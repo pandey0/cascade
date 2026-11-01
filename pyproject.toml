@@ -28,7 +28,7 @@ dependencies = [
 gateway = ["fastapi>=0.110", "uvicorn>=0.29", "prometheus-client>=0.20"]
 jev = ["typesafe-sdk>=0.7"]
 bench = ["datasets>=2.19", "sentence-transformers>=3.0"]
-figures = ["matplotlib>=3.8"]
+figures = ["matplotlib>=3.10.9"]
 gemini = ["google-genai>=1.0"]
 anthropic = ["anthropic>=2.0"]
 embed = ["sentence-transformers>=3.0"]
