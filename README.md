@@ -105,4 +105,4 @@ curl -s -X POST localhost:8081/v1/decide -H 'content-type: application/json' \
 ## Layout
 `src/cascade/` library · `tests/` · `docs/adr/` decisions · `docs/notes/` research notes (TRACER analysis, Jev and open alternatives, compute plan, exp0 findings) · `docs/REFERENCES.md` · `results/` generated outputs · `evidence/` run manifests, ledger, logs · `paper/` draft, figures, claim-evidence map · `notebooks/` Colab quickstart · `SCORECARD.md` production scorecard · `ops/` Prometheus rules and Grafana dashboard · `infra/` Terraform and Helm (unapplied) · `docs/runbook.md`, `docs/slo.md`, `docs/security.md`, `docs/perf.md`.
 
-License: MIT (change before publishing if you prefer another).
+License: MIT (see `LICENSE`).
