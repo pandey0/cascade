@@ -12,7 +12,9 @@
 
 Picture the support chat of a food-delivery app. Customers write things like *"my order is late"*, *"I want a refund"* or *"change my address"*. The app has to sort each message into a category (such as `late_order`, `refund`, `change_address`; AI people call these categories "intents") so it can send the message to the right team or trigger the right automation.
 
-The quickest way to build this is to ask an LLM: *"Here is a customer message. Which of these categories fits it best?"* It works well and takes a day to set up. A few months later it is handling thousands of messages a day and three things hurt:
+The quickest way to build this is to ask an LLM: *"Here is a customer message. Which of these categories fits it best?"* It works well and takes a day to set up.
+
+> **Note what the AI is doing here.** It only picks a *category* for the message. It does not look up the refund or write the reply. After the message is sorted, your own code takes over as usual: it finds the customer's order in your database and sends the real refund status. Because the category ("this is a refund-status question") is the same for every customer, a small model can learn it. The per-customer details never pass through Cascade. A few months later it is handling thousands of messages a day and three things hurt:
 
 - **Cost grows with every message.** Each one is a paid call to the LLM.
 - **You depend on someone else's service** for speed and uptime: slow replies, rate limits, outages.
@@ -180,6 +182,7 @@ These test the web service and its packaging, using a **simulated LLM** so they 
 | A few hundred requests a day, or a small bill | Just call the LLM. This is not worth the complexity. |
 | You already have thousands of human-labelled examples | Train a classifier on them directly: usually more accurate, with no LLM cost. |
 | Free text, reasoning, summaries | Keep the LLM. A small model on text embeddings will not work. |
+| The answer must be written for each customer from their own data, or the right choice depends on data that is not in the message | Not supported today: the small model sees only the message text. Keep the LLM for those, or use Cascade just for the sorting step. |
 | Categories change every week | Expect frequent re-training and refusals; consider retrieval instead of a fixed list. |
 | High-stakes decisions (credit, hiring, safety) | Keep a human in the loop. A statistical bound on agreement is not enough justification. |
 | You want something working this week | Try [TRACER](https://github.com/adrida/tracer), an open-source project built on the same core idea. |
