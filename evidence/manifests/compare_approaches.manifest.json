@@ -1,0 +1,37 @@
+{
+  "name": "compare_approaches",
+  "command": [
+    "compare_approaches"
+  ],
+  "started_utc": "2026-11-01T18:51:21Z",
+  "wall_s": 315.73,
+  "code": {
+    "commit": "3518182255da0a260bcef78f72c72f2bd9120dc3",
+    "dirty": true,
+    "source_sha256": "dad8aacc6caafdc5b3d78539023ba67631e5e2a9d96eef09ebd6275c324e206d"
+  },
+  "environment": {
+    "python": "3.10.12",
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+    "cpu_count": 8,
+    "packages": {
+      "cascade-llm": "0.0.1",
+      "numpy": "2.2.6",
+      "scipy": "1.15.3",
+      "scikit-learn": "1.7.2",
+      "pydantic": "2.14.2",
+      "sentence-transformers": "6.2.0"
+    }
+  },
+  "inputs": {},
+  "outputs": {
+    "/home/dell/COurse/projects/cascade/results/compare_banking77.json": "1a3ab008e6b4cd92c0043f437ac19042dbe47a48b520131069288851c6ac709f",
+    "/home/dell/COurse/projects/cascade/results/compare_clinc150.json": "32b2b281bb4ad0a7fe38eeaef0e532aaec27d7cf44b5793440f6030ff5f86e2c"
+  },
+  "extra": {
+    "audit_rate": 0.05,
+    "delta": 0.1,
+    "calibration": 400,
+    "draws": 100
+  }
+}

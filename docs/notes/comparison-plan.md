@@ -34,3 +34,6 @@ together because the approaches do not have the same accuracy.
 ## Limits fixed in advance
 One LLM (Haiku 5.5), two datasets, one student type, 3 splits; hosting, label and engineering costs are assumptions;
 no real traffic; no latency measurement beyond the encoder timings and the teacher timings already recorded.
+
+## Outcome (added after the run)
+Results and the verdict on each expectation are in [comparison-findings.md](comparison-findings.md). E1 confirmed (with label counts), E2 mostly confirmed, E3 partly wrong, E4 not tested (invalid API key).

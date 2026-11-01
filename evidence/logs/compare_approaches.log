@@ -1,0 +1,133 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+/home/dell/COurse/projects/cascade/.venv/lib/python3.10/site-packages/sklearn/utils/multiclass.py:213: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  y_type = type_of_target(y, input_name="y")
+[banking77 s0] gold N=50: alone 0.251
+/home/dell/COurse/projects/cascade/.venv/lib/python3.10/site-packages/sklearn/utils/multiclass.py:213: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  y_type = type_of_target(y, input_name="y")
+[banking77 s0] gold N=100: alone 0.402
+[banking77 s0] gold N=200: alone 0.544
+[banking77 s0] gold N=500: alone 0.720
+[banking77 s0] gold N=1000: alone 0.852
+[banking77 s0] gold N=3000: alone 0.889
+[banking77 s0] gold N=5000: alone 0.910
+/home/dell/COurse/projects/cascade/.venv/lib/python3.10/site-packages/sklearn/utils/multiclass.py:213: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  y_type = type_of_target(y, input_name="y")
+[banking77 s0] distilled N=50: alone 0.295
+/home/dell/COurse/projects/cascade/.venv/lib/python3.10/site-packages/sklearn/utils/multiclass.py:213: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  y_type = type_of_target(y, input_name="y")
+[banking77 s0] distilled N=100: alone 0.351
+[banking77 s0] distilled N=200: alone 0.466
+[banking77 s0] distilled N=500: alone 0.679
+[banking77 s0] distilled N=1000: alone 0.718
+/home/dell/COurse/projects/cascade/.venv/lib/python3.10/site-packages/sklearn/utils/multiclass.py:213: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  y_type = type_of_target(y, input_name="y")
+[banking77 s1] gold N=50: alone 0.324
+/home/dell/COurse/projects/cascade/.venv/lib/python3.10/site-packages/sklearn/utils/multiclass.py:213: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  y_type = type_of_target(y, input_name="y")
+[banking77 s1] gold N=100: alone 0.389
+[banking77 s1] gold N=200: alone 0.541
+[banking77 s1] gold N=500: alone 0.738
+[banking77 s1] gold N=1000: alone 0.835
+[banking77 s1] gold N=3000: alone 0.901
+[banking77 s1] gold N=5000: alone 0.912
+/home/dell/COurse/projects/cascade/.venv/lib/python3.10/site-packages/sklearn/utils/multiclass.py:213: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  y_type = type_of_target(y, input_name="y")
+[banking77 s1] distilled N=50: alone 0.276
+/home/dell/COurse/projects/cascade/.venv/lib/python3.10/site-packages/sklearn/utils/multiclass.py:213: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  y_type = type_of_target(y, input_name="y")
+[banking77 s1] distilled N=100: alone 0.417
+[banking77 s1] distilled N=200: alone 0.569
+[banking77 s1] distilled N=500: alone 0.687
+[banking77 s1] distilled N=1000: alone 0.742
+/home/dell/COurse/projects/cascade/.venv/lib/python3.10/site-packages/sklearn/utils/multiclass.py:213: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  y_type = type_of_target(y, input_name="y")
+[banking77 s2] gold N=50: alone 0.260
+/home/dell/COurse/projects/cascade/.venv/lib/python3.10/site-packages/sklearn/utils/multiclass.py:213: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  y_type = type_of_target(y, input_name="y")
+[banking77 s2] gold N=100: alone 0.406
+[banking77 s2] gold N=200: alone 0.527
+[banking77 s2] gold N=500: alone 0.768
+[banking77 s2] gold N=1000: alone 0.846
+[banking77 s2] gold N=3000: alone 0.896
+[banking77 s2] gold N=5000: alone 0.906
+/home/dell/COurse/projects/cascade/.venv/lib/python3.10/site-packages/sklearn/utils/multiclass.py:213: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  y_type = type_of_target(y, input_name="y")
+[banking77 s2] distilled N=50: alone 0.266
+/home/dell/COurse/projects/cascade/.venv/lib/python3.10/site-packages/sklearn/utils/multiclass.py:213: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  y_type = type_of_target(y, input_name="y")
+[banking77 s2] distilled N=100: alone 0.374
+[banking77 s2] distilled N=200: alone 0.546
+[banking77 s2] distilled N=500: alone 0.666
+[banking77 s2] distilled N=1000: alone 0.727
+/home/dell/COurse/projects/cascade/.venv/lib/python3.10/site-packages/sklearn/utils/multiclass.py:213: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  y_type = type_of_target(y, input_name="y")
+[clinc150 s0] gold N=50: alone 0.196
+/home/dell/COurse/projects/cascade/.venv/lib/python3.10/site-packages/sklearn/utils/multiclass.py:213: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  y_type = type_of_target(y, input_name="y")
+[clinc150 s0] gold N=100: alone 0.343
+/home/dell/COurse/projects/cascade/.venv/lib/python3.10/site-packages/sklearn/utils/multiclass.py:213: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  y_type = type_of_target(y, input_name="y")
+[clinc150 s0] gold N=200: alone 0.478
+[clinc150 s0] gold N=500: alone 0.693
+[clinc150 s0] gold N=1000: alone 0.882
+[clinc150 s0] gold N=3000: alone 0.960
+[clinc150 s0] gold N=5000: alone 0.959
+/home/dell/COurse/projects/cascade/.venv/lib/python3.10/site-packages/sklearn/utils/multiclass.py:213: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  y_type = type_of_target(y, input_name="y")
+[clinc150 s0] distilled N=50: alone 0.222
+/home/dell/COurse/projects/cascade/.venv/lib/python3.10/site-packages/sklearn/utils/multiclass.py:213: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  y_type = type_of_target(y, input_name="y")
+[clinc150 s0] distilled N=100: alone 0.329
+/home/dell/COurse/projects/cascade/.venv/lib/python3.10/site-packages/sklearn/utils/multiclass.py:213: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  y_type = type_of_target(y, input_name="y")
+[clinc150 s0] distilled N=200: alone 0.467
+[clinc150 s0] distilled N=500: alone 0.680
+[clinc150 s0] distilled N=1000: alone 0.796
+/home/dell/COurse/projects/cascade/.venv/lib/python3.10/site-packages/sklearn/utils/multiclass.py:213: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  y_type = type_of_target(y, input_name="y")
+[clinc150 s1] gold N=50: alone 0.154
+/home/dell/COurse/projects/cascade/.venv/lib/python3.10/site-packages/sklearn/utils/multiclass.py:213: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  y_type = type_of_target(y, input_name="y")
+[clinc150 s1] gold N=100: alone 0.323
+/home/dell/COurse/projects/cascade/.venv/lib/python3.10/site-packages/sklearn/utils/multiclass.py:213: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  y_type = type_of_target(y, input_name="y")
+[clinc150 s1] gold N=200: alone 0.464
+[clinc150 s1] gold N=500: alone 0.700
+[clinc150 s1] gold N=1000: alone 0.865
+[clinc150 s1] gold N=3000: alone 0.940
+[clinc150 s1] gold N=5000: alone 0.954
+/home/dell/COurse/projects/cascade/.venv/lib/python3.10/site-packages/sklearn/utils/multiclass.py:213: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  y_type = type_of_target(y, input_name="y")
+[clinc150 s1] distilled N=50: alone 0.264
+/home/dell/COurse/projects/cascade/.venv/lib/python3.10/site-packages/sklearn/utils/multiclass.py:213: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  y_type = type_of_target(y, input_name="y")
+[clinc150 s1] distilled N=100: alone 0.336
+/home/dell/COurse/projects/cascade/.venv/lib/python3.10/site-packages/sklearn/utils/multiclass.py:213: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  y_type = type_of_target(y, input_name="y")
+[clinc150 s1] distilled N=200: alone 0.472
+[clinc150 s1] distilled N=500: alone 0.693
+[clinc150 s1] distilled N=1000: alone 0.818
+/home/dell/COurse/projects/cascade/.venv/lib/python3.10/site-packages/sklearn/utils/multiclass.py:213: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  y_type = type_of_target(y, input_name="y")
+[clinc150 s2] gold N=50: alone 0.244
+/home/dell/COurse/projects/cascade/.venv/lib/python3.10/site-packages/sklearn/utils/multiclass.py:213: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  y_type = type_of_target(y, input_name="y")
+[clinc150 s2] gold N=100: alone 0.307
+/home/dell/COurse/projects/cascade/.venv/lib/python3.10/site-packages/sklearn/utils/multiclass.py:213: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  y_type = type_of_target(y, input_name="y")
+[clinc150 s2] gold N=200: alone 0.465
+[clinc150 s2] gold N=500: alone 0.684
+[clinc150 s2] gold N=1000: alone 0.839
+[clinc150 s2] gold N=3000: alone 0.951
+[clinc150 s2] gold N=5000: alone 0.952
+/home/dell/COurse/projects/cascade/.venv/lib/python3.10/site-packages/sklearn/utils/multiclass.py:213: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  y_type = type_of_target(y, input_name="y")
+[clinc150 s2] distilled N=50: alone 0.250
+/home/dell/COurse/projects/cascade/.venv/lib/python3.10/site-packages/sklearn/utils/multiclass.py:213: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  y_type = type_of_target(y, input_name="y")
+[clinc150 s2] distilled N=100: alone 0.296
+/home/dell/COurse/projects/cascade/.venv/lib/python3.10/site-packages/sklearn/utils/multiclass.py:213: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  y_type = type_of_target(y, input_name="y")
+[clinc150 s2] distilled N=200: alone 0.481
+[clinc150 s2] distilled N=500: alone 0.669
+[clinc150 s2] distilled N=1000: alone 0.820

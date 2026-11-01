@@ -1,0 +1,703 @@
+{
+  "task": "banking77",
+  "c_t": 0.00020406120000000005,
+  "llm_median_latency_ms": 946.9187214926933,
+  "seeds": {
+    "0": {
+      "llm_only_accuracy": 0.756,
+      "pool": 1000,
+      "gold": {
+        "50": {
+          "alone_accuracy": 0.251,
+          "cascade_alpha0.05": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.7560000000000001,
+            "llm_calls_per_request": 1.0
+          },
+          "cascade_alpha0.1": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.7560000000000001,
+            "llm_calls_per_request": 1.0
+          }
+        },
+        "100": {
+          "alone_accuracy": 0.402,
+          "cascade_alpha0.05": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.7560000000000001,
+            "llm_calls_per_request": 1.0
+          },
+          "cascade_alpha0.1": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.7560000000000001,
+            "llm_calls_per_request": 1.0
+          }
+        },
+        "200": {
+          "alone_accuracy": 0.544,
+          "cascade_alpha0.05": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.7560000000000001,
+            "llm_calls_per_request": 1.0
+          },
+          "cascade_alpha0.1": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.7560000000000001,
+            "llm_calls_per_request": 1.0
+          }
+        },
+        "500": {
+          "alone_accuracy": 0.72,
+          "cascade_alpha0.05": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.7560000000000001,
+            "llm_calls_per_request": 1.0
+          },
+          "cascade_alpha0.1": {
+            "deploy": 0.01,
+            "coverage": 0.0014399999999999999,
+            "e2e_accuracy": 0.75607,
+            "llm_calls_per_request": 0.9986320000000001
+          }
+        },
+        "1000": {
+          "alone_accuracy": 0.852,
+          "cascade_alpha0.05": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.7560000000000001,
+            "llm_calls_per_request": 1.0
+          },
+          "cascade_alpha0.1": {
+            "deploy": 0.01,
+            "coverage": 0.0039000000000000003,
+            "e2e_accuracy": 0.7563300000000001,
+            "llm_calls_per_request": 0.996295
+          }
+        },
+        "3000": {
+          "alone_accuracy": 0.889,
+          "cascade_alpha0.05": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.7560000000000001,
+            "llm_calls_per_request": 1.0
+          },
+          "cascade_alpha0.1": {
+            "deploy": 0.36,
+            "coverage": 0.08041000000000001,
+            "e2e_accuracy": 0.7589,
+            "llm_calls_per_request": 0.9236105000000001
+          }
+        },
+        "5000": {
+          "alone_accuracy": 0.91,
+          "cascade_alpha0.05": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.7560000000000001,
+            "llm_calls_per_request": 1.0
+          },
+          "cascade_alpha0.1": {
+            "deploy": 0.08,
+            "coverage": 0.02342,
+            "e2e_accuracy": 0.75735,
+            "llm_calls_per_request": 0.9777509999999999
+          }
+        }
+      },
+      "distilled": {
+        "50": {
+          "alone_accuracy": 0.295,
+          "cascade_alpha0.05": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.7560000000000001,
+            "llm_calls_per_request": 1.0
+          },
+          "cascade_alpha0.1": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.7560000000000001,
+            "llm_calls_per_request": 1.0
+          }
+        },
+        "100": {
+          "alone_accuracy": 0.351,
+          "cascade_alpha0.05": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.7560000000000001,
+            "llm_calls_per_request": 1.0
+          },
+          "cascade_alpha0.1": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.7560000000000001,
+            "llm_calls_per_request": 1.0
+          }
+        },
+        "200": {
+          "alone_accuracy": 0.466,
+          "cascade_alpha0.05": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.7560000000000001,
+            "llm_calls_per_request": 1.0
+          },
+          "cascade_alpha0.1": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.7560000000000001,
+            "llm_calls_per_request": 1.0
+          }
+        },
+        "500": {
+          "alone_accuracy": 0.679,
+          "cascade_alpha0.05": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.7560000000000001,
+            "llm_calls_per_request": 1.0
+          },
+          "cascade_alpha0.1": {
+            "deploy": 0.57,
+            "coverage": 0.15016,
+            "e2e_accuracy": 0.7566899999999999,
+            "llm_calls_per_request": 0.8573480000000001
+          }
+        },
+        "1000": {
+          "alone_accuracy": 0.718,
+          "cascade_alpha0.05": {
+            "deploy": 0.23,
+            "coverage": 0.07287,
+            "e2e_accuracy": 0.7560000000000002,
+            "llm_calls_per_request": 0.9307734999999999
+          },
+          "cascade_alpha0.1": {
+            "deploy": 1.0,
+            "coverage": 0.5061000000000001,
+            "e2e_accuracy": 0.7557200000000001,
+            "llm_calls_per_request": 0.5192049999999999
+          }
+        }
+      },
+      "cache": {
+        "0.98": {
+          "hit_rate": 0.022,
+          "accuracy": 0.756,
+          "accuracy_on_hits": 0.9090909090909091,
+          "llm_calls_per_request": 0.978
+        },
+        "0.95": {
+          "hit_rate": 0.092,
+          "accuracy": 0.757,
+          "accuracy_on_hits": 0.8804347826086957,
+          "llm_calls_per_request": 0.908
+        },
+        "0.92": {
+          "hit_rate": 0.179,
+          "accuracy": 0.755,
+          "accuracy_on_hits": 0.8603351955307262,
+          "llm_calls_per_request": 0.821
+        },
+        "0.9": {
+          "hit_rate": 0.261,
+          "accuracy": 0.752,
+          "accuracy_on_hits": 0.8390804597701149,
+          "llm_calls_per_request": 0.739
+        },
+        "0.85": {
+          "hit_rate": 0.45,
+          "accuracy": 0.745,
+          "accuracy_on_hits": 0.8111111111111111,
+          "llm_calls_per_request": 0.55
+        },
+        "0.8": {
+          "hit_rate": 0.621,
+          "accuracy": 0.738,
+          "accuracy_on_hits": 0.7809983896940419,
+          "llm_calls_per_request": 0.379
+        },
+        "0.7": {
+          "hit_rate": 0.873,
+          "accuracy": 0.72,
+          "accuracy_on_hits": 0.7308132875143184,
+          "llm_calls_per_request": 0.127
+        }
+      }
+    },
+    "1": {
+      "llm_only_accuracy": 0.749,
+      "pool": 1000,
+      "gold": {
+        "50": {
+          "alone_accuracy": 0.324,
+          "cascade_alpha0.05": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.7489999999999998,
+            "llm_calls_per_request": 1.0
+          },
+          "cascade_alpha0.1": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.7489999999999998,
+            "llm_calls_per_request": 1.0
+          }
+        },
+        "100": {
+          "alone_accuracy": 0.389,
+          "cascade_alpha0.05": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.7489999999999998,
+            "llm_calls_per_request": 1.0
+          },
+          "cascade_alpha0.1": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.7489999999999998,
+            "llm_calls_per_request": 1.0
+          }
+        },
+        "200": {
+          "alone_accuracy": 0.541,
+          "cascade_alpha0.05": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.7489999999999998,
+            "llm_calls_per_request": 1.0
+          },
+          "cascade_alpha0.1": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.7489999999999998,
+            "llm_calls_per_request": 1.0
+          }
+        },
+        "500": {
+          "alone_accuracy": 0.738,
+          "cascade_alpha0.05": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.7489999999999998,
+            "llm_calls_per_request": 1.0
+          },
+          "cascade_alpha0.1": {
+            "deploy": 0.01,
+            "coverage": 0.00156,
+            "e2e_accuracy": 0.7491099999999998,
+            "llm_calls_per_request": 0.998518
+          }
+        },
+        "1000": {
+          "alone_accuracy": 0.835,
+          "cascade_alpha0.05": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.7489999999999998,
+            "llm_calls_per_request": 1.0
+          },
+          "cascade_alpha0.1": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.7489999999999998,
+            "llm_calls_per_request": 1.0
+          }
+        },
+        "3000": {
+          "alone_accuracy": 0.901,
+          "cascade_alpha0.05": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.7489999999999998,
+            "llm_calls_per_request": 1.0
+          },
+          "cascade_alpha0.1": {
+            "deploy": 0.23,
+            "coverage": 0.04023000000000001,
+            "e2e_accuracy": 0.7498199999999998,
+            "llm_calls_per_request": 0.9617814999999998
+          }
+        },
+        "5000": {
+          "alone_accuracy": 0.912,
+          "cascade_alpha0.05": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.7489999999999998,
+            "llm_calls_per_request": 1.0
+          },
+          "cascade_alpha0.1": {
+            "deploy": 0.07,
+            "coverage": 0.014939999999999998,
+            "e2e_accuracy": 0.7496699999999998,
+            "llm_calls_per_request": 0.9858070000000001
+          }
+        }
+      },
+      "distilled": {
+        "50": {
+          "alone_accuracy": 0.276,
+          "cascade_alpha0.05": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.7489999999999998,
+            "llm_calls_per_request": 1.0
+          },
+          "cascade_alpha0.1": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.7489999999999998,
+            "llm_calls_per_request": 1.0
+          }
+        },
+        "100": {
+          "alone_accuracy": 0.417,
+          "cascade_alpha0.05": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.7489999999999998,
+            "llm_calls_per_request": 1.0
+          },
+          "cascade_alpha0.1": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.7489999999999998,
+            "llm_calls_per_request": 1.0
+          }
+        },
+        "200": {
+          "alone_accuracy": 0.569,
+          "cascade_alpha0.05": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.7489999999999998,
+            "llm_calls_per_request": 1.0
+          },
+          "cascade_alpha0.1": {
+            "deploy": 0.05,
+            "coverage": 0.007230000000000001,
+            "e2e_accuracy": 0.7488099999999999,
+            "llm_calls_per_request": 0.9931315000000001
+          }
+        },
+        "500": {
+          "alone_accuracy": 0.687,
+          "cascade_alpha0.05": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.7489999999999998,
+            "llm_calls_per_request": 1.0
+          },
+          "cascade_alpha0.1": {
+            "deploy": 0.47,
+            "coverage": 0.10843,
+            "e2e_accuracy": 0.7485599999999999,
+            "llm_calls_per_request": 0.8969915
+          }
+        },
+        "1000": {
+          "alone_accuracy": 0.742,
+          "cascade_alpha0.05": {
+            "deploy": 0.28,
+            "coverage": 0.1035,
+            "e2e_accuracy": 0.7480899999999998,
+            "llm_calls_per_request": 0.901675
+          },
+          "cascade_alpha0.1": {
+            "deploy": 1.0,
+            "coverage": 0.5462900000000002,
+            "e2e_accuracy": 0.74431,
+            "llm_calls_per_request": 0.48102449999999997
+          }
+        }
+      },
+      "cache": {
+        "0.98": {
+          "hit_rate": 0.021,
+          "accuracy": 0.749,
+          "accuracy_on_hits": 0.9523809523809523,
+          "llm_calls_per_request": 0.979
+        },
+        "0.95": {
+          "hit_rate": 0.086,
+          "accuracy": 0.749,
+          "accuracy_on_hits": 0.8953488372093024,
+          "llm_calls_per_request": 0.914
+        },
+        "0.92": {
+          "hit_rate": 0.175,
+          "accuracy": 0.752,
+          "accuracy_on_hits": 0.8857142857142857,
+          "llm_calls_per_request": 0.825
+        },
+        "0.9": {
+          "hit_rate": 0.248,
+          "accuracy": 0.747,
+          "accuracy_on_hits": 0.8508064516129032,
+          "llm_calls_per_request": 0.752
+        },
+        "0.85": {
+          "hit_rate": 0.441,
+          "accuracy": 0.741,
+          "accuracy_on_hits": 0.8163265306122449,
+          "llm_calls_per_request": 0.5589999999999999
+        },
+        "0.8": {
+          "hit_rate": 0.628,
+          "accuracy": 0.73,
+          "accuracy_on_hits": 0.7786624203821656,
+          "llm_calls_per_request": 0.372
+        },
+        "0.7": {
+          "hit_rate": 0.891,
+          "accuracy": 0.731,
+          "accuracy_on_hits": 0.7384960718294051,
+          "llm_calls_per_request": 0.10899999999999999
+        }
+      }
+    },
+    "2": {
+      "llm_only_accuracy": 0.768,
+      "pool": 1000,
+      "gold": {
+        "50": {
+          "alone_accuracy": 0.26,
+          "cascade_alpha0.05": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.768,
+            "llm_calls_per_request": 1.0
+          },
+          "cascade_alpha0.1": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.768,
+            "llm_calls_per_request": 1.0
+          }
+        },
+        "100": {
+          "alone_accuracy": 0.406,
+          "cascade_alpha0.05": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.768,
+            "llm_calls_per_request": 1.0
+          },
+          "cascade_alpha0.1": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.768,
+            "llm_calls_per_request": 1.0
+          }
+        },
+        "200": {
+          "alone_accuracy": 0.527,
+          "cascade_alpha0.05": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.768,
+            "llm_calls_per_request": 1.0
+          },
+          "cascade_alpha0.1": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.768,
+            "llm_calls_per_request": 1.0
+          }
+        },
+        "500": {
+          "alone_accuracy": 0.768,
+          "cascade_alpha0.05": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.768,
+            "llm_calls_per_request": 1.0
+          },
+          "cascade_alpha0.1": {
+            "deploy": 0.18,
+            "coverage": 0.04873,
+            "e2e_accuracy": 0.7704300000000001,
+            "llm_calls_per_request": 0.9537065
+          }
+        },
+        "1000": {
+          "alone_accuracy": 0.846,
+          "cascade_alpha0.05": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.768,
+            "llm_calls_per_request": 1.0
+          },
+          "cascade_alpha0.1": {
+            "deploy": 0.37,
+            "coverage": 0.10937999999999999,
+            "e2e_accuracy": 0.7732000000000001,
+            "llm_calls_per_request": 0.896089
+          }
+        },
+        "3000": {
+          "alone_accuracy": 0.896,
+          "cascade_alpha0.05": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.768,
+            "llm_calls_per_request": 1.0
+          },
+          "cascade_alpha0.1": {
+            "deploy": 0.13,
+            "coverage": 0.038369999999999994,
+            "e2e_accuracy": 0.77023,
+            "llm_calls_per_request": 0.9635485
+          }
+        },
+        "5000": {
+          "alone_accuracy": 0.906,
+          "cascade_alpha0.05": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.768,
+            "llm_calls_per_request": 1.0
+          },
+          "cascade_alpha0.1": {
+            "deploy": 0.2,
+            "coverage": 0.04889,
+            "e2e_accuracy": 0.77006,
+            "llm_calls_per_request": 0.9535544999999999
+          }
+        }
+      },
+      "distilled": {
+        "50": {
+          "alone_accuracy": 0.266,
+          "cascade_alpha0.05": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.768,
+            "llm_calls_per_request": 1.0
+          },
+          "cascade_alpha0.1": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.768,
+            "llm_calls_per_request": 1.0
+          }
+        },
+        "100": {
+          "alone_accuracy": 0.374,
+          "cascade_alpha0.05": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.768,
+            "llm_calls_per_request": 1.0
+          },
+          "cascade_alpha0.1": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.768,
+            "llm_calls_per_request": 1.0
+          }
+        },
+        "200": {
+          "alone_accuracy": 0.546,
+          "cascade_alpha0.05": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.768,
+            "llm_calls_per_request": 1.0
+          },
+          "cascade_alpha0.1": {
+            "deploy": 0.61,
+            "coverage": 0.13413999999999995,
+            "e2e_accuracy": 0.76896,
+            "llm_calls_per_request": 0.8725670000000002
+          }
+        },
+        "500": {
+          "alone_accuracy": 0.666,
+          "cascade_alpha0.05": {
+            "deploy": 0.0,
+            "coverage": 0.0,
+            "e2e_accuracy": 0.768,
+            "llm_calls_per_request": 1.0
+          },
+          "cascade_alpha0.1": {
+            "deploy": 0.47,
+            "coverage": 0.12374999999999999,
+            "e2e_accuracy": 0.76765,
+            "llm_calls_per_request": 0.8824375000000001
+          }
+        },
+        "1000": {
+          "alone_accuracy": 0.727,
+          "cascade_alpha0.05": {
+            "deploy": 0.24,
+            "coverage": 0.10642000000000001,
+            "e2e_accuracy": 0.7688700000000002,
+            "llm_calls_per_request": 0.8989010000000001
+          },
+          "cascade_alpha0.1": {
+            "deploy": 1.0,
+            "coverage": 0.5479199999999999,
+            "e2e_accuracy": 0.77286,
+            "llm_calls_per_request": 0.479476
+          }
+        }
+      },
+      "cache": {
+        "0.98": {
+          "hit_rate": 0.019,
+          "accuracy": 0.768,
+          "accuracy_on_hits": 0.8947368421052632,
+          "llm_calls_per_request": 0.981
+        },
+        "0.95": {
+          "hit_rate": 0.095,
+          "accuracy": 0.768,
+          "accuracy_on_hits": 0.8526315789473684,
+          "llm_calls_per_request": 0.905
+        },
+        "0.92": {
+          "hit_rate": 0.187,
+          "accuracy": 0.764,
+          "accuracy_on_hits": 0.8449197860962567,
+          "llm_calls_per_request": 0.813
+        },
+        "0.9": {
+          "hit_rate": 0.262,
+          "accuracy": 0.764,
+          "accuracy_on_hits": 0.8435114503816794,
+          "llm_calls_per_request": 0.738
+        },
+        "0.85": {
+          "hit_rate": 0.451,
+          "accuracy": 0.769,
+          "accuracy_on_hits": 0.8337028824833703,
+          "llm_calls_per_request": 0.5489999999999999
+        },
+        "0.8": {
+          "hit_rate": 0.621,
+          "accuracy": 0.762,
+          "accuracy_on_hits": 0.8003220611916264,
+          "llm_calls_per_request": 0.379
+        },
+        "0.7": {
+          "hit_rate": 0.871,
+          "accuracy": 0.738,
+          "accuracy_on_hits": 0.746268656716418,
+          "llm_calls_per_request": 0.129
+        }
+      }
+    }
+  }
+}

@@ -4,7 +4,7 @@ Written 2026-11-02 after the v0.1.0 release, deliberately adversarial: from the 
 
 ## Verdict
 
-**It helps in a narrow regime, and not for most teams.** The cost story is much weaker than the README first made it sound; the strongest real value is something else (see below). The evaluation has a large hole: we never compared Cascade with the alternatives a sensible team would try first.
+**It helps in a narrow regime, and not for most teams.** The cost story is much weaker than the README first made it sound; the strongest real value is something else (see below). **Update (same day): that hole is now filled** by experiment 3 ([notes/comparison-findings.md](notes/comparison-findings.md)). It confirms the worst of this critique: when human labels are available, a plain small model beats both the LLM and Cascade on accuracy and, above roughly 100,000 requests/day, on cost.
 
 | Claim | Holds? |
 |---|---|
@@ -78,7 +78,7 @@ Certified threshold selection is not new (Geifman and El-Yaniv 2017; Learn-then-
 
 ## What would make it really help (in priority order)
 
-1. **Run the missing comparison:** fine-tuned small encoder/SetFit on N human labels, cheaper LLM with prompt caching and batch pricing, semantic cache, and Cascade, at several volumes. Until then "does it help?" is unanswered.
+1. **Let the guarantee target the truth, not only the LLM (new top priority, from experiment 3):** a small human-labelled audit mode. Today a student that is *better* than the LLM is throttled by agreement with it (Banking77: 89.5% accurate, allowed to answer 5% of requests at a 10% target). The earlier comparison item is done: [notes/comparison-findings.md](notes/comparison-findings.md).
 2. **Ship a cost calculator** (volume, prices, hosting, engineering) that tells a team in one minute whether Cascade is worth it; the model exists in `economics.py`.
 3. **Fix the two measured defects:** background audits; bounded, client-enforced teacher timeouts.
 4. **Shared state** for multi-replica deployments.
@@ -91,3 +91,9 @@ Certified threshold selection is not new (Geifman and El-Yaniv 2017; Learn-then-
 - `docs/story.md` no longer claims a retraining "flywheel"; it states that the student is not retrained.
 - The README cost row and "not a good fit" table now include hosting and engineering time instead of the labelling-only break-even.
 - `economics.py` gained `break_even_daily_volume` and `payback_days` (with tests) and the script now prints the hosting-aware table.
+
+## Update after experiment 3 (head-to-head comparison)
+- **Confirmed:** a small model on 500-3,000 human labels beats the LLM's accuracy and, from about 100,000 requests/day, costs far less (year-1 on Banking77 at 1M/day: $8,032 vs $74,482).
+- **Where Cascade still earns its place:** when the LLM's answers are the only labels (about half the LLM calls at a 10% target for under a point of accuracy) and when you need an auditable, monitored bound. A semantic cache gets a similar call reduction with less machinery but no bound.
+- **New weakness found:** agreement-based certification throttles a student that is better than the LLM, and an LLM fallback can *lower* end-to-end accuracy (CLINC150: 94.3% with fallback vs 95.0% for the student alone).
+- **Still untested:** prompt caching (needs an API key), a stronger fine-tuned small model, latency under load with a real LLM.

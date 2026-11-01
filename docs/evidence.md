@@ -13,3 +13,6 @@ The Grafana dashboard (`ops/grafana/cascade-dashboard.json`) with live data from
 **Demo video:** [`img/demo_replay.mp4`](img/demo_replay.mp4), a 41-second typed replay of the real captured transcript of `scripts/demo.sh` with captions (not a live screen recording, not narrated; regenerate with `scripts/make_demo_video.py`).
 
 Other evidence in the repo: terminal transcript of the end-to-end demo (`evidence/logs/demo_transcript.txt`, `demo.md`), failure-injection results (`results/chaos.md`), Kubernetes smoke-test logs (`evidence/logs/k8s_smoke_*.txt`), Grafana panel-query check (`evidence/logs/grafana_check.txt`), CI runs (GitHub Actions, private repo), run manifests and ledger (`evidence/`). **Not yet in the repo:** a narrated screen recording of 2-3 minutes.
+
+![labels vs accuracy](img/fig7_labels_vs_accuracy.png) ![calls vs accuracy](img/fig8_calls_vs_accuracy.png)
+*Experiment 3: small model accuracy vs number of labels (left); fewer LLM calls vs accuracy for Cascade and a semantic cache (right; zoomed axis).*
