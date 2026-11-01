@@ -49,3 +49,18 @@ those without an explicit yes. No commits or pushes unless asked.
 
 ## User-side (I will not do these)
 Run CI on GitHub (push), AWS deploy/teardown, demo video, publish/arXiv, employer-agreement check, rotating exposed keys.
+
+---
+# Phase 2 plan (2026-11-01, written before executing)
+Order and gates; each step ends with tests + lint + mypy + CI green + SCORECARD/CLAIMS updated. Downloads are
+the Docker images named below (approved by the user's "plan out each of it ... and achieve it"); each is removed
+afterwards. Anything that bills money, publishes, or changes account settings is asked about first.
+
+| # | Step | Method | Gate (what proves it) | Risks / limits |
+|---|---|---|---|---|
+| 1 | Pinned-core load test (row 12) | `perf_compare.sh` with `taskset` (server cores 0-3, loadgen 4-5), 5 alternating pairs | table in `docs/perf.md`; conclusion stated with the spread, whatever it is | desktop still shared; not a dedicated host |
+| 2 | Helm on a real cluster (row 7) | k3s in a privileged container (`rancher/k3s`, no extra binaries), load the gateway image, `helm install` via the `alpine/helm` image. Needs a dependency-free embedder so the default image can serve: add `hashing:<n>` embedder + chart support for an artifact ConfigMap | pods Ready, `/readyz` 200 through the Service, a decision served, 2 replicas, rolling restart without errors, PDB present; evidence log | teacher is a dummy (no real LLM call); single-node cluster; k3s needs `--privileged` locally |
+| 3 | Grafana (row 8) | `grafana/grafana` + `prom/prometheus` images, provision datasource + dashboard JSON, call Grafana's query API for every panel while the demo gateway serves load | every panel query returns data; dashboard loads without errors | images are large; screenshots only if you point me at a file |
+| 4 | TRACER baseline (research) | `python:3.12-slim` container, `pip install tracer-llm`, run on the same teacher-labelled Banking77/CLINC150 samples and splits; compare coverage and agreement with our gates | numbers in `docs/notes/tracer-baseline.md` + claims map; honest if the API does not fit our setup | API unknown until read; their gate differs by design |
+| 5 | Release (row 5) | ask first; then tag push -> release workflow -> image in GHCR | workflow green, image tag exists, notes from CHANGELOG | publishes an image (private repo) |
+| 6 | Not mine to do | AWS apply (billing), demo video, branch protection (account settings) | -- | -- |

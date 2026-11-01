@@ -23,11 +23,16 @@ spec:
       containers:
         - name: gateway
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports: [{ containerPort: 8080 }]
           env:
             {{- range $k, $v := .Values.env }}
             - { name: {{ $k }}, value: {{ $v | quote }} }
             {{- end }}
+          volumeMounts:
+            - { name: artifact, mountPath: /artifact, readOnly: true }
+            - { name: data, mountPath: /data }
+            - { name: tmp, mountPath: /tmp }
           envFrom:
             - secretRef: { name: {{ .Values.existingSecret }} }
           securityContext:
@@ -37,3 +42,10 @@ spec:
           readinessProbe: { httpGet: { path: /readyz, port: 8080 }, periodSeconds: 5 }
           livenessProbe: { httpGet: { path: /healthz, port: 8080 }, periodSeconds: 10 }
           resources: {{ toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: artifact
+          configMap: { name: {{ .Values.artifactConfigMap }} }
+        - name: data
+          emptyDir: {}
+        - name: tmp
+          emptyDir: {}

@@ -1,6 +1,7 @@
 image:
   repository: cascade-gateway
   tag: "0.1.0"
+  pullPolicy: IfNotPresent
 replicaCount: 2
 service:
   port: 8080
@@ -11,3 +12,4 @@ existingSecret: cascade-secrets   # must hold CASCADE_API_KEYS and ANTHROPIC_API
 resources:
   requests: { cpu: 250m, memory: 512Mi }
   limits: { memory: 1Gi }
+artifactConfigMap: cascade-artifact   # ConfigMap holding artifact.json and student.npz (binaryData)

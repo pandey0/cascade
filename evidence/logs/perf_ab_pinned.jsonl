@@ -1,0 +1,10 @@
+{"concurrency": 24, "seconds": 15.6, "requests": 584, "rps": 37.5, "p50_ms": 589.3, "p95_ms": 930.1, "p99_ms": 1057.5, "mix": {"cheap": 531, "teacher": 53}, "label": "baseline_rep1"}
+{"concurrency": 24, "seconds": 15.4, "requests": 908, "rps": 59.1, "p50_ms": 369.0, "p95_ms": 660.3, "p99_ms": 768.5, "mix": {"cheap": 834, "teacher": 74}, "label": "batch16_rep1"}
+{"concurrency": 24, "seconds": 15.6, "requests": 587, "rps": 37.6, "p50_ms": 602.3, "p95_ms": 900.8, "p99_ms": 1020.2, "mix": {"cheap": 536, "teacher": 51}, "label": "baseline_rep2"}
+{"concurrency": 24, "seconds": 15.5, "requests": 852, "rps": 54.8, "p50_ms": 407.3, "p95_ms": 677.5, "p99_ms": 786.8, "mix": {"cheap": 782, "teacher": 70}, "label": "batch16_rep2"}
+{"concurrency": 24, "seconds": 15.7, "requests": 480, "rps": 30.6, "p50_ms": 749.3, "p95_ms": 1051.4, "p99_ms": 1182.6, "mix": {"cheap": 440, "teacher": 40}, "label": "baseline_rep3"}
+{"concurrency": 24, "seconds": 15.6, "requests": 674, "rps": 43.2, "p50_ms": 492.7, "p95_ms": 929.1, "p99_ms": 1102.9, "mix": {"cheap": 619, "teacher": 55}, "label": "batch16_rep3"}
+{"concurrency": 24, "seconds": 15.6, "requests": 354, "rps": 22.7, "p50_ms": 1001.8, "p95_ms": 1468.1, "p99_ms": 1647.6, "mix": {"cheap": 325, "teacher": 29}, "label": "baseline_rep4"}
+{"concurrency": 24, "seconds": 16.7, "requests": 169, "rps": 10.1, "p50_ms": 2276.5, "p95_ms": 2804.9, "p99_ms": 3044.0, "mix": {"cheap": 152, "teacher": 17}, "label": "batch16_rep4"}
+{"concurrency": 24, "seconds": 16.7, "requests": 136, "rps": 8.2, "p50_ms": 3010.6, "p95_ms": 3617.0, "p99_ms": 3973.5, "mix": {"cheap": 122, "teacher": 14}, "label": "baseline_rep5"}
+{"concurrency": 24, "seconds": 16.1, "requests": 262, "rps": 16.3, "p50_ms": 1457.9, "p95_ms": 2072.5, "p99_ms": 2129.5, "mix": {"cheap": 241, "teacher": 21}, "label": "batch16_rep5"}

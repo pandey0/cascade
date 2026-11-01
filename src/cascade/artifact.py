@@ -34,7 +34,7 @@ class ArtifactMeta:
     alpha: float
     delta: float
     threshold: float | None
-    embedder: str  # sentence-transformers model id
+    embedder: str  # sentence-transformers model id, or "hashing:<n_features>"
     instructions: str
     teacher_provider: str  # "claude" | "gemini"
     teacher_model: str
@@ -74,7 +74,24 @@ def make_teacher(meta: ArtifactMeta) -> Callable[[str], TeacherResponse]:
     raise ValueError(msg)
 
 
+def hashing_embedder(n_features: int) -> Callable[[str], FloatArray]:
+    """Dependency-free embedder (hashed word + bigram counts, L2-normalised). Weaker than a
+    sentence encoder, but needs no PyTorch and no model download: fits the default image."""
+    from sklearn.feature_extraction.text import HashingVectorizer  # noqa: PLC0415
+
+    vec = HashingVectorizer(
+        n_features=n_features, alternate_sign=False, norm="l2", ngram_range=(1, 2), lowercase=True
+    )
+
+    def embed(text: str) -> FloatArray:
+        return np.asarray(vec.transform([text]).toarray()[0], dtype=np.float64)
+
+    return embed
+
+
 def sentence_embedder(model_id: str) -> Callable[[str], FloatArray]:
+    if model_id.startswith("hashing:"):
+        return hashing_embedder(int(model_id.split(":", 1)[1]))
     from sentence_transformers import SentenceTransformer  # noqa: PLC0415  (optional extra)
 
     encoder = SentenceTransformer(model_id, device="cpu")

@@ -43,6 +43,26 @@ earlier unpaired run also favoured the default. Conclusion: a plausible gain of 
 under load, **not established**; host noise (the desktop was in use) is as large as the effect.
 Keep it opt-in; a dedicated host and more repetitions would be needed to settle it.
 
+5. **Pinned cores** (server on cores 0-3, load generator on 4-5, 5 alternating pairs, 24 clients, 15 s; `evidence/logs/perf_ab_pinned.jsonl`, `SERVER_PIN=0-3 LOADGEN_PIN=4-5 REPS=5 ./scripts/perf_compare.sh`):
+
+| rep | default req/s | batched req/s | ratio | default p50/p99 ms | batched p50/p99 ms |
+|---|---|---|---|---|---|
+| 1 | 37.5 | 59.1 | 1.58 | 589 / 1058 | 369 / 769 |
+| 2 | 37.6 | 54.8 | 1.46 | 602 / 1020 | 407 / 787 |
+| 3 | 30.6 | 43.2 | 1.41 | 749 / 1183 | 493 / 1103 |
+| 4 | 22.7 | 10.1 | 0.44 | 1002 / 1648 | 2277 / 3044 |
+| 5 | 8.2 | 16.3 | 1.99 | 3011 / 3974 | 1458 / 2130 |
+
+Reps 4 and 5 are contaminated: **I was running lint, type checks and tests on the same machine at
+that moment** (throughput fell for both configurations, to 8-23 req/s). They are kept in the table
+for transparency; the median ratio over all five is 1.46, and the three quiet pairs give 1.41-1.58.
+
+**Updated conclusion:** on this host, with pinned cores and no other load, micro-batching raised
+throughput by roughly 40-60% and cut p50 by about 35% at 24 concurrent clients; across every paired
+comparison in this document it won 9 of 11 (the losses: 0.94 in the unpinned quiet set and 0.44 in a
+pinned pair that I contaminated myself), so the gain is plausible and repeatable under load but has
+not been measured on a dedicated machine. It remains opt-in.
+
 ## Other measured facts
 - Process start-up is about 9 s (importing scipy.stats and loading the encoder dominates); the
   container healthcheck uses `--start-period=40s`.

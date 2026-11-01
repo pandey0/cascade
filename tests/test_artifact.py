@@ -10,6 +10,7 @@ from cascade.artifact import (
     load_artifact,
     make_teacher,
     save_artifact,
+    sentence_embedder,
 )
 from cascade.students import LogisticStudent
 
@@ -77,3 +78,12 @@ def test_serve_from_env_end_to_end(tmp_path: Path, monkeypatch: pytest.MonkeyPat
 def test_unknown_provider_rejected() -> None:
     with pytest.raises(ValueError, match="unknown teacher provider"):
         make_teacher(_meta(teacher_provider="nope"))
+
+
+def test_hashing_embedder_is_deterministic_unit_norm_and_text_sensitive() -> None:
+    e = sentence_embedder("hashing:128")
+    a, b = e("where is my card"), e("where is my card")
+    c = e("totally different words here")
+    assert a.shape == (128,) and np.allclose(a, b)
+    assert abs(float(np.linalg.norm(a)) - 1.0) < 1e-9 and not np.allclose(a, c)
+    assert float(np.linalg.norm(e(""))) == 0.0  # empty text -> zero vector, no crash
