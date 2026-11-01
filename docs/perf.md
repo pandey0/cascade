@@ -63,6 +63,22 @@ comparison in this document it won 9 of 11 (the losses: 0.94 in the unpinned qui
 pinned pair that I contaminated myself), so the gain is plausible and repeatable under load but has
 not been measured on a dedicated machine. It remains opt-in.
 
+6. **Locust 2.46, resource use sampled** (`scripts/locust_ab.sh`: server pinned to cores 0-3, Locust to 4-5, 24 users, 30 s, 3 alternating pairs; CPU% summed over the server process tree, RSS = peak; raw CSVs in `evidence/logs/locust_ab/`). Zero failed requests in all six runs.
+
+| pair | default req/s | batched req/s | ratio | default p50 / p95 / p99 ms | batched p50 / p95 / p99 ms | CPU% (default / batched) | peak RSS MB |
+|---|---|---|---|---|---|---|---|
+| 1 | 14.8 | 16.1 | 1.09 | 1500 / 2000 / 2200 | 1500 / 2100 / 2300 | 155 / 292 | 750 / 782 |
+| 2 | 26.7 | 58.5 | 2.19 | 860 / 1200 / 1400 | 370 / 710 / 900 | 235 / 389 | 778 / 833 |
+| 3 | 39.4 | 73.8 | 1.88 | 580 / 890 / 960 | 290 / 590 / 670 | 250 / 392 | 780 / 854 |
+
+Medians: default 26.7 req/s (p50 860, p95 1200, p99 1400 ms); batched 58.5 req/s (p50 370, p95 710,
+p99 900 ms). **Caveat:** throughput rises from pair to pair for *both* configurations (15 -> 27 -> 39
+and 16 -> 58 -> 74), i.e. the shared desktop got quieter during the run, so absolute numbers are not
+comparable across pairs and the ratio in pair 1 (both slow) is the least informative. Within each
+adjacent pair batching won. Batching uses more CPU (about 3-4 cores vs 1.5-2.5 on the 4 pinned cores)
+and about 50-100 MB more memory, but serves more requests per CPU-second (roughly 19 vs 16 req/s per
+core in pairs 2-3). Memory is dominated by PyTorch and the encoder, about 0.8 GB per process.
+
 ## Other measured facts
 - Process start-up is about 9 s (importing scipy.stats and loading the encoder dominates); the
   container healthcheck uses `--start-period=40s`.
