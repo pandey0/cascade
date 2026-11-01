@@ -74,6 +74,12 @@ resource "aws_security_group" "alb" {
     protocol    = "tcp"
     cidr_blocks = var.allowed_cidrs
   }
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = var.allowed_cidrs
+  }
   egress {
     from_port   = 0
     to_port     = 0
@@ -116,10 +122,36 @@ resource "aws_lb_target_group" "gateway" {
     matcher = "200"
   }
 }
+locals {
+  tls = var.certificate_arn != ""
+}
+
+# Plain HTTP only when no certificate is given (demo). With a certificate, port 80 redirects to 443.
 resource "aws_lb_listener" "http" {
   load_balancer_arn = aws_lb.gateway.arn
   port              = 80
-  protocol          = "HTTP" # terminate TLS with an ACM cert + 443 listener before real traffic
+  protocol          = "HTTP"
+  default_action {
+    type             = local.tls ? "redirect" : "forward"
+    target_group_arn = local.tls ? null : aws_lb_target_group.gateway.arn
+    dynamic "redirect" {
+      for_each = local.tls ? [1] : []
+      content {
+        port        = "443"
+        protocol    = "HTTPS"
+        status_code = "HTTP_301"
+      }
+    }
+  }
+}
+
+resource "aws_lb_listener" "https" {
+  count             = local.tls ? 1 : 0
+  load_balancer_arn = aws_lb.gateway.arn
+  port              = 443
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-TLS13-1-2-2021-06"
+  certificate_arn   = var.certificate_arn
   default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.gateway.arn
@@ -175,5 +207,5 @@ resource "aws_ecs_service" "gateway" {
     container_name   = "gateway"
     container_port   = 8080
   }
-  depends_on = [aws_lb_listener.http]
+  depends_on = [aws_lb_listener.http, aws_lb_listener.https]
 }

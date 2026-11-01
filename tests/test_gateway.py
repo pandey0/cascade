@@ -2,6 +2,7 @@ import threading
 from pathlib import Path
 from typing import Any
 
+import pytest
 from fastapi.testclient import TestClient
 
 from cascade.gateway.app import Settings, TokenBucket, create_app
@@ -125,5 +126,68 @@ def test_metrics_and_status(tmp_path: Path) -> None:
     st = c.get("/v1/status/d", headers=KEY).json()
     assert st["decisions"] == 1 and st["threshold"] == 0.8
     assert c.get("/v1/status/d").status_code == 401
-    assert c.post("/v1/recalibrate/d", headers=KEY).status_code == 200
+    assert c.post("/v1/recalibrate/d", headers=KEY).status_code == 403  # plain keys lack admin
     assert c.get("/v1/status/zzz", headers=KEY).status_code == 404
+
+
+ADMIN = {"X-API-Key": "k-admin"}
+BODY = {"decision": "d", "input": "x c=0.9"}
+
+
+def test_scopes_and_admin_only_recalibration(tmp_path: Path) -> None:
+    s = Settings(
+        api_keys=("k-test",),
+        scoped_keys=(
+            ("k-admin", frozenset({"admin"})),
+            ("k-ro", frozenset({"status"})),
+            ("k-one", frozenset({"decide:other"})),
+        ),
+    )
+    c = _client(tmp_path, s)
+    assert c.post("/v1/recalibrate/d", headers=ADMIN).status_code == 200
+    assert c.post("/v1/decide", json=BODY, headers=ADMIN).status_code == 200  # admin implies all
+    ro = {"X-API-Key": "k-ro"}
+    assert c.get("/v1/status/d", headers=ro).status_code == 200
+    assert c.post("/v1/decide", json=BODY, headers=ro).status_code == 403
+    one = {"X-API-Key": "k-one"}
+    assert c.post("/v1/decide", json=BODY, headers=one).status_code == 403  # wrong decision
+    assert c.get("/v1/status/d", headers=one).status_code == 403
+
+
+def test_settings_parse_scoped_keys_from_env(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("CASCADE_API_KEYS", "plain1, k2@status|decide:d ,k3@admin")
+    s = Settings.from_env()
+    assert s.api_keys == ("plain1",)
+    assert dict(s.scoped_keys) == {
+        "k2": frozenset({"status", "decide:d"}),
+        "k3": frozenset({"admin"}),
+    }
+    monkeypatch.setenv("CASCADE_API_KEYS", "k@bogus")
+    with pytest.raises(ValueError, match="unknown API key scopes"):
+        Settings.from_env()
+
+
+def test_failed_auth_lockout_and_valid_key_still_works_for_others(tmp_path: Path) -> None:
+    c = _client(tmp_path, Settings(api_keys=("k-test",), auth_fail_per_min=3))
+    bad = {"X-API-Key": "wrong"}
+    codes = [c.post("/v1/decide", json=BODY, headers=bad).status_code for _ in range(6)]
+    assert codes[:3] == [401, 401, 401] and 429 in codes[3:]
+    # the locked-out client address is refused even with a valid key (brute-force control)
+    assert c.post("/v1/decide", json=BODY, headers=KEY).status_code == 429
+
+
+def test_security_headers(tmp_path: Path) -> None:
+    c = _client(tmp_path)
+    r = c.post("/v1/decide", json=BODY, headers=KEY)
+    assert r.headers["X-Content-Type-Options"] == "nosniff"
+    assert r.headers["Cache-Control"] == "no-store"
+    assert "max-age=31536000" in r.headers["Strict-Transport-Security"]
+    assert "Cache-Control" not in c.get("/healthz").headers
+    off = _client(tmp_path / "x" if False else tmp_path, Settings(api_keys=("k-test",), hsts=False))
+    assert "Strict-Transport-Security" not in off.get("/healthz").headers
+
+
+def test_no_cors_headers_by_default(tmp_path: Path) -> None:
+    c = _client(tmp_path)
+    r = c.get("/healthz", headers={"Origin": "https://evil.example"})
+    assert "access-control-allow-origin" not in {k.lower() for k in r.headers}

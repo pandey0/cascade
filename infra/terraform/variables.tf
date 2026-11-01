@@ -30,3 +30,8 @@ variable "allowed_cidrs" {
   type        = list(string)
   description = "Who may reach the ALB. No default on purpose: choose your own IP, not 0.0.0.0/0."
 }
+variable "certificate_arn" {
+  type        = string
+  default     = ""
+  description = "ACM certificate ARN. Empty = plain HTTP (demo only). Set it before any real traffic."
+}

@@ -48,7 +48,10 @@ def configure_logging(level: int = logging.INFO) -> None:
 
 @dataclass(frozen=True)
 class Settings:
-    api_keys: tuple[str, ...] = ()
+    api_keys: tuple[str, ...] = ()  # plain keys get DEFAULT_SCOPES
+    scoped_keys: tuple[tuple[str, frozenset[str]], ...] = ()
+    auth_fail_per_min: int = 20  # failed-auth attempts per client address before lockout (429)
+    hsts: bool = True
     allow_anonymous: bool = False
     rate_limit_per_min: int = 600
     max_input_chars: int = 4000
@@ -57,16 +60,47 @@ class Settings:
 
     @classmethod
     def from_env(cls) -> Settings:
-        keys = tuple(
-            k.strip() for k in os.environ.get("CASCADE_API_KEYS", "").split(",") if k.strip()
-        )
+        plain: list[str] = []
+        scoped: list[tuple[str, frozenset[str]]] = []
+        for entry in (e.strip() for e in os.environ.get("CASCADE_API_KEYS", "").split(",")):
+            if not entry:
+                continue
+            key, _, spec = entry.partition("@")  # "key" or "key@decide|status|admin"
+            if not spec:
+                plain.append(key)
+                continue
+            scopes = frozenset(spec.split("|"))
+            bad = {x for x in scopes if x not in ("status", "admin") and not x.startswith("decide")}
+            if bad:
+                msg = f"unknown API key scopes: {sorted(bad)}"
+                raise ValueError(msg)
+            scoped.append((key, scopes))
         return cls(
-            api_keys=keys,
+            api_keys=tuple(plain),
+            scoped_keys=tuple(scoped),
+            auth_fail_per_min=int(os.environ.get("CASCADE_AUTH_FAIL_PER_MIN", "20")),
             allow_anonymous=os.environ.get("CASCADE_ALLOW_ANONYMOUS") == "1",
             rate_limit_per_min=int(os.environ.get("CASCADE_RATE_LIMIT_PER_MIN", "600")),
             max_input_chars=int(os.environ.get("CASCADE_MAX_INPUT_CHARS", "4000")),
             max_concurrency=int(os.environ.get("CASCADE_MAX_CONCURRENCY", "32")),
         )
+
+
+DEFAULT_SCOPES = frozenset({"decide", "status"})
+
+
+@dataclass(frozen=True)
+class Principal:
+    """An authenticated caller. Scopes: ``decide`` (any) or ``decide:<name>``, ``status``, ``admin``
+    (admin implies everything, including recalibration)."""
+
+    name: str
+    scopes: frozenset[str]
+
+    def can(self, scope: str, decision: str | None = None) -> bool:
+        if "admin" in self.scopes or scope in self.scopes:
+            return True
+        return scope == "decide" and decision is not None and f"decide:{decision}" in self.scopes
 
 
 class TokenBucket:
@@ -77,6 +111,13 @@ class TokenBucket:
         self.capacity = float(max(per_minute, 1))
         self._state: dict[str, tuple[float, float]] = {}
         self._lock = threading.Lock()
+
+    def peek(self, client: str, now: float | None = None) -> bool:
+        """True if a token is available, without consuming it."""
+        t = time.monotonic() if now is None else now
+        with self._lock:
+            tokens, last = self._state.get(client, (self.capacity, t))
+            return min(self.capacity, tokens + (t - last) * self.rate) >= 1.0
 
     def allow(self, client: str, now: float | None = None) -> bool:
         t = time.monotonic() if now is None else now
@@ -141,13 +182,36 @@ def create_app(  # noqa: PLR0915
     bucket = TokenBucket(cfg.rate_limit_per_min)
     gate = threading.BoundedSemaphore(cfg.max_concurrency)
 
-    def auth(x_api_key: str | None = Header(default=None)) -> str:
+    fail_bucket = TokenBucket(cfg.auth_fail_per_min)
+    key_table: list[tuple[str, Principal]] = [
+        (k, Principal(k[:4] + "…", DEFAULT_SCOPES)) for k in cfg.api_keys
+    ] + [(k, Principal(k[:4] + "…", sc)) for k, sc in cfg.scoped_keys]
+
+    def auth(request: Request, x_api_key: str | None = Header(default=None)) -> Principal:
         if cfg.allow_anonymous:
-            return "anonymous"
-        if x_api_key and any(hmac.compare_digest(x_api_key, k) for k in cfg.api_keys):
-            return x_api_key[:4] + "…"
+            return Principal("anonymous", frozenset({"admin"}))
+        ip = request.client.host if request.client else "unknown"
+        if not fail_bucket.peek(ip):  # brute-force lockout (ASVS V6.3.1)
+            errors_total.labels("auth_lockout").inc()
+            raise HTTPException(
+                status_code=429, detail="too many failed attempts", headers={"Retry-After": "60"}
+            )
+        if x_api_key:
+            found: Principal | None = None
+            for k, principal in key_table:  # no early exit: constant work per key
+                if hmac.compare_digest(x_api_key, k):
+                    found = principal
+            if found is not None:
+                return found
+        fail_bucket.allow(ip)  # consume a token on failure
         errors_total.labels("auth").inc()
+        log.warning("auth_failed", extra={"fields": {"client": ip, "path": request.url.path}})
         raise HTTPException(status_code=401, detail="missing or invalid API key")
+
+    def require(scope: str, decision: str | None, who: Principal) -> None:
+        if not who.can(scope, decision):
+            errors_total.labels("forbidden").inc()
+            raise HTTPException(status_code=403, detail="insufficient scope")
 
     @app.middleware("http")
     async def add_request_id(request: Request, call_next):  # type: ignore[no-untyped-def,unused-ignore]
@@ -155,6 +219,11 @@ def create_app(  # noqa: PLR0915
         request.state.rid = rid
         response: Response = await call_next(request)
         response.headers["X-Request-ID"] = rid
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        if request.url.path.startswith("/v1"):
+            response.headers["Cache-Control"] = "no-store"
+        if cfg.hsts:  # effective only over TLS (terminated in front of the app); ASVS V3.4.1
+            response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
         return response
 
     @app.get("/healthz")
@@ -182,10 +251,12 @@ def create_app(  # noqa: PLR0915
         req: DecideRequest,
         request: Request,
         response: Response,
-        client: str = Depends(auth),
+        who: Principal = Depends(auth),  # noqa: B008
         idempotency_key: str | None = Header(default=None),
     ) -> DecideResponse | JSONResponse:
         rid = request.state.rid
+        require("decide", req.decision, who)
+        client = who.name
         if len(req.input) > cfg.max_input_chars:
             errors_total.labels("too_large").inc()
             raise HTTPException(
@@ -246,7 +317,11 @@ def create_app(  # noqa: PLR0915
         return out
 
     @app.get("/v1/status/{decision}")
-    def status(decision: str, _client: str = Depends(auth)) -> dict[str, object]:
+    def status(
+        decision: str,
+        who: Principal = Depends(auth),  # noqa: B008
+    ) -> dict[str, object]:
+        require("status", None, who)
         eng = registry_engines.get(decision)
         if eng is None:
             raise HTTPException(status_code=404, detail="unknown decision")
@@ -267,7 +342,11 @@ def create_app(  # noqa: PLR0915
         }
 
     @app.post("/v1/recalibrate/{decision}")
-    def recalibrate(decision: str, _client: str = Depends(auth)) -> dict[str, object]:
+    def recalibrate(
+        decision: str,
+        who: Principal = Depends(auth),  # noqa: B008
+    ) -> dict[str, object]:
+        require("admin", None, who)
         eng = registry_engines.get(decision)
         if eng is None:
             raise HTTPException(status_code=404, detail="unknown decision")

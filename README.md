@@ -44,12 +44,16 @@ Not on day one. It appears when **all** of these are true: the decision is a *cl
 5. **Keep it honest.** A small random fraction of *accepted* requests is also sent to the teacher (an **audit**), so agreement keeps being measured on the traffic the student actually handles. If agreement drops, Cascade falls back to the LLM automatically. Deferred requests become new training data (the flywheel).
 6. **Report.** A dashboard shows cost per 1,000 decisions, latency, share handled cheaply, measured agreement, calibration, and drift, so the savings are measured instead of promised.
 
-```
- request ──► embed ──► student ──► confident AND certified? ──yes──► cheap answer (ms, ~free)
-                                          │ no
-                                          ▼
-                                   teacher (LLM) ──► answer + logged as new training data
-   random 1-5% of "yes" answers are ALSO sent to the teacher ──► audit ──► monitors the guarantee
+```mermaid
+flowchart LR
+  R[request] --> E[embed] --> S[student + confidence]
+  S --> G{confident AND certified?}
+  G -- yes --> C[cheap answer: ms, near-free]
+  G -- no --> T[teacher LLM answer]
+  T --> D[(logged as training data)]
+  C -. random 1-5% .-> A[audit: also ask teacher]
+  A --> M[monitor risk, drift alarm, recalibrate]
+  M -. new threshold or withdraw .-> G
 ```
 
 ### 5. What it buys (illustrative arithmetic, not a benchmark)
