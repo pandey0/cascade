@@ -138,7 +138,7 @@ These run on public customer-support datasets (Banking77: 77 categories; CLINC15
 | **1a** | Does picking the cutoff naively break its promise on real data? | The dataset's labels stand in for the LLM; 5 data splits | Naive cutoffs missed the target in **43-58%** of draws; certified ones in **at most 0.5%**, at a cost of **4-12 points** of coverage with 1,000-2,000 audited examples. |
 | **1b** | What changes when the LLM is real, and imperfect? | **Claude Haiku 5.5 labelled 2,000 messages per dataset** (about $0.9 in total); a student trained on its answers; compared against the dataset's labels | The LLM disagreed with the dataset's labels about 1 time in 4 on Banking77. The promise held *against the LLM*, but not against the truth: that student missed a correctness target in 70% of draws. A student trained directly on the dataset's labels beat the LLM (92% vs 76%). |
 | **2** | What happens when requests change over time? | Constructed shifts on real data (different category mix, typos, unseen categories); 100 simulated streams per setting | On Banking77, re-checking against audited samples cut the share of stretches that broke the target from 39-65% to 2-33% for mild shifts. It did **not** recover from severe shifts (unseen categories) within 6,000 requests at a 10% audit rate. The drift alarm raised no false alarms but was slow. |
-| **Cost model** | When does the setup pay for itself? | A formula plus the measured price per call ($0.0002 for the Claude run) | About 5,000-12,500 requests to break even for 3,000 labelling calls, if the small model answers 30-60% of requests, **excluding engineering time**. |
+| **Cost model** | When does the setup pay for itself? | A formula, the measured price per call ($0.0002 for the Claude run), and assumed hosting ($0.15/hour per node, 2 nodes) and engineering ($10,000) costs | Labelling alone pays back in about 5,000-12,500 requests, but **hosting and engineering dominate**: with an inexpensive LLM the savings only cover hosting at roughly **75,000 requests/day**, and repaying the engineering takes roughly **1 million/day** (about 10 times more if prompt caching makes the LLM cheaper). [Details and assumptions](docs/critique.md). |
 
 | | |
 |---|---|
@@ -179,6 +179,7 @@ These test the web service and its packaging, using a **simulated LLM** so they 
 
 | Situation | Better choice |
 |---|---|
+| Under roughly 100,000 requests a day with an inexpensive LLM | Just call the LLM (use prompt caching and a batch discount if available). Our own cost model says hosting and engineering outweigh the savings below that. |
 | A few hundred requests a day, or a small bill | Just call the LLM. This is not worth the complexity. |
 | You already have thousands of human-labelled examples | Train a classifier on them directly: usually more accurate, with no LLM cost. |
 | Free text, reasoning, summaries | Keep the LLM. A small model on text embeddings will not work. |
@@ -189,6 +190,7 @@ These test the web service and its packaging, using a **simulated LLM** so they 
 
 ## Honest limits
 
+- **Does it really help? Only in a narrow regime.** Read the adversarial review first: [docs/critique.md](docs/critique.md). It covers the cost reality, two measured defects (audits add the LLM's latency to the audited requests; the LLM-call thread pool can be exhausted), state that is per replica, and the comparison we have not run (against a fine-tuned small model, prompt caching or a semantic cache).
 - **Alpha software (v0.1.0).** Not deployed anywhere; the AWS setup has never been applied; the repo is private for now.
 - **The promise is about agreement with the LLM, not about being correct.** If the LLM is wrong 1 time in 4, a student that copies it inherits that. Our experiments show this clearly ([docs/notes/exp1b-findings.md](docs/notes/exp1b-findings.md)).
 - **It assumes the audited sample looks like today's requests.** When requests change, that breaks; the audits and the alarm exist to catch it, but recovery takes time (about `audited labels / audit rate` requests).
@@ -198,6 +200,7 @@ These test the web service and its packaging, using a **simulated LLM** so they 
 
 | Read | For |
 |---|---|
+| [docs/critique.md](docs/critique.md) | **An honest, adversarial review:** does this really help, from an architect's, AI engineer's and developer's view |
 | [docs/story.md](docs/story.md) | A longer worked example and the reasoning behind this README |
 | [docs/architecture.md](docs/architecture.md) | How the pieces fit together |
 | [docs/runbook.md](docs/runbook.md), [docs/slo.md](docs/slo.md), [docs/reliability.md](docs/reliability.md) | Operating it |

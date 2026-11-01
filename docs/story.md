@@ -27,7 +27,7 @@ Not on day one. It appears when **all** of these are true: the decision is a *cl
 2. **Learn (week 1).** Cascade trains a cheap student (frozen sentence embeddings plus a linear model, so CPU is enough) on those traces, and **calibrates** its confidence.
 3. **Certify the gate.** On a *held-out* audited slice, it tests a fixed grid of confidence thresholds and picks the most lenient one whose **upper confidence bound** on student-teacher disagreement stays under your target (for example, "agree with the LLM at least 95% of the time, with 90% confidence"). The bound is exact (Clopper-Pearson) and the grid is fixed in advance with a union-bound correction, so picking the best-looking threshold cannot inflate the guarantee. If no threshold can be certified, **it refuses to deploy**: you keep calling the LLM.
 4. **Serve.** Confident requests are answered by the student in about a millisecond, locally. Everything else goes to the LLM as before.
-5. **Keep it honest.** A small random fraction of *accepted* requests is also sent to the teacher (an **audit**), so agreement keeps being measured on the traffic the student actually handles. If agreement drops, Cascade falls back to the LLM automatically. Deferred requests become new training data (the flywheel).
+5. **Keep it honest.** A small random fraction of *accepted* requests is also sent to the teacher (an **audit**), so agreement keeps being measured on the traffic the student actually handles. If agreement drops, Cascade re-tunes the cutoff or falls back to the LLM automatically. **It does not retrain the student today:** it stores only hashes of inputs (for privacy), so there is no training data to learn from; retraining on escalated requests is a planned extension, not a feature.
 6. **Report.** A dashboard shows cost per 1,000 decisions, latency, share handled cheaply, measured agreement, calibration, and drift, so the savings are measured instead of promised.
 
 ```mermaid
@@ -66,7 +66,7 @@ Plus: the handled 83% no longer waits on an API, and keeps working during LLM ou
 | You already have thousands of **human-labelled** examples | Train a classifier directly on them: usually more accurate than imitating a noisy teacher, with no teacher cost at all |
 | A smaller/cheaper LLM already meets your quality bar | Use it, optionally behind a cascade of two LLMs (FrugalGPT/RouteLLM-style) |
 | The task needs reasoning or free text (summaries, NLI-like judgments, open questions) | Keep the LLM, or fine-tune a model; frozen-embedding students will not work |
-| Labels or categories change every week | Cascade's retraining helps, but expect frequent refusals; consider a design with an embedding-retrieval step instead of closed labels |
+| Labels or categories change every week | Cascade does not retrain the student by itself, so expect frequent refusals and manual re-training; consider a design with an embedding-retrieval step instead of closed labels |
 | High-stakes decisions (credit, hiring, safety) | Keep a human in the loop; a statistical bound on agreement is not sufficient justification |
 | You want something running this week | Try **TRACER** (open source, MIT, same core idea, PyPI `tracer-llm`) rather than waiting for this project |
 

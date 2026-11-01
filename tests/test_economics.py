@@ -3,7 +3,13 @@ from typing import Any
 
 import pytest
 
-from cascade.economics import break_even_volume, cumulative_net, savings_per_decision
+from cascade.economics import (
+    break_even_daily_volume,
+    break_even_volume,
+    cumulative_net,
+    payback_days,
+    savings_per_decision,
+)
 
 
 def test_closed_form_matches_cumulative_crossing() -> None:
@@ -40,3 +46,18 @@ def test_zero_upfront_is_zero_and_validation() -> None:
         savings_per_decision(1.5, 1e-3)
     with pytest.raises(ValueError, match="non-negative"):
         savings_per_decision(0.5, -1.0)
+
+
+def test_daily_break_even_and_payback_are_consistent() -> None:
+    kw: dict[str, Any] = {
+        "coverage": 0.5,
+        "teacher_cost": 2e-4,
+        "student_cost": 8e-7,
+        "audit_rate": 0.05,
+        "hosting_per_day": 7.2,
+    }
+    v = break_even_daily_volume(**kw)
+    assert v * savings_per_decision(0.5, 2e-4, 8e-7, 0.05) == pytest.approx(7.2)
+    assert math.isinf(payback_days(v * 0.9, upfront=10_000, **kw))  # below break-even: never
+    assert payback_days(v * 3, upfront=10_000, **kw) < payback_days(v * 2, upfront=10_000, **kw)
+    assert math.isinf(break_even_daily_volume(0.5, 1e-3, student_cost=2e-3, hosting_per_day=1.0))

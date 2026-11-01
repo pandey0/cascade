@@ -55,3 +55,30 @@ def cumulative_net(  # noqa: PLR0917
     """Cumulative saving after ``volume`` decisions, net of the one-off cost."""
     gain = savings_per_decision(coverage, teacher_cost, student_cost, audit_rate)
     return volume * gain - (labels * teacher_cost + fixed_cost)
+
+
+def break_even_daily_volume(
+    coverage: float,
+    teacher_cost: float,
+    student_cost: float = 0.0,
+    audit_rate: float = 0.0,
+    hosting_per_day: float = 0.0,
+) -> float:
+    """Requests per day above which the savings at least cover the daily hosting cost."""
+    gain = savings_per_decision(coverage, teacher_cost, student_cost, audit_rate)
+    return math.inf if gain <= 0 else hosting_per_day / gain
+
+
+def payback_days(  # noqa: PLR0917
+    volume_per_day: float,
+    coverage: float,
+    teacher_cost: float,
+    upfront: float,
+    student_cost: float = 0.0,
+    audit_rate: float = 0.0,
+    hosting_per_day: float = 0.0,
+) -> float:
+    """Days for net daily savings (after hosting) to repay ``upfront`` (labels + engineering)."""
+    gain = savings_per_decision(coverage, teacher_cost, student_cost, audit_rate)
+    net = volume_per_day * gain - hosting_per_day
+    return math.inf if net <= 0 else upfront / net
