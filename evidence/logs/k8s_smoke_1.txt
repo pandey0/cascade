@@ -1,0 +1,28 @@
+== pods/svc/pdb
+NAME                                   READY   STATUS    RESTARTS   AGE   IP          NODE           NOMINATED NODE   READINESS GATES
+pod/cascade-gateway-6485df58f8-sl5jj   1/1     Running   0          43s   10.42.0.5   d36461466427   <none>           <none>
+pod/cascade-gateway-6485df58f8-tphs8   1/1     Running   0          43s   10.42.0.4   d36461466427   <none>           <none>
+
+NAME                      TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)    AGE     SELECTOR
+service/cascade-gateway   ClusterIP   10.43.5.91   <none>        8080/TCP   43s     app=cascade-gateway
+service/kubernetes        ClusterIP   10.43.0.1    <none>        443/TCP    2m24s   <none>
+
+NAME                                         MIN AVAILABLE   MAX UNAVAILABLE   ALLOWED DISRUPTIONS   AGE
+poddisruptionbudget.policy/cascade-gateway   1               N/A               1                     43s
+
+== in-cluster calls through the Service (from pod)
+readyz          (200, '{"ready":true,"decisions":["banking77"]}')
+decide no key   (401, '{"detail":"missing or invalid API key"}')
+decide admin    (200, '{"decision":"banking77","label":"card_arrival","path":"cheap","confidence":0.954571,"request_id":"4ef69c432a4a4efaacee2a38e0e047e6"}')
+recalibrate ro  (403, '{"detail":"insufficient scope"}')
+recalibrate adm (200, '{"decision":"banking77","threshold":0.35000000000000003}')
+
+== security context inside the pod
+uid=10001
+touch: cannot touch '/x': Read-only file system
+/tmp writable
+CapEff:	0000000000000000
+
+== effective pod spec
+{"runAsNonRoot":true,"runAsUser":10001,"seccompProfile":{"type":"RuntimeDefault"}}
+{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}
