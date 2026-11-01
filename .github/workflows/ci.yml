@@ -46,7 +46,7 @@ jobs:
       - name: promtool
         run: |
           docker run --rm -v "$PWD/ops/prometheus:/p" --entrypoint promtool prom/prometheus:v2.55.1 check rules /p/alerts.yml
-      - uses: hashicorp/setup-terraform@v3
+      - uses: hashicorp/setup-terraform@v4
       - run: cd infra/terraform && terraform init -backend=false && terraform fmt -check && terraform validate
       - uses: azure/setup-helm@v4
       - run: helm lint infra/helm/cascade
