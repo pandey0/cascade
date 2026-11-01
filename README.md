@@ -109,27 +109,65 @@ Output and a 41-second replay video: [docs/demo.md](docs/demo.md). The running s
 4. Serve the saved result: `uvicorn --factory cascade.artifact:create_app_from_env` (configured by environment variables; see [docs/runbook.md](docs/runbook.md)).
 5. Watch `/metrics` and the dashboard; the runbook says what to do when the alarm fires or the cutoff is withdrawn.
 
-## What you get
+## What Cascade does today
+
+| Part | Status |
+|---|---|
+| Choose the cutoff with a statistical guarantee (Python library) | **Built and tested.** Exact bounds (Clopper-Pearson, with Bonferroni or Holm correction) plus six other methods to compare against, including the naive one. |
+| Train the small model and package it | **Worked example only** (`scripts/build_demo_artifact.py`, Banking77). Not yet a one-command tool. |
+| Web service: decide, status, metrics | **Built and tested.** API keys with scopes, rate limiting and brute-force lockout, idempotency keys, backpressure, structured logs, Prometheus metrics, OpenAPI. |
+| Double-checks, re-tuning, drift alarm | **Built.** Evaluated in simulations, and exercised on the live service only against a simulated LLM. |
+| LLM adapters | **Claude: used for real** (it labelled the data for one experiment). **Gemini: unit-tested only, never called.** Both only answer with labels from your list, with cost accounting. |
+| Docker image and Kubernetes (Helm) | **Built and tested locally** (single-node cluster). |
+| AWS setup (Terraform) | **Validated only.** Never applied. |
+| Dashboard and alert rules | **Built, and checked against a live local Prometheus and Grafana.** |
+| **Not built** | A one-command training tool; rate limits shared across several replicas; distributed tracing; any production deployment. |
+
+## How we tested it
+
+"Tested" means two different things here, plus a note on what was real and what was simulated.
+
+### A. Research experiments: does the statistical idea work?
+
+These run on public customer-support datasets (Banking77: 77 categories; CLINC150: 150 categories) with a simple student (text embeddings plus logistic regression). No real customer traffic. Details and caveats: [docs/notes/](docs/notes/).
+
+| Experiment | Question | Setup | Finding |
+|---|---|---|---|
+| **1a** | Does picking the cutoff naively break its promise on real data? | The dataset's labels stand in for the LLM; 5 data splits | Naive cutoffs missed the target in **43-58%** of draws; certified ones in **at most 0.5%**, at a cost of **4-12 points** of coverage with 1,000-2,000 audited examples. |
+| **1b** | What changes when the LLM is real, and imperfect? | **Claude Haiku 5.5 labelled 2,000 messages per dataset** (about $0.9 in total); a student trained on its answers; compared against the dataset's labels | The LLM disagreed with the dataset's labels about 1 time in 4 on Banking77. The promise held *against the LLM*, but not against the truth: that student missed a correctness target in 70% of draws. A student trained directly on the dataset's labels beat the LLM (92% vs 76%). |
+| **2** | What happens when requests change over time? | Constructed shifts on real data (different category mix, typos, unseen categories); 100 simulated streams per setting | On Banking77, re-checking against audited samples cut the share of stretches that broke the target from 39-65% to 2-33% for mild shifts. It did **not** recover from severe shifts (unseen categories) within 6,000 requests at a 10% audit rate. The drift alarm raised no false alarms but was slow. |
+| **Cost model** | When does the setup pay for itself? | A formula plus the measured price per call ($0.0002 for the Claude run) | About 5,000-12,500 requests to break even for 3,000 labelling calls, if the small model answers 30-60% of requests, **excluding engineering time**. |
 
 | | |
 |---|---|
-| **Certified cutoff selection** | Exact statistical bounds (Clopper-Pearson, with Bonferroni or Holm correction) plus six other methods to compare against, including the naive one. |
-| **Web service** | FastAPI: API-key auth with scopes, rate limiting and brute-force lockout, idempotency keys, backpressure, structured logs, Prometheus metrics, OpenAPI. |
-| **Audit and drift handling** | Random double-checks, rolling re-certification, a drift alarm that stays valid under continuous monitoring, and a choice of fail-open or fail-closed when the LLM is down. |
-| **LLM adapters** | Claude and Gemini, constrained to answer only with labels from your list, with token and cost accounting. |
-| **Operations** | Docker image, Helm chart (tested on a real cluster), Terraform for AWS (validated, never applied), Grafana dashboard, alert rules, runbook, SLOs. |
-| **Reproducible research** | Every number in the docs comes from a script in `scripts/`, with run records in `evidence/`. |
+| ![naive cutoff vs certified cutoff](paper/figures/fig1_violation_vs_m.png) **Experiment 1a.** Naive cutoffs miss their target about half the time near the achievable error rate; certified cutoffs stay far below the allowed 10% of misses. | ![teacher noise](docs/img/fig5_teacher_noise.png) **Experiment 1b.** Left: a student trained on the LLM's answers keeps missing a *correctness* target even when certified against the LLM. Right: a student trained on the dataset's labels does not. |
+| ![drift](docs/img/fig6_drift_policies.png) **Experiment 2.** Share of post-change stretches that break the target, for three ways of handling change. | |
 
-## Results at a glance
+### B. Software tests: does the code behave?
 
-All on two public datasets of customer-support messages (Banking77: 77 banking categories; CLINC150: 150 categories), with a simple student (text embeddings plus logistic regression). Details and caveats are in [docs/notes/](docs/notes/).
+These test the web service and its packaging, using a **simulated LLM** so they cost nothing and are repeatable.
 
-| | |
+| Test | What it checks | Result |
+|---|---|---|
+| Automated tests | Statistics, decision logic, the API (auth, limits, idempotency), the audit database (migrations, backup and restore), the adapters (with fake clients) | **98 tests pass, 93% code coverage** |
+| Continuous integration (GitHub) | Every push: lint, strict type checks, tests on Python 3.10 and 3.12, secret and dependency scans, container build and vulnerability scan, alert-rule and Terraform and Helm checks | **Green** (no high or critical vulnerabilities with a fix available) |
+| Failure injection | LLM failing 30% of calls, down completely, slower than the timeout, and the service being stopped mid-load | While the LLM failed, slowed or was down, the cheap path kept answering and the service stayed healthy; when stopped mid-load it shut down in under a second ([docs/reliability.md](docs/reliability.md)) |
+| Kubernetes | Install the Helm chart on a real local cluster, check auth and security settings, restart the pods under traffic | **553 of 553 requests succeeded** through a rolling restart ([infra/README.md](infra/README.md)) |
+| Load test (Locust) | Throughput, latency, CPU and memory, with and without batching the encoder | Batching: median **58 vs 27 requests/s**, p99 latency 900 vs 1400 ms, 0 failures. Shared desktop, so treat as indicative ([docs/perf.md](docs/perf.md)) |
+| Live monitoring | A running Prometheus and Grafana against the service | All 11 alert rules evaluate; all 7 dashboard panels show data |
+| Security self-check | Mapped against the OWASP ASVS Level 1 list; gaps found were fixed | Details in [docs/security.md](docs/security.md) |
+
+![dashboard](docs/img/grafana_dashboard.jpg)
+*The Grafana dashboard on a live local service: the cutoff is re-tuned from the audits while the cheap share dips and recovers.*
+
+### What was real, and what was simulated
+
+| Real | Simulated or not done |
 |---|---|
-| ![naive cutoff vs certified cutoff](paper/figures/fig1_violation_vs_m.png) **Naive cutoffs miss their target about half the time** when the target is near what the student can achieve; certified cutoffs keep misses far below the allowed 10%, giving up about 4-12 points of coverage. | ![teacher noise](docs/img/fig5_teacher_noise.png) **The LLM itself is wrong sometimes:** on Banking77, Claude Haiku 5.5 disagreed with the dataset's labels about 1 time in 4. A student that copies it inherits those mistakes, so "agrees with the LLM" is not the same as "correct". |
-| ![drift](docs/img/fig6_drift_policies.png) **When requests change over time**, re-checking against audited samples helps for mild changes and is not enough for severe ones (categories the student never saw). | ![dashboard](docs/img/grafana_dashboard.jpg) **The Grafana dashboard** on a live service: the cutoff is re-tuned from the audits while the cheap share dips and recovers. |
-
-Also measured: the cheap path keeps working when the LLM fails or times out ([docs/reliability.md](docs/reliability.md)); a rolling restart on Kubernetes served 553 of 553 requests ([infra/README.md](infra/README.md)); batching the encoder raised throughput in most paired local runs ([docs/perf.md](docs/perf.md), noisy shared machine).
+| Public datasets, the text encoder, the small model, the statistics | **The LLM in every demo, load test, failure test and Kubernetes test** (a stand-in that answers after 300 ms) |
+| Claude Haiku 5.5 labelling 4,000 messages for experiment 1b | Customer traffic: requests are replayed dataset messages |
+| The web service, Docker image, GitHub CI and release | The changes in experiment 2 are constructed from real data, not observed in production |
+| A local single-node Kubernetes cluster; local Prometheus and Grafana | **Any production deployment, the AWS setup, real users, long-running tests** |
 
 ## Is this for you?
 
