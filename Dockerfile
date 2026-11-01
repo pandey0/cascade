@@ -2,13 +2,13 @@
 # Default image: gateway + Claude adapter. The embedding model needs the `embed` extra
 # (PyTorch): build with  --build-arg EXTRAS=gateway,anthropic,embed  and a CPU wheel index:
 #   --build-arg PIP_EXTRA_INDEX_URL=https://download.pytorch.org/whl/cpu
-FROM python:3.12-slim AS build
+FROM python:3.15-slim AS build
 WORKDIR /src
 COPY pyproject.toml README.md LICENSE ./
 COPY src ./src
 RUN pip install --no-cache-dir build && python -m build --wheel --outdir /wheels
 
-FROM python:3.12-slim
+FROM python:3.15-slim
 ARG EXTRAS=gateway,anthropic
 ARG PIP_EXTRA_INDEX_URL=
 ENV PIP_EXTRA_INDEX_URL=${PIP_EXTRA_INDEX_URL} PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1 \
