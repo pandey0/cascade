@@ -1,0 +1,65 @@
+{
+  "name": "exp1b_goldtrained_banking77_alpha005",
+  "command": [
+    "cascade",
+    "exp1b",
+    "data/cache/pools1b_goldtrained_banking77_seed0.npz",
+    "data/cache/pools1b_goldtrained_banking77_seed1.npz",
+    "data/cache/pools1b_goldtrained_banking77_seed2.npz",
+    "--alpha",
+    "0.05",
+    "--delta",
+    "0.1",
+    "--trials",
+    "400",
+    "--m",
+    "100",
+    "200",
+    "400",
+    "--name",
+    "exp1b_goldtrained_banking77_alpha005",
+    "--out",
+    "results"
+  ],
+  "started_utc": "2026-11-01T06:07:38Z",
+  "wall_s": 1477.13,
+  "code": {
+    "commit": null,
+    "dirty": true,
+    "source_sha256": "9ebdc1a73c359dc4adbde0ae87f1096a901a4b9a30100bcd9e628210171f7fea"
+  },
+  "environment": {
+    "python": "3.10.12",
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+    "cpu_count": 8,
+    "packages": {
+      "cascade-llm": "0.0.1",
+      "numpy": "2.2.6",
+      "scipy": "1.15.3",
+      "scikit-learn": "1.7.2",
+      "pydantic": "2.14.2",
+      "sentence-transformers": "6.2.0"
+    }
+  },
+  "inputs": {
+    "data/cache/pools1b_goldtrained_banking77_seed0.npz": "5adcfc4a60b4330cb80a63b43aea7f7fe0b7af428b4fa9f40d78cb124c467d77",
+    "data/cache/pools1b_goldtrained_banking77_seed1.npz": "0d48d20726fa3cfa516697e51f542258335fa945402c5c303749871f02a65b15",
+    "data/cache/pools1b_goldtrained_banking77_seed2.npz": "2f061d09cace9cee4f02c20191a1f4932477b7474318aaed8a7871f5ead0fe02"
+  },
+  "outputs": {
+    "results/exp1b_goldtrained_banking77_alpha005_vs_teacher.json": "2c1c61a3e5b18ce30d852cc1587f8c92bb8928ba400729ac82db5fb955dc3fff",
+    "results/exp1b_goldtrained_banking77_alpha005_vs_teacher.md": "640313042e06cf3b5215799d35abe6457e2bd0579268a2c54a93f13bc66b35c8",
+    "results/exp1b_goldtrained_banking77_alpha005_vs_gold.json": "437438d0633a76b77d5bc8ec3d591a61fbacfecc07630d5abfd912ea9dd0d76d",
+    "results/exp1b_goldtrained_banking77_alpha005_vs_gold.md": "d0ee4d06fd858b08c508b029409592c2c568f0e44a233f359ddff5bff5def124"
+  },
+  "extra": {
+    "alpha": 0.05,
+    "delta": 0.1,
+    "trials": 400,
+    "sizes": [
+      100,
+      200,
+      400
+    ]
+  }
+}

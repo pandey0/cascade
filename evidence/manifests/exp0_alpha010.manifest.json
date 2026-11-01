@@ -1,0 +1,49 @@
+{
+  "name": "exp0_alpha010",
+  "command": [
+    "cascade",
+    "exp0",
+    "--alpha",
+    "0.10",
+    "--trials",
+    "500",
+    "--m",
+    "200",
+    "500",
+    "1000",
+    "3000",
+    "--out",
+    "results",
+    "--name",
+    "exp0_alpha010"
+  ],
+  "started_utc": "2026-11-01T03:34:12Z",
+  "wall_s": 90.4,
+  "code": {
+    "commit": null,
+    "dirty": true,
+    "source_sha256": "4cdd66c603c892c9eea91614a9c980fd617b6898ff8d127596ada4aaa967860d"
+  },
+  "environment": {
+    "python": "3.10.12",
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+    "cpu_count": 8,
+    "packages": {
+      "cascade-llm": "0.0.1",
+      "numpy": "2.2.6",
+      "scipy": "1.15.3",
+      "scikit-learn": "1.7.2",
+      "pydantic": "2.14.2",
+      "sentence-transformers": "6.2.0"
+    }
+  },
+  "inputs": {},
+  "outputs": {
+    "results/exp0_alpha010.json": "c986b2349d0121338e4cac442b9dc826f215954ac0673c9d3f6cb6bcfbd11997",
+    "results/exp0_alpha010.md": "0179078041180aea8a7906c1b0247f2aafdbeb12f5ceff1cf036ec9fa8204b24"
+  },
+  "extra": {
+    "alpha": 0.1,
+    "delta": 0.1
+  }
+}

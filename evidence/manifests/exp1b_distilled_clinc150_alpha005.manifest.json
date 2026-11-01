@@ -1,0 +1,65 @@
+{
+  "name": "exp1b_distilled_clinc150_alpha005",
+  "command": [
+    "cascade",
+    "exp1b",
+    "data/cache/pools1b_distilled_clinc150_seed0.npz",
+    "data/cache/pools1b_distilled_clinc150_seed1.npz",
+    "data/cache/pools1b_distilled_clinc150_seed2.npz",
+    "--alpha",
+    "0.05",
+    "--delta",
+    "0.1",
+    "--trials",
+    "400",
+    "--m",
+    "100",
+    "200",
+    "400",
+    "--name",
+    "exp1b_distilled_clinc150_alpha005",
+    "--out",
+    "results"
+  ],
+  "started_utc": "2026-11-01T06:56:51Z",
+  "wall_s": 274.41,
+  "code": {
+    "commit": null,
+    "dirty": true,
+    "source_sha256": "9ebdc1a73c359dc4adbde0ae87f1096a901a4b9a30100bcd9e628210171f7fea"
+  },
+  "environment": {
+    "python": "3.10.12",
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+    "cpu_count": 8,
+    "packages": {
+      "cascade-llm": "0.0.1",
+      "numpy": "2.2.6",
+      "scipy": "1.15.3",
+      "scikit-learn": "1.7.2",
+      "pydantic": "2.14.2",
+      "sentence-transformers": "6.2.0"
+    }
+  },
+  "inputs": {
+    "data/cache/pools1b_distilled_clinc150_seed0.npz": "1887366ea9ddab6dc2c2a3ff10c7861c690f57fb8772da016dc01ddfb6100237",
+    "data/cache/pools1b_distilled_clinc150_seed1.npz": "ceada724b00d0f807dfb934b89b7e49e7aa5e86fc6c977efb9cd7be2ec75a2ff",
+    "data/cache/pools1b_distilled_clinc150_seed2.npz": "303d102d79a48c01f09317f6f19e3a5975541f28e2bc9d635621c8bdccf653f0"
+  },
+  "outputs": {
+    "results/exp1b_distilled_clinc150_alpha005_vs_teacher.json": "31f1df218deab1574a8bc7ffc603ae962b0867869cb5c88b2c6937eabc59745f",
+    "results/exp1b_distilled_clinc150_alpha005_vs_teacher.md": "8a7c80deb820d89fd481a72886b417ab6a62951d96a06abe23fc320eee104b4b",
+    "results/exp1b_distilled_clinc150_alpha005_vs_gold.json": "30e34c563ffa2e5b8c2c0692806bb99bcdcc9eec54076d2038550596752f6d06",
+    "results/exp1b_distilled_clinc150_alpha005_vs_gold.md": "937fdcd7f2d7f5e9d8e445a8a3e42e8f731901b9bbc9f75713a7329a885281a4"
+  },
+  "extra": {
+    "alpha": 0.05,
+    "delta": 0.1,
+    "trials": 400,
+    "sizes": [
+      100,
+      200,
+      400
+    ]
+  }
+}

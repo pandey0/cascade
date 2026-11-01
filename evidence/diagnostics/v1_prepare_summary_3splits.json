@@ -1,0 +1,45 @@
+{
+  "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+  "tasks": {
+    "banking77": [
+      {
+        "seed": 0,
+        "train": 6542,
+        "pool": 6541,
+        "pool_accuracy": 0.9182082250420425
+      },
+      {
+        "seed": 1,
+        "train": 6542,
+        "pool": 6541,
+        "pool_accuracy": 0.9180553432196912
+      },
+      {
+        "seed": 2,
+        "train": 6542,
+        "pool": 6541,
+        "pool_accuracy": 0.9215716251337716
+      }
+    ],
+    "clinc150": [
+      {
+        "seed": 0,
+        "train": 11250,
+        "pool": 11250,
+        "pool_accuracy": 0.9672
+      },
+      {
+        "seed": 1,
+        "train": 11250,
+        "pool": 11250,
+        "pool_accuracy": 0.9677333333333333
+      },
+      {
+        "seed": 2,
+        "train": 11250,
+        "pool": 11250,
+        "pool_accuracy": 0.9653333333333334
+      }
+    ]
+  }
+}

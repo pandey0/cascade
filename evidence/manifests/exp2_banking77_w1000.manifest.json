@@ -1,0 +1,59 @@
+{
+  "name": "exp2_banking77_w1000",
+  "command": [
+    "cascade",
+    "exp2",
+    "data/cache/drift_banking77_prior.npz",
+    "data/cache/drift_banking77_perturbed.npz",
+    "data/cache/drift_banking77_unseen.npz",
+    "--alpha",
+    "0.05",
+    "--trials",
+    "100",
+    "--window",
+    "1000",
+    "--name",
+    "exp2_banking77_w1000",
+    "--out",
+    "results"
+  ],
+  "started_utc": "2026-11-01T08:15:46Z",
+  "wall_s": 230.9,
+  "code": {
+    "commit": null,
+    "dirty": true,
+    "source_sha256": "d4d521d0e43b7161b18dab7f3414a0133c33fa3b88a1f02b6e640ea44965f4e3"
+  },
+  "environment": {
+    "python": "3.10.12",
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+    "cpu_count": 8,
+    "packages": {
+      "cascade-llm": "0.0.1",
+      "numpy": "2.2.6",
+      "scipy": "1.15.3",
+      "scikit-learn": "1.7.2",
+      "pydantic": "2.14.2",
+      "sentence-transformers": "6.2.0"
+    }
+  },
+  "inputs": {
+    "data/cache/drift_banking77_prior.npz": "e3f8648d85550c2138d47560c11077a5d1070e75e9c0213f3903cc1271d2fc30",
+    "data/cache/drift_banking77_perturbed.npz": "21990142406d7d8d9711185f7d5726892ad2a87b4b9519b6f5d21d09744bc250",
+    "data/cache/drift_banking77_unseen.npz": "713810ca58944da7e3f1d1f778bf02adf857ff6f9dfdb44cd10ea08f432fd2b7"
+  },
+  "outputs": {
+    "results/exp2_banking77_w1000.json": "d473b3811b57c230b2fd3b5e8552bffdf62b9ec6da248858e3802d0a673957da",
+    "results/exp2_banking77_w1000.md": "121fd05e9f0afd2278ffe83133f136964f03fd8a088e926eb29615c6baa7bf13"
+  },
+  "extra": {
+    "alpha": 0.05,
+    "delta": 0.1,
+    "window": 1000,
+    "recal_every": 250,
+    "initial_labels": 2000,
+    "n_pre": 3000,
+    "n_post": 6000,
+    "trials": 100
+  }
+}

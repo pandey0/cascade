@@ -1,0 +1,69 @@
+{
+  "name": "exp1a_banking77_alpha005",
+  "command": [
+    "cascade",
+    "exp1a",
+    "data/cache/pools_banking77_seed0.npz",
+    "data/cache/pools_banking77_seed1.npz",
+    "data/cache/pools_banking77_seed2.npz",
+    "data/cache/pools_banking77_seed3.npz",
+    "data/cache/pools_banking77_seed4.npz",
+    "--alpha",
+    "0.05",
+    "--delta",
+    "0.1",
+    "--trials",
+    "400",
+    "--m",
+    "250",
+    "500",
+    "1000",
+    "2000",
+    "--name",
+    "exp1a_banking77_alpha005",
+    "--out",
+    "results"
+  ],
+  "started_utc": "2026-11-01T03:35:43Z",
+  "wall_s": 237.26,
+  "code": {
+    "commit": null,
+    "dirty": true,
+    "source_sha256": "4cdd66c603c892c9eea91614a9c980fd617b6898ff8d127596ada4aaa967860d"
+  },
+  "environment": {
+    "python": "3.10.12",
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+    "cpu_count": 8,
+    "packages": {
+      "cascade-llm": "0.0.1",
+      "numpy": "2.2.6",
+      "scipy": "1.15.3",
+      "scikit-learn": "1.7.2",
+      "pydantic": "2.14.2",
+      "sentence-transformers": "6.2.0"
+    }
+  },
+  "inputs": {
+    "data/cache/pools_banking77_seed0.npz": "002211db238ea3d4eea4b48a306cf5b449559ed952bdcf455b3cb31e4d04e7cf",
+    "data/cache/pools_banking77_seed1.npz": "32173a3d82e8ff70af8a0b79bf814ec2c1fa30aa9b1f120ef7d730b2a3c5f76a",
+    "data/cache/pools_banking77_seed2.npz": "7a1cbf06138d8948077ebf835d5349e55006bce20221bb61da98dff21eb2ad5c",
+    "data/cache/pools_banking77_seed3.npz": "487cb191383179dc61d527eef882d72dbfc3ba2fb229dab95109e65a82c9c925",
+    "data/cache/pools_banking77_seed4.npz": "3ddaaad7c8e2b1d24940e848b09bd00cc59c9c64a703089fea9c135dad735e85"
+  },
+  "outputs": {
+    "results/exp1a_banking77_alpha005.json": "0a7630267da051ec808c8a674b264163fee970144469c997db0b1688c0813706",
+    "results/exp1a_banking77_alpha005.md": "c908f5afbc1df809f14d5589fd8c84ed99e0a06a6a88ff5e9c40354d95f58d88"
+  },
+  "extra": {
+    "alpha": 0.05,
+    "delta": 0.1,
+    "trials": 400,
+    "sizes": [
+      250,
+      500,
+      1000,
+      2000
+    ]
+  }
+}

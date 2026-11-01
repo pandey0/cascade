@@ -1,0 +1,63 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+threshold=0.47500000000000003 coverage=0.919
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 6020.67it/s]
+{"ts": 1793540109.661, "level": "INFO", "msg": "decide", "rid": "778d9d358e884e6bb0cd7464ca4523ac", "decision": "banking77", "path": "cheap", "ms": 328.31, "audited": true}
+{"ts": 1793540110.006, "level": "INFO", "msg": "decide", "rid": "ab5f610ae0d545e5ab814617c693a668", "decision": "banking77", "path": "cheap", "ms": 324.96, "audited": true}
+{"ts": 1793540110.044, "level": "INFO", "msg": "decide", "rid": "63c0e864cd6a42c6b5ade251df799f0c", "decision": "banking77", "path": "cheap", "ms": 18.84, "audited": false}
+{"ts": 1793540110.372, "level": "INFO", "msg": "decide", "rid": "fdc9bd40d22e4681900eb2e52b4275c0", "decision": "banking77", "path": "cheap", "ms": 318.76, "audited": true}
+{"ts": 1793540110.723, "level": "INFO", "msg": "decide", "rid": "64187e311fb2471095a46181882adeb8", "decision": "banking77", "path": "cheap", "ms": 330.65, "audited": true}
+{"ts": 1793540111.06, "level": "INFO", "msg": "decide", "rid": "34f11c3dc41144ce91c23292b3070170", "decision": "banking77", "path": "cheap", "ms": 317.28, "audited": true}
+{"ts": 1793540111.406, "level": "INFO", "msg": "decide", "rid": "4d6328a15bd44ce4a2937b07711cd69d", "decision": "banking77", "path": "cheap", "ms": 326.24, "audited": true}
+{"ts": 1793540111.827, "level": "INFO", "msg": "decide", "rid": "d892a01f621d49cc9c76167e812a09c0", "decision": "banking77", "path": "cheap", "ms": 327.6, "audited": true}
+{"ts": 1793540111.87, "level": "INFO", "msg": "decide", "rid": "103dd18fe85b449599ec3ae3a15994b9", "decision": "banking77", "path": "cheap", "ms": 22.79, "audited": false}
+{"ts": 1793540111.893, "level": "INFO", "msg": "decide", "rid": "155c71c261074b63b6fd1c1ed774f3dd", "decision": "banking77", "path": "cheap", "ms": 13.94, "audited": false}
+{"ts": 1793540112.221, "level": "INFO", "msg": "decide", "rid": "5464a0fc69624c5a8b0a213e2707e850", "decision": "banking77", "path": "cheap", "ms": 319.39, "audited": true}
+{"ts": 1793540112.254, "level": "INFO", "msg": "decide", "rid": "1dd6d34a1e78494a830e07970e399f66", "decision": "banking77", "path": "cheap", "ms": 15.49, "audited": false}
+{"ts": 1793540112.576, "level": "INFO", "msg": "decide", "rid": "9e20d1224a674b5191d4326c064df59b", "decision": "banking77", "path": "teacher", "ms": 313.72, "audited": true}
+{"ts": 1793540112.913, "level": "INFO", "msg": "decide", "rid": "0ef1dfd4d6074332aa25cb87d1d14a46", "decision": "banking77", "path": "cheap", "ms": 318.24, "audited": true}
+{"ts": 1793540112.941, "level": "INFO", "msg": "decide", "rid": "60a682896e184d7489e20bc9b7f2f584", "decision": "banking77", "path": "cheap", "ms": 13.22, "audited": false}
+{"ts": 1793540112.96, "level": "INFO", "msg": "decide", "rid": "b821caa849e144c0aca05c4bece92f50", "decision": "banking77", "path": "cheap", "ms": 10.46, "audited": false}
+{"ts": 1793540112.978, "level": "INFO", "msg": "decide", "rid": "381b95a8bcf04b0793637191eed3e047", "decision": "banking77", "path": "cheap", "ms": 8.96, "audited": false}
+{"ts": 1793540113.0, "level": "INFO", "msg": "decide", "rid": "5703dec158c847d880cf0521b265aa04", "decision": "banking77", "path": "cheap", "ms": 11.46, "audited": false}
+{"ts": 1793540113.021, "level": "INFO", "msg": "decide", "rid": "f9b38f6e25fc4515afe52841de4403d9", "decision": "banking77", "path": "cheap", "ms": 11.22, "audited": false}
+{"ts": 1793540113.041, "level": "INFO", "msg": "decide", "rid": "b669546c479b41bfbf424ab64fd255f7", "decision": "banking77", "path": "cheap", "ms": 9.51, "audited": false}
+{"ts": 1793540113.062, "level": "INFO", "msg": "decide", "rid": "dd2090805bbe4036994b355935ef7c92", "decision": "banking77", "path": "cheap", "ms": 11.32, "audited": false}
+{"ts": 1793540113.389, "level": "INFO", "msg": "decide", "rid": "bd3ee16634ef40b399c855b95db83feb", "decision": "banking77", "path": "cheap", "ms": 316.26, "audited": true}
+{"ts": 1793540113.422, "level": "INFO", "msg": "decide", "rid": "def7b3ef567b4ba4869d07defcc20ba6", "decision": "banking77", "path": "cheap", "ms": 14.89, "audited": false}
+{"ts": 1793540113.442, "level": "INFO", "msg": "decide", "rid": "f3e570285f944cdfb7c0a9df3335f008", "decision": "banking77", "path": "cheap", "ms": 10.76, "audited": false}
+{"ts": 1793540113.773, "level": "INFO", "msg": "decide", "rid": "1fcbdc281fd94656844f7c41c15d0ba3", "decision": "banking77", "path": "teacher", "ms": 319.34, "audited": true}
+{"ts": 1793540113.798, "level": "INFO", "msg": "decide", "rid": "41c517ac323d49d79a81f478c169ad12", "decision": "banking77", "path": "cheap", "ms": 12.12, "audited": false}
+{"ts": 1793540114.124, "level": "INFO", "msg": "decide", "rid": "6c8956893b314a83ab19760a1aeec33b", "decision": "banking77", "path": "cheap", "ms": 317.29, "audited": true}
+{"ts": 1793540114.152, "level": "INFO", "msg": "decide", "rid": "2d90f974982d41949374d9004c21b1c1", "decision": "banking77", "path": "cheap", "ms": 13.77, "audited": false}
+{"ts": 1793540114.471, "level": "INFO", "msg": "decide", "rid": "f888ce64cf724dddb5db7c11140bcfa7", "decision": "banking77", "path": "teacher", "ms": 310.59, "audited": true}
+{"ts": 1793540114.503, "level": "INFO", "msg": "decide", "rid": "ea619328a68043a29dd2acd16a15545c", "decision": "banking77", "path": "cheap", "ms": 13.55, "audited": false}
+{"ts": 1793540114.827, "level": "INFO", "msg": "decide", "rid": "d05e5872790742ba9aba6ff5225ed495", "decision": "banking77", "path": "cheap", "ms": 314.39, "audited": true}
+{"ts": 1793540114.864, "level": "INFO", "msg": "decide", "rid": "a00878e7d84e4afc84512863d8f62a3a", "decision": "banking77", "path": "cheap", "ms": 18.33, "audited": false}
+{"ts": 1793540114.882, "level": "INFO", "msg": "decide", "rid": "becb28aa8c324cec9ee78068017f066e", "decision": "banking77", "path": "cheap", "ms": 9.32, "audited": false}
+{"ts": 1793540114.9, "level": "INFO", "msg": "decide", "rid": "35b1b7a2bd674ec2a1de2c95dc8559f5", "decision": "banking77", "path": "cheap", "ms": 10.1, "audited": false}
+{"ts": 1793540115.228, "level": "INFO", "msg": "decide", "rid": "3fd3b697715c43558ae6bef5a424d42f", "decision": "banking77", "path": "cheap", "ms": 319.44, "audited": true}
+{"ts": 1793540115.571, "level": "INFO", "msg": "decide", "rid": "b01c028bc8124e178fb81dbdfbe11696", "decision": "banking77", "path": "cheap", "ms": 322.98, "audited": true}
+{"ts": 1793540115.602, "level": "INFO", "msg": "decide", "rid": "b1d23969369942339daea0c1e6c6b59b", "decision": "banking77", "path": "cheap", "ms": 14.04, "audited": false}
+{"ts": 1793540115.936, "level": "INFO", "msg": "decide", "rid": "12d31583a9f14780bc414c355fc81882", "decision": "banking77", "path": "cheap", "ms": 324.72, "audited": true}
+{"ts": 1793540116.278, "level": "INFO", "msg": "decide", "rid": "4fa22bdeef714f17b74a2f5976970c3e", "decision": "banking77", "path": "cheap", "ms": 323.47, "audited": true}
+{"ts": 1793540116.319, "level": "INFO", "msg": "decide", "rid": "2888d652a7ab4d75b1d7945ef40c729a", "decision": "banking77", "path": "cheap", "ms": 22.23, "audited": false}
+{"ts": 1793540116.643, "level": "INFO", "msg": "decide", "rid": "a187db3b6408408d82de0ac5d980f4f9", "decision": "banking77", "path": "cheap", "ms": 314.87, "audited": true}
+{"ts": 1793540116.676, "level": "INFO", "msg": "decide", "rid": "bebcfcd0856d4222a14d2eb2f4f292a9", "decision": "banking77", "path": "cheap", "ms": 15.56, "audited": false}
+{"ts": 1793540117.01, "level": "INFO", "msg": "decide", "rid": "0cd551e469f2439fbefb1f205d17cb48", "decision": "banking77", "path": "cheap", "ms": 323.35, "audited": true}
+{"ts": 1793540117.045, "level": "INFO", "msg": "decide", "rid": "995baa8998434d77b4c0aa34018f8740", "decision": "banking77", "path": "cheap", "ms": 15.1, "audited": false}
+{"ts": 1793540117.363, "level": "INFO", "msg": "decide", "rid": "ff36bee8ab1049f7b50e6bfc5b641ed2", "decision": "banking77", "path": "teacher", "ms": 308.53, "audited": false}
+{"ts": 1793540117.392, "level": "INFO", "msg": "decide", "rid": "cb6ed552614c4e9a8d4e366e005307bb", "decision": "banking77", "path": "cheap", "ms": 10.57, "audited": false}
+{"ts": 1793540117.41, "level": "INFO", "msg": "decide", "rid": "b33ad504f0aa4a0582d103f7c6a0c9d5", "decision": "banking77", "path": "cheap", "ms": 8.44, "audited": false}
+{"ts": 1793540117.734, "level": "INFO", "msg": "decide", "rid": "9ffa08589ffe468c80442d0dbf1ab49b", "decision": "banking77", "path": "cheap", "ms": 315.14, "audited": true}
+{"ts": 1793540117.77, "level": "INFO", "msg": "decide", "rid": "66a2e85aa04f490bb7cfe6e7a2630a03", "decision": "banking77", "path": "cheap", "ms": 17.24, "audited": false}
+{"ts": 1793540117.787, "level": "INFO", "msg": "decide", "rid": "3c6dfcb77e3449969849f834d2db6563", "decision": "banking77", "path": "cheap", "ms": 8.13, "audited": false}
+{"ts": 1793540118.113, "level": "INFO", "msg": "decide", "rid": "f920cb490c5c459aaf052755c4c6bad5", "decision": "banking77", "path": "cheap", "ms": 317.85, "audited": true}
+{"ts": 1793540118.455, "level": "INFO", "msg": "decide", "rid": "ca58f595798a4ea8b20597cb98d37bcc", "decision": "banking77", "path": "cheap", "ms": 322.76, "audited": true}
+{"ts": 1793540118.492, "level": "INFO", "msg": "decide", "rid": "1a645050ec8c4d1cb6bd274f859ee194", "decision": "banking77", "path": "cheap", "ms": 18.07, "audited": false}
+{"ts": 1793540118.818, "level": "INFO", "msg": "decide", "rid": "b2b1c3461aa64640a1d0e539c786b006", "decision": "banking77", "path": "cheap", "ms": 316.09, "audited": true}
+{"ts": 1793540119.166, "level": "INFO", "msg": "decide", "rid": "23fda026720f4f1c9ad67dc8dd66e4a4", "decision": "banking77", "path": "teacher", "ms": 329.99, "audited": true}
+{"ts": 1793540119.507, "level": "INFO", "msg": "decide", "rid": "00b96080fc5b4f26a465ce432334e779", "decision": "banking77", "path": "cheap", "ms": 320.36, "audited": true}
+{"ts": 1793540119.849, "level": "INFO", "msg": "decide", "rid": "616591c26a8f4960919d2d90a2ce88b3", "decision": "banking77", "path": "teacher", "ms": 322.44, "audited": false}
+{"ts": 1793540120.196, "level": "INFO", "msg": "decide", "rid": "441b7de29c2e47a984db805dbfcb0d4f", "decision": "banking77", "path": "cheap", "ms": 328.89, "audited": true}
+{"ts": 1793540120.233, "level": "INFO", "msg": "decide", "rid": "03fee6872504412aa95d03269fed0957", "decision": "banking77", "path": "cheap", "ms": 18.56, "audited": false}
+{"ts": 1793540120.254, "level": "INFO", "msg": "decide", "rid": "4c2029b60b9744a6ab6da47057d42786", "decision": "banking77", "path": "cheap", "ms": 10.46, "audited": false}

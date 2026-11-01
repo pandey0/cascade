@@ -1,0 +1,206 @@
+DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+            Install the buildx component to build images with BuildKit:
+            https://docs.docker.com/go/buildx/
+
+Sending build context to Docker daemon    157MB
+Step 1/17 : FROM python:3.12-slim AS build
+3.12-slim: Pulling from library/python
+6fc242d221a6: Already exists
+3eb771151506: Pulling fs layer
+f574edac59d9: Pulling fs layer
+acca7542dfc7: Pulling fs layer
+acca7542dfc7: Verifying Checksum
+acca7542dfc7: Download complete
+3eb771151506: Download complete
+f574edac59d9: Verifying Checksum
+f574edac59d9: Download complete
+3eb771151506: Pull complete
+f574edac59d9: Pull complete
+acca7542dfc7: Pull complete
+Digest: sha256:aa943ce411423c7582288f18707ff66eddcbaeb510502d747a72aeb34f30d159
+Status: Downloaded newer image for python:3.12-slim
+ ---> ae4e8b7c575f
+Step 2/17 : WORKDIR /src
+ ---> Running in ddf9724cf931
+ ---> Removed intermediate container ddf9724cf931
+ ---> a05ef112d62e
+Step 3/17 : COPY pyproject.toml README.md LICENSE ./
+ ---> b04ac38a558a
+Step 4/17 : COPY src ./src
+ ---> e8c413e21453
+Step 5/17 : RUN pip install --no-cache-dir build && python -m build --wheel --outdir /wheels
+ ---> Running in f9482412d5ce
+Collecting build
+  Downloading build-1.6.1-py3-none-any.whl.metadata (5.6 kB)
+Collecting packaging>=24.0 (from build)
+  Downloading packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+Collecting pyproject_hooks (from build)
+  Downloading pyproject_hooks-1.3.3-py3-none-any.whl.metadata (1.3 kB)
+Downloading build-1.6.1-py3-none-any.whl (31 kB)
+Downloading packaging-26.3-py3-none-any.whl (129 kB)
+Downloading pyproject_hooks-1.3.3-py3-none-any.whl (10 kB)
+Installing collected packages: pyproject_hooks, packaging, build
+Successfully installed build-1.6.1 packaging-26.3 pyproject_hooks-1.3.3
+[91mWARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+[0m[91m
+[notice] A new release of pip is available: 25.0.1 -> 26.2.2
+[notice] To update, run: pip install --upgrade pip
+[0m[91m* Creating isolated environment: venv+pip...
+[0m[91m* Installing packages in isolated environment:
+  - hatchling>=1.24
+[0m[91m* Getting build dependencies for wheel...
+[0m[91m* Installed build dependency versions:
+  - hatchling==1.33.0
+[0m[91m* Building wheel...
+[0mSuccessfully built cascade_llm-0.1.0-py3-none-any.whl
+ ---> Removed intermediate container f9482412d5ce
+ ---> be04ab94a8ee
+Step 6/17 : FROM python:3.12-slim
+ ---> ae4e8b7c575f
+Step 7/17 : ARG EXTRAS=gateway,anthropic
+ ---> Running in b90bcd8f4a11
+ ---> Removed intermediate container b90bcd8f4a11
+ ---> 9147bef06c56
+Step 8/17 : ARG PIP_EXTRA_INDEX_URL=
+ ---> Running in 0a76ebf3003f
+ ---> Removed intermediate container 0a76ebf3003f
+ ---> ebe852360bc6
+Step 9/17 : ENV PIP_EXTRA_INDEX_URL=${PIP_EXTRA_INDEX_URL} PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1     CASCADE_DB_PATH=/data/audit.db CASCADE_ARTIFACT_DIR=/artifact
+ ---> Running in 8c0ab02ac34b
+ ---> Removed intermediate container 8c0ab02ac34b
+ ---> eb78fcfaeb6a
+Step 10/17 : RUN useradd --create-home --uid 10001 app && mkdir /data /artifact && chown app /data
+ ---> Running in 1aaf605f0131
+ ---> Removed intermediate container 1aaf605f0131
+ ---> fd3bc9867c48
+Step 11/17 : COPY --from=build /wheels /wheels
+ ---> 7f507e49399a
+Step 12/17 : RUN pip install --no-cache-dir "$(ls /wheels/*.whl)[${EXTRAS}]" && rm -rf /wheels
+ ---> Running in a186b230fa7c
+Processing /wheels/cascade_llm-0.1.0-py3-none-any.whl (from cascade-llm==0.1.0)
+Collecting numpy>=1.26 (from cascade-llm==0.1.0->cascade-llm==0.1.0)
+  Downloading numpy-2.5.4-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (6.6 kB)
+Collecting pydantic>=2.6 (from cascade-llm==0.1.0->cascade-llm==0.1.0)
+  Downloading pydantic-2.14.2-py3-none-any.whl.metadata (137 kB)
+Collecting pyyaml>=6.0 (from cascade-llm==0.1.0->cascade-llm==0.1.0)
+  Downloading pyyaml-6.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.4 kB)
+Collecting scikit-learn>=1.4 (from cascade-llm==0.1.0->cascade-llm==0.1.0)
+  Downloading scikit_learn-1.9.1-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (9.3 kB)
+Collecting scipy>=1.11 (from cascade-llm==0.1.0->cascade-llm==0.1.0)
+  Downloading scipy-1.18.1-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (62 kB)
+Collecting anthropic>=2.0 (from cascade-llm==0.1.0->cascade-llm==0.1.0)
+  Downloading anthropic-2.3.0-py3-none-any.whl.metadata (6.0 kB)
+Collecting fastapi>=0.110 (from cascade-llm==0.1.0->cascade-llm==0.1.0)
+  Downloading fastapi-0.162.0-py3-none-any.whl.metadata (26 kB)
+Collecting prometheus-client>=0.20 (from cascade-llm==0.1.0->cascade-llm==0.1.0)
+  Downloading prometheus_client-0.26.0-py3-none-any.whl.metadata (2.1 kB)
+Collecting uvicorn>=0.29 (from cascade-llm==0.1.0->cascade-llm==0.1.0)
+  Downloading uvicorn-0.54.0-py3-none-any.whl.metadata (6.6 kB)
+Collecting anyio<5,>=4.1.0 (from anthropic>=2.0->cascade-llm==0.1.0->cascade-llm==0.1.0)
+  Downloading anyio-4.16.0-py3-none-any.whl.metadata (4.7 kB)
+Collecting docstring-parser<1,>=0.15 (from anthropic>=2.0->cascade-llm==0.1.0->cascade-llm==0.1.0)
+  Downloading docstring_parser-0.18.0-py3-none-any.whl.metadata (3.5 kB)
+Collecting httpx2<3,>=2.0.0 (from anthropic>=2.0->cascade-llm==0.1.0->cascade-llm==0.1.0)
+  Downloading httpx2-2.16.0-py3-none-any.whl.metadata (10 kB)
+Collecting jiter<1,>=0.4.0 (from anthropic>=2.0->cascade-llm==0.1.0->cascade-llm==0.1.0)
+  Downloading jiter-0.18.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (5.2 kB)
+Collecting opentelemetry-api<2,>=1.1.0 (from anthropic>=2.0->cascade-llm==0.1.0->cascade-llm==0.1.0)
+  Downloading opentelemetry_api-1.45.2-py3-none-any.whl.metadata (1.4 kB)
+Collecting sniffio<2,>=1 (from anthropic>=2.0->cascade-llm==0.1.0->cascade-llm==0.1.0)
+  Downloading sniffio-1.3.1-py3-none-any.whl.metadata (3.9 kB)
+Collecting typing-extensions<5,>=4.14 (from anthropic>=2.0->cascade-llm==0.1.0->cascade-llm==0.1.0)
+  Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting starlette>=0.46.0 (from fastapi>=0.110->cascade-llm==0.1.0->cascade-llm==0.1.0)
+  Downloading starlette-1.10.0-py3-none-any.whl.metadata (6.6 kB)
+Collecting typing-inspection>=0.4.2 (from fastapi>=0.110->cascade-llm==0.1.0->cascade-llm==0.1.0)
+  Downloading typing_inspection-0.4.4-py3-none-any.whl.metadata (2.6 kB)
+Collecting annotated-doc>=0.0.2 (from fastapi>=0.110->cascade-llm==0.1.0->cascade-llm==0.1.0)
+  Downloading annotated_doc-0.0.5-py3-none-any.whl.metadata (6.5 kB)
+Collecting annotated-types>=0.6.0 (from pydantic>=2.6->cascade-llm==0.1.0->cascade-llm==0.1.0)
+  Downloading annotated_types-0.8.0-py3-none-any.whl.metadata (15 kB)
+Collecting pydantic-core==2.50.2 (from pydantic>=2.6->cascade-llm==0.1.0->cascade-llm==0.1.0)
+  Downloading pydantic_core-2.50.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (6.5 kB)
+Collecting joblib>=1.4.0 (from scikit-learn>=1.4->cascade-llm==0.1.0->cascade-llm==0.1.0)
+  Downloading joblib-1.6.0-py3-none-any.whl.metadata (6.5 kB)
+Collecting narwhals>=2.0.1 (from scikit-learn>=1.4->cascade-llm==0.1.0->cascade-llm==0.1.0)
+  Downloading narwhals-2.28.0-py3-none-any.whl.metadata (15 kB)
+Collecting threadpoolctl>=3.5.0 (from scikit-learn>=1.4->cascade-llm==0.1.0->cascade-llm==0.1.0)
+  Downloading threadpoolctl-3.7.0-py3-none-any.whl.metadata (24 kB)
+Collecting click>=7.0 (from uvicorn>=0.29->cascade-llm==0.1.0->cascade-llm==0.1.0)
+  Downloading click-8.5.0-py3-none-any.whl.metadata (2.6 kB)
+Collecting h11>=0.8 (from uvicorn>=0.29->cascade-llm==0.1.0->cascade-llm==0.1.0)
+  Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+Collecting idna>=2.8 (from anyio<5,>=4.1.0->anthropic>=2.0->cascade-llm==0.1.0->cascade-llm==0.1.0)
+  Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+Collecting httpcore2==2.16.0 (from httpx2<3,>=2.0.0->anthropic>=2.0->cascade-llm==0.1.0->cascade-llm==0.1.0)
+  Downloading httpcore2-2.16.0-py3-none-any.whl.metadata (27 kB)
+Collecting truststore>=0.10 (from httpx2<3,>=2.0.0->anthropic>=2.0->cascade-llm==0.1.0->cascade-llm==0.1.0)
+  Downloading truststore-0.10.5-py3-none-any.whl.metadata (4.5 kB)
+Collecting cloudpickle>=3.0 (from joblib>=1.4.0->scikit-learn>=1.4->cascade-llm==0.1.0->cascade-llm==0.1.0)
+  Downloading cloudpickle-3.1.2-py3-none-any.whl.metadata (7.1 kB)
+Downloading anthropic-2.3.0-py3-none-any.whl (2.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.2/2.2 MB 16.4 MB/s eta 0:00:00
+Downloading fastapi-0.162.0-py3-none-any.whl (148 kB)
+Downloading numpy-2.5.4-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (16.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 16.7/16.7 MB 20.3 MB/s eta 0:00:00
+Downloading prometheus_client-0.26.0-py3-none-any.whl (64 kB)
+Downloading pydantic-2.14.2-py3-none-any.whl (490 kB)
+Downloading pydantic_core-2.50.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (2.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.2/2.2 MB 30.0 MB/s eta 0:00:00
+Downloading pyyaml-6.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (807 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 807.9/807.9 kB 36.9 MB/s eta 0:00:00
+Downloading scikit_learn-1.9.1-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (9.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.2/9.2 MB 21.3 MB/s eta 0:00:00
+Downloading scipy-1.18.1-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (35.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 35.3/35.3 MB 22.5 MB/s eta 0:00:00
+Downloading uvicorn-0.54.0-py3-none-any.whl (87 kB)
+Downloading annotated_doc-0.0.5-py3-none-any.whl (5.3 kB)
+Downloading annotated_types-0.8.0-py3-none-any.whl (13 kB)
+Downloading anyio-4.16.0-py3-none-any.whl (134 kB)
+Downloading click-8.5.0-py3-none-any.whl (125 kB)
+Downloading docstring_parser-0.18.0-py3-none-any.whl (22 kB)
+Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+Downloading httpx2-2.16.0-py3-none-any.whl (97 kB)
+Downloading httpcore2-2.16.0-py3-none-any.whl (85 kB)
+Downloading jiter-0.18.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (336 kB)
+Downloading joblib-1.6.0-py3-none-any.whl (306 kB)
+Downloading narwhals-2.28.0-py3-none-any.whl (490 kB)
+Downloading opentelemetry_api-1.45.2-py3-none-any.whl (60 kB)
+Downloading sniffio-1.3.1-py3-none-any.whl (10 kB)
+Downloading starlette-1.10.0-py3-none-any.whl (80 kB)
+Downloading threadpoolctl-3.7.0-py3-none-any.whl (26 kB)
+Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+Downloading typing_inspection-0.4.4-py3-none-any.whl (14 kB)
+Downloading cloudpickle-3.1.2-py3-none-any.whl (22 kB)
+Downloading idna-3.20-py3-none-any.whl (69 kB)
+Downloading truststore-0.10.5-py3-none-any.whl (19 kB)
+Installing collected packages: typing-extensions, truststore, threadpoolctl, sniffio, pyyaml, prometheus-client, numpy, narwhals, jiter, idna, h11, docstring-parser, cloudpickle, click, annotated-types, annotated-doc, uvicorn, typing-inspection, scipy, pydantic-core, opentelemetry-api, joblib, httpcore2, anyio, starlette, scikit-learn, pydantic, httpx2, fastapi, cascade-llm, anthropic
+Successfully installed annotated-doc-0.0.5 annotated-types-0.8.0 anthropic-2.3.0 anyio-4.16.0 cascade-llm-0.1.0 click-8.5.0 cloudpickle-3.1.2 docstring-parser-0.18.0 fastapi-0.162.0 h11-0.16.0 httpcore2-2.16.0 httpx2-2.16.0 idna-3.20 jiter-0.18.0 joblib-1.6.0 narwhals-2.28.0 numpy-2.5.4 opentelemetry-api-1.45.2 prometheus-client-0.26.0 pydantic-2.14.2 pydantic-core-2.50.2 pyyaml-6.0.3 scikit-learn-1.9.1 scipy-1.18.1 sniffio-1.3.1 starlette-1.10.0 threadpoolctl-3.7.0 truststore-0.10.5 typing-extensions-4.16.0 typing-inspection-0.4.4 uvicorn-0.54.0
+[91mWARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+[0m[91m
+[notice] A new release of pip is available: 25.0.1 -> 26.2.2
+[notice] To update, run: pip install --upgrade pip
+[0m ---> Removed intermediate container a186b230fa7c
+ ---> fe602b1dde93
+Step 13/17 : USER app
+ ---> Running in 81e4ce26b098
+ ---> Removed intermediate container 81e4ce26b098
+ ---> a5d76e7dd2f8
+Step 14/17 : WORKDIR /home/app
+ ---> Running in 6819ea4233a8
+ ---> Removed intermediate container 6819ea4233a8
+ ---> c1126fe1c072
+Step 15/17 : EXPOSE 8080
+ ---> Running in d4e0dfccae6f
+ ---> Removed intermediate container d4e0dfccae6f
+ ---> f6de0da3b29f
+Step 16/17 : HEALTHCHECK --interval=30s --timeout=3s CMD python -c "import urllib.request as u; u.urlopen('http://127.0.0.1:8080/healthz')" || exit 1
+ ---> Running in 6308e9a25307
+ ---> Removed intermediate container 6308e9a25307
+ ---> ce4e8db759d8
+Step 17/17 : CMD ["uvicorn", "--factory", "cascade.artifact:create_app_from_env", "--host", "0.0.0.0", "--port", "8080"]
+ ---> Running in a47849a52fc9
+ ---> Removed intermediate container a47849a52fc9
+ ---> 18dac76868d6
+Successfully built 18dac76868d6
+Successfully tagged cascade-test:0.1.0

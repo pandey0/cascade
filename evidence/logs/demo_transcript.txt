@@ -1,0 +1,29 @@
+$ no key
+{"detail":"missing or invalid API key"}
+$ with key: first 6 held-out messages (path shows cheap vs teacher)
+  I am still waiting on my card?
+{"decision":"banking77","label":"card_arrival","path":"cheap","confidence":0.599811,"request_id":"778d9d358e884e6bb0cd74
+  What can I do if my card still hasn't arrived after 2 weeks?
+{"decision":"banking77","label":"card_arrival","path":"cheap","confidence":0.816064,"request_id":"ab5f610ae0d545e5ab8146
+  I have been waiting over a week. Is the card still coming?
+{"decision":"banking77","label":"card_arrival","path":"cheap","confidence":0.836153,"request_id":"63c0e864cd6a42c6b5ade2
+  How do I know if I will get my card, or if it is lost?
+{"decision":"banking77","label":"card_arrival","path":"cheap","confidence":0.535745,"request_id":"fdc9bd40d22e4681900eb2
+  When did you send me my new card?
+{"decision":"banking77","label":"card_arrival","path":"cheap","confidence":0.878442,"request_id":"64187e311fb2471095a461
+  Does the package with my card have tracking?
+{"decision":"banking77","label":"card_arrival","path":"cheap","confidence":0.858601,"request_id":"34f11c3dc41144ce91c232
+$ idempotency: same key twice (second is a replay, no second teacher call)
+HTTP/1.1 200 OK
+HTTP/1.1 200 OK
+idempotent-replay: true
+$ oversize input
+HTTP Error 413: Request Entity Too Large
+$ status after 60 requests (audit rate 50%)
+{"decision":"banking77","threshold":0.47500000000000003,"decisions":60,"audits":28,"teacher_calls":30,"teacher_errors":0,"spent_usd":0.0,"recalibrations":0,"drift_alarm":false,"risk_lower_bound":-0.21656051610903201,"shadow":false,"alpha":0.05}
+$ metrics excerpt
+cascade_decisions_total{decision="banking77",path="cheap"} 54.0
+cascade_decisions_total{decision="banking77",path="teacher"} 6.0
+cascade_threshold{decision="banking77"} 0.47500000000000003
+cascade_risk_lower_bound{decision="banking77"} -0.21656051610903201
+cascade_drift_alarm{decision="banking77"} 0.0

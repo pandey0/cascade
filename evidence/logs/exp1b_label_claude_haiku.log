@@ -1,0 +1,4 @@
+banking77: n=2000 est input tokens~954,066 est cost~$0.1074 (rough)
+labelled 2000/2000; invalid=0; teacher-vs-gold=0.765; new spend=$0.4067; cache hits=7
+clinc150: n=2000 est input tokens~1,114,881 est cost~$0.1235 (rough)
+labelled 2000/2000; invalid=0; teacher-vs-gold=0.909; new spend=$0.4856; cache hits=0

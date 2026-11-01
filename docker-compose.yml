@@ -1,0 +1,29 @@
+services:
+  gateway:
+    build:
+      context: .
+      args:
+        EXTRAS: gateway,anthropic,embed
+        PIP_EXTRA_INDEX_URL: https://download.pytorch.org/whl/cpu
+    ports: ["127.0.0.1:8080:8080"]
+    environment:
+      CASCADE_API_KEYS: ${CASCADE_API_KEYS:?set CASCADE_API_KEYS}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:?set ANTHROPIC_API_KEY}
+    volumes:
+      - ./artifact:/artifact:ro
+      - audit-data:/data
+    read_only: true
+    tmpfs: ["/tmp", "/home/app/.cache"]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+  prometheus:
+    profiles: ["obs"]
+    image: prom/prometheus:v2.55.1
+    volumes: ["./ops/prometheus:/etc/prometheus:ro"]
+    ports: ["127.0.0.1:9090:9090"]
+  grafana:
+    profiles: ["obs"]
+    image: grafana/grafana:11.3.0
+    ports: ["127.0.0.1:3000:3000"]
+volumes:
+  audit-data: {}

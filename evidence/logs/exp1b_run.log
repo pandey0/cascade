@@ -1,0 +1,13 @@
+== exp1b banking77 distilled alpha=0.05
+== exp1b banking77 distilled alpha=0.10
+== exp1b banking77 goldtrained alpha=0.05
+== exp1b banking77 goldtrained alpha=0.10
+== exp1b clinc150 distilled alpha=0.05
+== exp1b clinc150 distilled alpha=0.10
+== exp1b clinc150 goldtrained alpha=0.05
+== exp1b clinc150 goldtrained alpha=0.10
+DONE
+
+real	99m51.940s
+user	97m46.495s
+sys	0m11.720s

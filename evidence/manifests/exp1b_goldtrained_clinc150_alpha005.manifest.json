@@ -1,0 +1,65 @@
+{
+  "name": "exp1b_goldtrained_clinc150_alpha005",
+  "command": [
+    "cascade",
+    "exp1b",
+    "data/cache/pools1b_goldtrained_clinc150_seed0.npz",
+    "data/cache/pools1b_goldtrained_clinc150_seed1.npz",
+    "data/cache/pools1b_goldtrained_clinc150_seed2.npz",
+    "--alpha",
+    "0.05",
+    "--delta",
+    "0.1",
+    "--trials",
+    "400",
+    "--m",
+    "100",
+    "200",
+    "400",
+    "--name",
+    "exp1b_goldtrained_clinc150_alpha005",
+    "--out",
+    "results"
+  ],
+  "started_utc": "2026-11-01T07:04:17Z",
+  "wall_s": 326.61,
+  "code": {
+    "commit": null,
+    "dirty": true,
+    "source_sha256": "9ebdc1a73c359dc4adbde0ae87f1096a901a4b9a30100bcd9e628210171f7fea"
+  },
+  "environment": {
+    "python": "3.10.12",
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+    "cpu_count": 8,
+    "packages": {
+      "cascade-llm": "0.0.1",
+      "numpy": "2.2.6",
+      "scipy": "1.15.3",
+      "scikit-learn": "1.7.2",
+      "pydantic": "2.14.2",
+      "sentence-transformers": "6.2.0"
+    }
+  },
+  "inputs": {
+    "data/cache/pools1b_goldtrained_clinc150_seed0.npz": "f47ced34ae5452e14961694e791fa8266b5a47ee87589ff76040e1c1b34be855",
+    "data/cache/pools1b_goldtrained_clinc150_seed1.npz": "9470a00d644c7e120a241cd13ebd130cb626642a062a789c4f86de95a6302738",
+    "data/cache/pools1b_goldtrained_clinc150_seed2.npz": "1238e1ddf5be971d58ed80f280881091cc110087abdf9909e5eaf9f98dcc205c"
+  },
+  "outputs": {
+    "results/exp1b_goldtrained_clinc150_alpha005_vs_teacher.json": "c318a7f0a727362ad36836cc7d696c6bc0968cde7966f5b99b4b2e9d965accb4",
+    "results/exp1b_goldtrained_clinc150_alpha005_vs_teacher.md": "df7e175a7eaccb714c29112607680f110d9142014c726fb24e2eddf2a0928d85",
+    "results/exp1b_goldtrained_clinc150_alpha005_vs_gold.json": "8c91d66904d791888533dbbb7f4c2b1a88b1a2f2c81fcacd64ae5b2d1b2d85d4",
+    "results/exp1b_goldtrained_clinc150_alpha005_vs_gold.md": "87b015369f517bef3beed8c648eb3bd3617977aa066afb9936e97c21bf9bb442"
+  },
+  "extra": {
+    "alpha": 0.05,
+    "delta": 0.1,
+    "trials": 400,
+    "sizes": [
+      100,
+      200,
+      400
+    ]
+  }
+}

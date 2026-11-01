@@ -1,0 +1,53 @@
+{
+  "name": "teacher_clinc150_claude_claude-haiku-5-5_n2000_seed0",
+  "command": [
+    "label_with_teacher",
+    "--task",
+    "clinc150",
+    "--n",
+    "2000",
+    "--provider",
+    "claude",
+    "--model",
+    "claude-haiku-5-5",
+    "--price-in",
+    "0.10",
+    "--price-out",
+    "0.50",
+    "--max-usd",
+    "1.0",
+    "--run"
+  ],
+  "started_utc": "2026-11-01T04:44:15Z",
+  "wall_s": 1900.99,
+  "code": {
+    "commit": null,
+    "dirty": true,
+    "source_sha256": "bb623b2bb5eb5f3d9bdcc55a10a0e35708379ad5510cfe580819bda405898f1f"
+  },
+  "environment": {
+    "python": "3.10.12",
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+    "cpu_count": 8,
+    "packages": {
+      "cascade-llm": "0.0.1",
+      "numpy": "2.2.6",
+      "scipy": "1.15.3",
+      "scikit-learn": "1.7.2",
+      "pydantic": "2.14.2",
+      "sentence-transformers": "6.2.0"
+    }
+  },
+  "inputs": {},
+  "outputs": {
+    "/home/dell/COurse/projects/cascade/data/cache/teacher/teacher_clinc150_claude_claude-haiku-5-5_n2000_seed0.jsonl": "2cae661e794a8530266050d621cc05e98a887299d5545f30ca7e1da3d8f0a06b"
+  },
+  "extra": {
+    "model": "claude-haiku-5-5",
+    "task": "clinc150",
+    "n": 2000,
+    "spent_usd": 0.48555260000000044,
+    "prompt_version": "v1",
+    "thinking": "MINIMAL"
+  }
+}

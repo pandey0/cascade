@@ -1,0 +1,13 @@
+image:
+  repository: cascade-gateway
+  tag: "0.1.0"
+replicaCount: 2
+service:
+  port: 8080
+env:
+  CASCADE_RATE_LIMIT_PER_MIN: "600"
+  CASCADE_MAX_CONCURRENCY: "32"
+existingSecret: cascade-secrets   # must hold CASCADE_API_KEYS and ANTHROPIC_API_KEY
+resources:
+  requests: { cpu: 250m, memory: 512Mi }
+  limits: { memory: 1Gi }

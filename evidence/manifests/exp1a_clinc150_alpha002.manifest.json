@@ -1,0 +1,69 @@
+{
+  "name": "exp1a_clinc150_alpha002",
+  "command": [
+    "cascade",
+    "exp1a",
+    "data/cache/pools_clinc150_seed0.npz",
+    "data/cache/pools_clinc150_seed1.npz",
+    "data/cache/pools_clinc150_seed2.npz",
+    "data/cache/pools_clinc150_seed3.npz",
+    "data/cache/pools_clinc150_seed4.npz",
+    "--alpha",
+    "0.02",
+    "--delta",
+    "0.1",
+    "--trials",
+    "400",
+    "--m",
+    "250",
+    "500",
+    "1000",
+    "2000",
+    "--name",
+    "exp1a_clinc150_alpha002",
+    "--out",
+    "results"
+  ],
+  "started_utc": "2026-11-01T03:44:56Z",
+  "wall_s": 265.64,
+  "code": {
+    "commit": null,
+    "dirty": true,
+    "source_sha256": "4cdd66c603c892c9eea91614a9c980fd617b6898ff8d127596ada4aaa967860d"
+  },
+  "environment": {
+    "python": "3.10.12",
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+    "cpu_count": 8,
+    "packages": {
+      "cascade-llm": "0.0.1",
+      "numpy": "2.2.6",
+      "scipy": "1.15.3",
+      "scikit-learn": "1.7.2",
+      "pydantic": "2.14.2",
+      "sentence-transformers": "6.2.0"
+    }
+  },
+  "inputs": {
+    "data/cache/pools_clinc150_seed0.npz": "3554f180b2738a168befbfcfce4c222b42e688027164de0617168057b05851fe",
+    "data/cache/pools_clinc150_seed1.npz": "cdfcd52908014a1a737bf0d8f6eb0d6e69b9230257f4f7115e5e895ab5d3edb0",
+    "data/cache/pools_clinc150_seed2.npz": "e5ed17d99adab9bace3cb9a48ab069d71f21c8b825da2268a71dd9e648f76182",
+    "data/cache/pools_clinc150_seed3.npz": "f29927b85b00a08c925ad9c1e16a9db23135359f129dd5c489f72dfc24dfd42d",
+    "data/cache/pools_clinc150_seed4.npz": "d01b5c1e790a19a2531df74599b9d6aa37c71f70f58703182d7868b362f3429d"
+  },
+  "outputs": {
+    "results/exp1a_clinc150_alpha002.json": "74fec714eebdd2c656d375fe668287335b2f5e9eb0b05a44f497a0ece97f260c",
+    "results/exp1a_clinc150_alpha002.md": "c97d2c275e7950a773b46cbb65a0a68a509f8ff802fc96c7c467a5a006dc0825"
+  },
+  "extra": {
+    "alpha": 0.02,
+    "delta": 0.1,
+    "trials": 400,
+    "sizes": [
+      250,
+      500,
+      1000,
+      2000
+    ]
+  }
+}

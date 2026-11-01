@@ -1,0 +1,23 @@
+== start 20261101T032833Z
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 2274.46it/s]
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[banking77] seed 0: train 6542, pool 6541, pool accuracy 0.9182, fit 23s
+[banking77] seed 1: train 6542, pool 6541, pool accuracy 0.9181, fit 24s
+[banking77] seed 2: train 6542, pool 6541, pool accuracy 0.9216, fit 29s
+[banking77] seed 3: train 6542, pool 6541, pool accuracy 0.9177, fit 28s
+[banking77] seed 4: train 6542, pool 6541, pool accuracy 0.9231, fit 21s
+[clinc150] seed 0: train 11250, pool 11250, pool accuracy 0.9672, fit 16s
+[clinc150] seed 1: train 11250, pool 11250, pool accuracy 0.9677, fit 16s
+[clinc150] seed 2: train 11250, pool 11250, pool accuracy 0.9653, fit 16s
+[clinc150] seed 3: train 11250, pool 11250, pool accuracy 0.9650, fit 16s
+[clinc150] seed 4: train 11250, pool 11250, pool accuracy 0.9677, fit 15s
+== exp0 alpha=0.05
+== exp0 alpha=0.10
+== exp1a banking77 alpha=0.05
+== exp1a banking77 alpha=0.03
+== exp1a clinc150 alpha=0.02
+== diagnostics
+strictest non-empty threshold 0.995: n=37, errors=0, CP upper bound 0.06034 > alpha 0.05: the strict-start walk stops here. wrote /home/dell/COurse/projects/cascade/evidence/diagnostics/strict_sequence_pitfall.csv
+== summary + figures
+figures: ['fig1_violation_vs_m.png', 'fig2_coverage_vs_m.png', 'fig3_risk_coverage.png', 'fig4_strict_sequence_pitfall.png']
+DONE 20261101T032833Z

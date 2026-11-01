@@ -1,0 +1,59 @@
+{
+  "name": "exp2_clinc150_w1000",
+  "command": [
+    "cascade",
+    "exp2",
+    "data/cache/drift_clinc150_prior.npz",
+    "data/cache/drift_clinc150_perturbed.npz",
+    "data/cache/drift_clinc150_unseen.npz",
+    "--alpha",
+    "0.02",
+    "--trials",
+    "100",
+    "--window",
+    "1000",
+    "--name",
+    "exp2_clinc150_w1000",
+    "--out",
+    "results"
+  ],
+  "started_utc": "2026-11-01T08:19:41Z",
+  "wall_s": 16629.92,
+  "code": {
+    "commit": null,
+    "dirty": true,
+    "source_sha256": "72172348f38fbc106e9a601f4cf4c180e7832666ff6286eb5a212f4234ffa114"
+  },
+  "environment": {
+    "python": "3.10.12",
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+    "cpu_count": 8,
+    "packages": {
+      "cascade-llm": "0.0.1",
+      "numpy": "2.2.6",
+      "scipy": "1.15.3",
+      "scikit-learn": "1.7.2",
+      "pydantic": "2.14.2",
+      "sentence-transformers": "6.2.0"
+    }
+  },
+  "inputs": {
+    "data/cache/drift_clinc150_prior.npz": "36334ed77f5ca4e94ef4df2c166e257b254598d3a9e66fc64733b7bc4c988e1e",
+    "data/cache/drift_clinc150_perturbed.npz": "ce6b2d500cc52c8a4bded7dd73008fea28eae1f51dc4f4a9c96cccef2efbd0bf",
+    "data/cache/drift_clinc150_unseen.npz": "e9d70509b1e3d9cfef701fa27a5f50126c300f0e544179d9279cf8ef968719d2"
+  },
+  "outputs": {
+    "results/exp2_clinc150_w1000.json": "0c5bd78f5b80b724c6192e507637376492fb5448cdb9f147e5460254f40da661",
+    "results/exp2_clinc150_w1000.md": "9620432e1f04462d32a238c7f2f11b9bd7166e30ef41faea10712b98445bfc38"
+  },
+  "extra": {
+    "alpha": 0.02,
+    "delta": 0.1,
+    "window": 1000,
+    "recal_every": 250,
+    "initial_labels": 2000,
+    "n_pre": 3000,
+    "n_post": 6000,
+    "trials": 100
+  }
+}

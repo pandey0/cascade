@@ -1,0 +1,68 @@
+# SLOs (see docs/slo.md): availability 99.5% over 30 days, latency 95% of decisions < 1 s.
+# Multi-window burn-rate alerts follow the Google SRE Workbook, "Alerting on SLOs":
+# page at 14.4x burn over 1h (confirmed by 5m), ticket at 6x over 6h (confirmed by 30m).
+# Validate with: promtool check rules ops/prometheus/alerts.yml   (not run in this repo's CI yet)
+groups:
+  - name: cascade-slo-recording
+    rules:
+      - record: cascade:bad_ratio_5m
+        expr: |
+          sum(rate(cascade_errors_total{kind=~"teacher_unavailable|overloaded"}[5m]))
+          / (sum(rate(cascade_decisions_total[5m])) + sum(rate(cascade_errors_total{kind=~"teacher_unavailable|overloaded"}[5m])))
+      - record: cascade:bad_ratio_30m
+        expr: |
+          sum(rate(cascade_errors_total{kind=~"teacher_unavailable|overloaded"}[30m]))
+          / (sum(rate(cascade_decisions_total[30m])) + sum(rate(cascade_errors_total{kind=~"teacher_unavailable|overloaded"}[30m])))
+      - record: cascade:bad_ratio_1h
+        expr: |
+          sum(rate(cascade_errors_total{kind=~"teacher_unavailable|overloaded"}[1h]))
+          / (sum(rate(cascade_decisions_total[1h])) + sum(rate(cascade_errors_total{kind=~"teacher_unavailable|overloaded"}[1h])))
+      - record: cascade:bad_ratio_6h
+        expr: |
+          sum(rate(cascade_errors_total{kind=~"teacher_unavailable|overloaded"}[6h]))
+          / (sum(rate(cascade_decisions_total[6h])) + sum(rate(cascade_errors_total{kind=~"teacher_unavailable|overloaded"}[6h])))
+      - record: cascade:slow_ratio_5m
+        expr: |
+          1 - (sum(rate(cascade_decide_seconds_bucket{le="1"}[5m])) / sum(rate(cascade_decide_seconds_count[5m])))
+  - name: cascade-alerts
+    rules:
+      - alert: CascadeErrorBudgetFastBurn
+        expr: cascade:bad_ratio_1h > (14.4 * 0.005) and cascade:bad_ratio_5m > (14.4 * 0.005)
+        for: 2m
+        labels: { severity: page }
+        annotations:
+          summary: "Availability SLO burning 14.4x (30-day budget gone in ~2 days)"
+          runbook: docs/runbook.md#teacher-unavailable-or-overload
+      - alert: CascadeErrorBudgetSlowBurn
+        expr: cascade:bad_ratio_6h > (6 * 0.005) and cascade:bad_ratio_30m > (6 * 0.005)
+        for: 15m
+        labels: { severity: ticket }
+        annotations:
+          summary: "Availability SLO burning 6x"
+          runbook: docs/runbook.md#teacher-unavailable-or-overload
+      - alert: CascadeLatencySLOBreach
+        expr: cascade:slow_ratio_5m > 0.05
+        for: 10m
+        labels: { severity: ticket }
+        annotations:
+          summary: "More than 5% of decisions slower than 1 s"
+          runbook: docs/runbook.md#latency
+      - alert: CascadeRiskMonitorAlarm
+        expr: max(cascade_drift_alarm) == 1
+        for: 5m
+        labels: { severity: page }
+        annotations:
+          summary: "Audited risk of accepted decisions is above target (anytime-valid lower bound)"
+          runbook: docs/runbook.md#drift-alarm
+      - alert: CascadeGateWithdrawn
+        expr: min(cascade_threshold) == -1
+        for: 30m
+        labels: { severity: ticket }
+        annotations:
+          summary: "No certifiable threshold: all traffic is escalating to the teacher (cost spike)"
+          runbook: docs/runbook.md#gate-withdrawn
+      - alert: CascadeTeacherSpendHigh
+        expr: sum(increase(cascade_teacher_spend_usd[1h])) > 5
+        labels: { severity: ticket }
+        annotations:
+          summary: "Teacher spend above USD 5 in the last hour (adjust to your budget)"

@@ -1,0 +1,20 @@
+== install torch (CPU)
+== install bench extras
+== prepare
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 6833.27it/s]
+Generating train split:   0%|          | 0/10003 [00:00<?, ? examples/s]Generating train split: 100%|██████████| 10003/10003 [00:00<00:00, 692359.86 examples/s]
+Generating test split:   0%|          | 0/3080 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 3080/3080 [00:00<00:00, 418438.65 examples/s]
+[banking77] embedded 13083 texts in 79s
+[banking77] seed 0: train 6542, pool 6541, pool accuracy 0.9182, fit 20s
+[banking77] seed 1: train 6542, pool 6541, pool accuracy 0.9181, fit 15s
+[banking77] seed 2: train 6542, pool 6541, pool accuracy 0.9216, fit 19s
+Generating train split:   0%|          | 0/15250 [00:00<?, ? examples/s]Generating train split: 100%|██████████| 15250/15250 [00:00<00:00, 1100365.33 examples/s]
+Generating validation split:   0%|          | 0/3100 [00:00<?, ? examples/s]Generating validation split: 100%|██████████| 3100/3100 [00:00<00:00, 546684.43 examples/s]
+Generating test split:   0%|          | 0/5500 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 5500/5500 [00:00<00:00, 614312.74 examples/s]
+[clinc150] embedded 22500 texts in 121s
+[clinc150] seed 0: train 11250, pool 11250, pool accuracy 0.9672, fit 18s
+[clinc150] seed 1: train 11250, pool 11250, pool accuracy 0.9677, fit 17s
+[clinc150] seed 2: train 11250, pool 11250, pool accuracy 0.9653, fit 18s
+DONE
+exit=0

@@ -1,0 +1,53 @@
+{
+  "name": "teacher_banking77_claude_claude-haiku-5-5_n20_seed0",
+  "command": [
+    "label_with_teacher",
+    "--task",
+    "banking77",
+    "--n",
+    "20",
+    "--provider",
+    "claude",
+    "--model",
+    "claude-haiku-5-5",
+    "--price-in",
+    "0.10",
+    "--price-out",
+    "0.50",
+    "--max-usd",
+    "0.25",
+    "--run"
+  ],
+  "started_utc": "2026-11-01T04:07:40Z",
+  "wall_s": 22.55,
+  "code": {
+    "commit": null,
+    "dirty": true,
+    "source_sha256": "bb623b2bb5eb5f3d9bdcc55a10a0e35708379ad5510cfe580819bda405898f1f"
+  },
+  "environment": {
+    "python": "3.10.12",
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+    "cpu_count": 8,
+    "packages": {
+      "cascade-llm": "0.0.1",
+      "numpy": "2.2.6",
+      "scipy": "1.15.3",
+      "scikit-learn": "1.7.2",
+      "pydantic": "2.14.2",
+      "sentence-transformers": "6.2.0"
+    }
+  },
+  "inputs": {},
+  "outputs": {
+    "/home/dell/COurse/projects/cascade/data/cache/teacher/teacher_banking77_claude_claude-haiku-5-5_n20_seed0.jsonl": "aeef48289fe140f0a03ebacb033e50c58710f75f3d2c6dd65617f5723fc69b5d"
+  },
+  "extra": {
+    "model": "claude-haiku-5-5",
+    "task": "banking77",
+    "n": 20,
+    "spent_usd": 0.004095199999999999,
+    "prompt_version": "v1",
+    "thinking": "MINIMAL"
+  }
+}

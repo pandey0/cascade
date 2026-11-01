@@ -1,0 +1,132 @@
+DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+            Install the buildx component to build images with BuildKit:
+            https://docs.docker.com/go/buildx/
+
+Sending build context to Docker daemon    276kB
+Step 1/14 : FROM python:3.12-slim AS build
+ ---> ec7d6c95cd36
+Step 2/14 : WORKDIR /src
+ ---> Using cache
+ ---> 5c31281cc124
+Step 3/14 : COPY pyproject.toml README.md LICENSE ./
+ ---> Using cache
+ ---> aeca784b36bf
+Step 4/14 : COPY src ./src
+ ---> Using cache
+ ---> 7015244db0f8
+Step 5/14 : RUN pip install --no-cache-dir build && python -m build --wheel --outdir /wheels
+ ---> Using cache
+ ---> f2c61564bf15
+Step 6/14 : FROM python:3.12-slim
+ ---> ec7d6c95cd36
+Step 7/14 : RUN useradd --create-home --uid 10001 app
+ ---> Using cache
+ ---> f30a4d73c02a
+Step 8/14 : COPY --from=build /wheels /wheels
+ ---> Using cache
+ ---> c1bd6ba2d9af
+Step 9/14 : RUN pip install --no-cache-dir "$(ls /wheels/*.whl)[gateway]" && rm -rf /wheels
+ ---> Running in 93bdbee35c6c
+Processing /wheels/cascade_llm-0.0.1-py3-none-any.whl (from cascade-llm==0.0.1)
+Collecting numpy>=1.26 (from cascade-llm==0.0.1->cascade-llm==0.0.1)
+  Downloading numpy-2.5.4-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (6.6 kB)
+Collecting pydantic>=2.6 (from cascade-llm==0.0.1->cascade-llm==0.0.1)
+  Downloading pydantic-2.14.2-py3-none-any.whl.metadata (137 kB)
+Collecting pyyaml>=6.0 (from cascade-llm==0.0.1->cascade-llm==0.0.1)
+  Downloading pyyaml-6.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.4 kB)
+Collecting scikit-learn>=1.4 (from cascade-llm==0.0.1->cascade-llm==0.0.1)
+  Downloading scikit_learn-1.9.1-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (9.3 kB)
+Collecting scipy>=1.11 (from cascade-llm==0.0.1->cascade-llm==0.0.1)
+  Downloading scipy-1.18.1-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (62 kB)
+Collecting fastapi>=0.110 (from cascade-llm==0.0.1->cascade-llm==0.0.1)
+  Downloading fastapi-0.162.0-py3-none-any.whl.metadata (26 kB)
+Collecting uvicorn>=0.29 (from cascade-llm==0.0.1->cascade-llm==0.0.1)
+  Downloading uvicorn-0.54.0-py3-none-any.whl.metadata (6.6 kB)
+Collecting starlette>=0.46.0 (from fastapi>=0.110->cascade-llm==0.0.1->cascade-llm==0.0.1)
+  Downloading starlette-1.10.0-py3-none-any.whl.metadata (6.6 kB)
+Collecting typing-extensions>=4.8.0 (from fastapi>=0.110->cascade-llm==0.0.1->cascade-llm==0.0.1)
+  Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting typing-inspection>=0.4.2 (from fastapi>=0.110->cascade-llm==0.0.1->cascade-llm==0.0.1)
+  Downloading typing_inspection-0.4.4-py3-none-any.whl.metadata (2.6 kB)
+Collecting annotated-doc>=0.0.2 (from fastapi>=0.110->cascade-llm==0.0.1->cascade-llm==0.0.1)
+  Downloading annotated_doc-0.0.5-py3-none-any.whl.metadata (6.5 kB)
+Collecting opentelemetry-api>=1.44.0 (from fastapi>=0.110->cascade-llm==0.0.1->cascade-llm==0.0.1)
+  Downloading opentelemetry_api-1.45.2-py3-none-any.whl.metadata (1.4 kB)
+Collecting annotated-types>=0.6.0 (from pydantic>=2.6->cascade-llm==0.0.1->cascade-llm==0.0.1)
+  Downloading annotated_types-0.8.0-py3-none-any.whl.metadata (15 kB)
+Collecting pydantic-core==2.50.2 (from pydantic>=2.6->cascade-llm==0.0.1->cascade-llm==0.0.1)
+  Downloading pydantic_core-2.50.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (6.5 kB)
+Collecting joblib>=1.4.0 (from scikit-learn>=1.4->cascade-llm==0.0.1->cascade-llm==0.0.1)
+  Downloading joblib-1.6.0-py3-none-any.whl.metadata (6.5 kB)
+Collecting narwhals>=2.0.1 (from scikit-learn>=1.4->cascade-llm==0.0.1->cascade-llm==0.0.1)
+  Downloading narwhals-2.28.0-py3-none-any.whl.metadata (15 kB)
+Collecting threadpoolctl>=3.5.0 (from scikit-learn>=1.4->cascade-llm==0.0.1->cascade-llm==0.0.1)
+  Downloading threadpoolctl-3.7.0-py3-none-any.whl.metadata (24 kB)
+Collecting click>=7.0 (from uvicorn>=0.29->cascade-llm==0.0.1->cascade-llm==0.0.1)
+  Downloading click-8.5.0-py3-none-any.whl.metadata (2.6 kB)
+Collecting h11>=0.8 (from uvicorn>=0.29->cascade-llm==0.0.1->cascade-llm==0.0.1)
+  Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+Collecting cloudpickle>=3.0 (from joblib>=1.4.0->scikit-learn>=1.4->cascade-llm==0.0.1->cascade-llm==0.0.1)
+  Downloading cloudpickle-3.1.2-py3-none-any.whl.metadata (7.1 kB)
+Collecting anyio<5,>=4.0.0 (from starlette>=0.46.0->fastapi>=0.110->cascade-llm==0.0.1->cascade-llm==0.0.1)
+  Downloading anyio-4.15.1-py3-none-any.whl.metadata (4.7 kB)
+Collecting idna>=2.8 (from anyio<5,>=4.0.0->starlette>=0.46.0->fastapi>=0.110->cascade-llm==0.0.1->cascade-llm==0.0.1)
+  Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+Downloading fastapi-0.162.0-py3-none-any.whl (148 kB)
+Downloading numpy-2.5.4-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (16.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 16.7/16.7 MB 6.6 MB/s eta 0:00:00
+Downloading pydantic-2.14.2-py3-none-any.whl (490 kB)
+Downloading pydantic_core-2.50.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (2.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.2/2.2 MB 7.7 MB/s eta 0:00:00
+Downloading pyyaml-6.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (807 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 807.9/807.9 kB 7.0 MB/s eta 0:00:00
+Downloading scikit_learn-1.9.1-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (9.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.2/9.2 MB 6.7 MB/s eta 0:00:00
+Downloading scipy-1.18.1-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (35.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 35.3/35.3 MB 6.8 MB/s eta 0:00:00
+Downloading uvicorn-0.54.0-py3-none-any.whl (87 kB)
+Downloading annotated_doc-0.0.5-py3-none-any.whl (5.3 kB)
+Downloading annotated_types-0.8.0-py3-none-any.whl (13 kB)
+Downloading click-8.5.0-py3-none-any.whl (125 kB)
+Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+Downloading joblib-1.6.0-py3-none-any.whl (306 kB)
+Downloading narwhals-2.28.0-py3-none-any.whl (490 kB)
+Downloading opentelemetry_api-1.45.2-py3-none-any.whl (60 kB)
+Downloading starlette-1.10.0-py3-none-any.whl (80 kB)
+Downloading threadpoolctl-3.7.0-py3-none-any.whl (26 kB)
+Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+Downloading typing_inspection-0.4.4-py3-none-any.whl (14 kB)
+Downloading anyio-4.15.1-py3-none-any.whl (132 kB)
+Downloading cloudpickle-3.1.2-py3-none-any.whl (22 kB)
+Downloading idna-3.20-py3-none-any.whl (69 kB)
+Installing collected packages: typing-extensions, threadpoolctl, pyyaml, numpy, narwhals, idna, h11, cloudpickle, click, annotated-types, annotated-doc, uvicorn, typing-inspection, scipy, pydantic-core, opentelemetry-api, joblib, anyio, starlette, scikit-learn, pydantic, fastapi, cascade-llm
+Successfully installed annotated-doc-0.0.5 annotated-types-0.8.0 anyio-4.15.1 cascade-llm-0.0.1 click-8.5.0 cloudpickle-3.1.2 fastapi-0.162.0 h11-0.16.0 idna-3.20 joblib-1.6.0 narwhals-2.28.0 numpy-2.5.4 opentelemetry-api-1.45.2 pydantic-2.14.2 pydantic-core-2.50.2 pyyaml-6.0.3 scikit-learn-1.9.1 scipy-1.18.1 starlette-1.10.0 threadpoolctl-3.7.0 typing-extensions-4.16.0 typing-inspection-0.4.4 uvicorn-0.54.0
+[91mWARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+[0m[91m
+[notice] A new release of pip is available: 25.0.1 -> 26.2.2
+[notice] To update, run: pip install --upgrade pip
+[0m ---> Removed intermediate container 93bdbee35c6c
+ ---> 7c42b0c1ef21
+Step 10/14 : USER app
+ ---> Running in e673ca34ea8d
+ ---> Removed intermediate container e673ca34ea8d
+ ---> 62362b7a4def
+Step 11/14 : WORKDIR /home/app
+ ---> Running in 407ae55f8794
+ ---> Removed intermediate container 407ae55f8794
+ ---> c63c89819576
+Step 12/14 : EXPOSE 8080
+ ---> Running in f298830ba0e2
+ ---> Removed intermediate container f298830ba0e2
+ ---> f89aa3390c1e
+Step 13/14 : HEALTHCHECK --interval=30s --timeout=3s CMD python -c "import urllib.request as u; u.urlopen('http://127.0.0.1:8080/healthz')" || exit 1
+ ---> Running in c6f321b0ab2f
+ ---> Removed intermediate container c6f321b0ab2f
+ ---> 7615f91586a5
+Step 14/14 : CMD ["uvicorn", "--factory", "cascade.gateway.app:create_app", "--host", "0.0.0.0", "--port", "8080"]
+ ---> Running in d1882301fe43
+ ---> Removed intermediate container d1882301fe43
+ ---> f0d231b82564
+Successfully built f0d231b82564
+Successfully tagged cascade:local
+exit=0

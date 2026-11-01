@@ -1,0 +1,35 @@
+........................................................................ [ 87%]
+..........                                                               [100%]
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.10.12-final-0 _______________
+
+Name                             Stmts   Miss  Cover   Missing
+--------------------------------------------------------------
+src/cascade/adapters/claude.py      60      3    95%   48-50, 61
+src/cascade/adapters/gemini.py      83      5    94%   75-77, 96, 116-117
+src/cascade/backends.py             21      4    81%   33-35, 49-50
+src/cascade/bounds.py               21      1    95%   27
+src/cascade/cli.py                 147     46    69%   78, 80, 144-156, 168-223, 227-261, 265
+src/cascade/data.py                 43      2    95%   27-28
+src/cascade/datasets_io.py          22     22     0%   3-33
+src/cascade/drift.py               152      7    95%   88, 122, 125, 182, 223-226
+src/cascade/engine.py              133      1    99%   187
+src/cascade/gates.py               143      5    97%   127, 130, 157, 207, 304
+src/cascade/gateway/app.py         159     11    93%   32-38, 42-46, 60-63, 273
+src/cascade/provenance.py           63      2    97%   75-76
+src/cascade/students.py             46     11    76%   55-56, 66-74
+--------------------------------------------------------------
+TOTAL                             1446    120    92%
+
+10 files skipped due to complete coverage.
+Required test coverage of 85.0% reached. Total coverage: 91.70%
+============================= slowest 8 durations ==============================
+12.38s call     tests/test_cli.py::test_exp0_writes_outputs
+11.93s call     tests/test_provenance.py::test_cli_experiment_writes_manifest_and_ledger
+2.41s call     tests/test_sim.py::test_true_curves_are_monotone_and_sane
+2.36s call     tests/test_drift.py::test_rolling_policy_recovers_where_static_does_not
+0.98s call     tests/test_bench.py::test_aggregate_and_markdown_ranges
+0.93s call     tests/test_drift.py::test_monitor_covers_true_mean_at_all_times
+0.65s call     tests/test_gates.py::test_holm_is_at_least_as_lenient_as_bonferroni
+0.62s call     tests/test_bench.py::test_pool_experiment_runs_and_reports_all_methods
+82 passed, 2 deselected in 37.03s

@@ -1,0 +1,222 @@
+[
+  {
+    "method": "naive",
+    "m": 250,
+    "trials": 400,
+    "deploy_rate": 1.0,
+    "violation_rate_all": 0.5391666666666667,
+    "violation_rate_deployed": 0.5391666666666667,
+    "mean_coverage": 0.9409048055852827,
+    "mean_true_risk_deployed": 0.05235537388228026,
+    "pools": 3
+  },
+  {
+    "method": "certify_once",
+    "m": 250,
+    "trials": 400,
+    "deploy_rate": 0.07666666666666667,
+    "violation_rate_all": 0.035833333333333335,
+    "violation_rate_deployed": 0.47056277056277057,
+    "mean_coverage": 0.07156028639861388,
+    "mean_true_risk_deployed": 0.04878878554574676,
+    "pools": 3
+  },
+  {
+    "method": "strict_sequence",
+    "m": 250,
+    "trials": 400,
+    "deploy_rate": 0.0,
+    "violation_rate_all": 0.0,
+    "violation_rate_deployed": NaN,
+    "mean_coverage": 0.0,
+    "mean_true_risk_deployed": NaN,
+    "pools": 3
+  },
+  {
+    "method": "bonferroni",
+    "m": 250,
+    "trials": 400,
+    "deploy_rate": 0.7958333333333334,
+    "violation_rate_all": 0.004166666666666667,
+    "violation_rate_deployed": 0.0052525252525252525,
+    "mean_coverage": 0.5863226825663762,
+    "mean_true_risk_deployed": 0.015080911324251734,
+    "pools": 3
+  },
+  {
+    "method": "split_sequence",
+    "m": 250,
+    "trials": 400,
+    "deploy_rate": 0.3875,
+    "violation_rate_all": 0.06,
+    "violation_rate_deployed": 0.15438162176513434,
+    "mean_coverage": 0.34057343423533615,
+    "mean_true_risk_deployed": 0.035431524000958996,
+    "pools": 3
+  },
+  {
+    "method": "naive",
+    "m": 500,
+    "trials": 400,
+    "deploy_rate": 1.0,
+    "violation_rate_all": 0.535,
+    "violation_rate_deployed": 0.535,
+    "mean_coverage": 0.9400666309942416,
+    "mean_true_risk_deployed": 0.0509498113467319,
+    "pools": 3
+  },
+  {
+    "method": "certify_once",
+    "m": 500,
+    "trials": 400,
+    "deploy_rate": 0.0775,
+    "violation_rate_all": 0.02,
+    "violation_rate_deployed": 0.25374019339536585,
+    "mean_coverage": 0.07088696937267493,
+    "mean_true_risk_deployed": 0.04255777477026901,
+    "pools": 3
+  },
+  {
+    "method": "strict_sequence",
+    "m": 500,
+    "trials": 400,
+    "deploy_rate": 0.0,
+    "violation_rate_all": 0.0,
+    "violation_rate_deployed": NaN,
+    "mean_coverage": 0.0,
+    "mean_true_risk_deployed": NaN,
+    "pools": 3
+  },
+  {
+    "method": "bonferroni",
+    "m": 500,
+    "trials": 400,
+    "deploy_rate": 0.9991666666666666,
+    "violation_rate_all": 0.0008333333333333334,
+    "violation_rate_deployed": 0.000835421888053467,
+    "mean_coverage": 0.8163445956275798,
+    "mean_true_risk_deployed": 0.022183864462144917,
+    "pools": 3
+  },
+  {
+    "method": "split_sequence",
+    "m": 500,
+    "trials": 400,
+    "deploy_rate": 0.6283333333333333,
+    "violation_rate_all": 0.059166666666666666,
+    "violation_rate_deployed": 0.09439346619874005,
+    "mean_coverage": 0.560750649747745,
+    "mean_true_risk_deployed": 0.03661998908307376,
+    "pools": 3
+  },
+  {
+    "method": "naive",
+    "m": 1000,
+    "trials": 400,
+    "deploy_rate": 1.0,
+    "violation_rate_all": 0.4983333333333333,
+    "violation_rate_deployed": 0.4983333333333333,
+    "mean_coverage": 0.9394508994547216,
+    "mean_true_risk_deployed": 0.05006816630832614,
+    "pools": 3
+  },
+  {
+    "method": "certify_once",
+    "m": 1000,
+    "trials": 400,
+    "deploy_rate": 0.11083333333333334,
+    "violation_rate_all": 0.023333333333333334,
+    "violation_rate_deployed": 0.21182917611489038,
+    "mean_coverage": 0.10274983437802578,
+    "mean_true_risk_deployed": 0.045189406861245424,
+    "pools": 3
+  },
+  {
+    "method": "strict_sequence",
+    "m": 1000,
+    "trials": 400,
+    "deploy_rate": 0.0,
+    "violation_rate_all": 0.0,
+    "violation_rate_deployed": NaN,
+    "mean_coverage": 0.0,
+    "mean_true_risk_deployed": NaN,
+    "pools": 3
+  },
+  {
+    "method": "bonferroni",
+    "m": 1000,
+    "trials": 400,
+    "deploy_rate": 1.0,
+    "violation_rate_all": 0.0008333333333333334,
+    "violation_rate_deployed": 0.0008333333333333334,
+    "mean_coverage": 0.8646850634459563,
+    "mean_true_risk_deployed": 0.02950346486167203,
+    "pools": 3
+  },
+  {
+    "method": "split_sequence",
+    "m": 1000,
+    "trials": 400,
+    "deploy_rate": 0.8275,
+    "violation_rate_all": 0.07166666666666667,
+    "violation_rate_deployed": 0.08651237526253745,
+    "mean_coverage": 0.7475182184171635,
+    "mean_true_risk_deployed": 0.03879410644616027,
+    "pools": 3
+  },
+  {
+    "method": "naive",
+    "m": 2000,
+    "trials": 400,
+    "deploy_rate": 1.0,
+    "violation_rate_all": 0.48666666666666664,
+    "violation_rate_deployed": 0.48666666666666664,
+    "mean_coverage": 0.9393822300361819,
+    "mean_true_risk_deployed": 0.04971202014220868,
+    "pools": 3
+  },
+  {
+    "method": "certify_once",
+    "m": 2000,
+    "trials": 400,
+    "deploy_rate": 0.09833333333333333,
+    "violation_rate_all": 0.01916666666666667,
+    "violation_rate_deployed": 0.18912812333864962,
+    "mean_coverage": 0.09136179483259442,
+    "mean_true_risk_deployed": 0.04579166425900147,
+    "pools": 3
+  },
+  {
+    "method": "strict_sequence",
+    "m": 2000,
+    "trials": 400,
+    "deploy_rate": 0.03416666666666667,
+    "violation_rate_all": 0.0008333333333333334,
+    "violation_rate_deployed": 0.022222222222222223,
+    "mean_coverage": 0.03151123681394282,
+    "mean_true_risk_deployed": 0.043253161909005806,
+    "pools": 3
+  },
+  {
+    "method": "bonferroni",
+    "m": 2000,
+    "trials": 400,
+    "deploy_rate": 1.0,
+    "violation_rate_all": 0.0,
+    "violation_rate_deployed": 0.0,
+    "mean_coverage": 0.8912868827396423,
+    "mean_true_risk_deployed": 0.03499996821527249,
+    "pools": 3
+  },
+  {
+    "method": "split_sequence",
+    "m": 2000,
+    "trials": 400,
+    "deploy_rate": 0.9674999999999999,
+    "violation_rate_all": 0.055,
+    "violation_rate_deployed": 0.05683821072422109,
+    "mean_coverage": 0.8845975386026602,
+    "mean_true_risk_deployed": 0.04129787313567801,
+    "pools": 3
+  }
+]

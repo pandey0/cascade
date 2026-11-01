@@ -1,0 +1,5 @@
+# ADR 0003: Certified threshold selection by fixed-sequence testing
+Status: superseded in part by ADR 0004 (2026-11-01). The validity argument below stands; the choice of a strict-start sequence does not.
+**Context.** Selecting a threshold where empirical risk first meets the target on the calibration sample is optimistic; experiment 0 shows about half of selections miss the target. Certifying a single pre-selected policy once is valid but all-or-nothing.
+**Decision.** Use a fixed grid of thresholds chosen *before* seeing data; test from strictest to most lenient; accept while the one-sided Clopper-Pearson upper bound on risk is <= alpha; stop at the first failure (fixed-sequence testing, Learn-then-Test style). Validity: P(true risk of chosen threshold > alpha) <= delta under i.i.d. calibration data, with no multiplicity correction because the order is fixed. Grids must never be derived from the calibration sample.
+**Consequences.** Cost is statistical power: thousands of audited examples are needed for tight targets (see `docs/notes/exp0-findings.md`). Assumes exchangeability; drift breaks it, which motivates audit sampling and monitoring (E2, E3).

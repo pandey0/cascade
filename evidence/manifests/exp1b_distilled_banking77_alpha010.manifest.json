@@ -1,0 +1,65 @@
+{
+  "name": "exp1b_distilled_banking77_alpha010",
+  "command": [
+    "cascade",
+    "exp1b",
+    "data/cache/pools1b_distilled_banking77_seed0.npz",
+    "data/cache/pools1b_distilled_banking77_seed1.npz",
+    "data/cache/pools1b_distilled_banking77_seed2.npz",
+    "--alpha",
+    "0.10",
+    "--delta",
+    "0.1",
+    "--trials",
+    "400",
+    "--m",
+    "100",
+    "200",
+    "400",
+    "--name",
+    "exp1b_distilled_banking77_alpha010",
+    "--out",
+    "results"
+  ],
+  "started_utc": "2026-11-01T05:55:01Z",
+  "wall_s": 754.1,
+  "code": {
+    "commit": null,
+    "dirty": true,
+    "source_sha256": "9ebdc1a73c359dc4adbde0ae87f1096a901a4b9a30100bcd9e628210171f7fea"
+  },
+  "environment": {
+    "python": "3.10.12",
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+    "cpu_count": 8,
+    "packages": {
+      "cascade-llm": "0.0.1",
+      "numpy": "2.2.6",
+      "scipy": "1.15.3",
+      "scikit-learn": "1.7.2",
+      "pydantic": "2.14.2",
+      "sentence-transformers": "6.2.0"
+    }
+  },
+  "inputs": {
+    "data/cache/pools1b_distilled_banking77_seed0.npz": "2fa3ac02d7fd3dbabfe268a1c69a29436eb8109ddca5b815a67fe67de90288d1",
+    "data/cache/pools1b_distilled_banking77_seed1.npz": "b5d8fcd6c55f90fdd9aeeb6806b2f7599385aa972035f7370cd189fc257f829f",
+    "data/cache/pools1b_distilled_banking77_seed2.npz": "3d3bd7a3d6203d9ca17c2224e819733f6ff85e2be0282d1eeca6c81e81f0b899"
+  },
+  "outputs": {
+    "results/exp1b_distilled_banking77_alpha010_vs_teacher.json": "9869dfca36a3f75195b867e87b9784a59d6ceb918db75d44f27aa8119af43fd0",
+    "results/exp1b_distilled_banking77_alpha010_vs_teacher.md": "3db43f742d2ffef33cab6adb432597de3dddff2faeb3a943508666b37bd15a95",
+    "results/exp1b_distilled_banking77_alpha010_vs_gold.json": "9aaa8fce742e19825446cfe3728888da9ccf9878bda851f518019a5feb6633fd",
+    "results/exp1b_distilled_banking77_alpha010_vs_gold.md": "ebaa770450660fa5e6f4e8554a21b56babaa1896c00eabd061145b8ec7073ef7"
+  },
+  "extra": {
+    "alpha": 0.1,
+    "delta": 0.1,
+    "trials": 400,
+    "sizes": [
+      100,
+      200,
+      400
+    ]
+  }
+}

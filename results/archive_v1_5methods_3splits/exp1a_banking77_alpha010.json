@@ -1,0 +1,222 @@
+[
+  {
+    "method": "naive",
+    "m": 250,
+    "trials": 400,
+    "deploy_rate": 1.0,
+    "violation_rate_all": 0.0,
+    "violation_rate_deployed": 0.0,
+    "mean_coverage": 0.9985545023696681,
+    "mean_true_risk_deployed": 0.07985208868313022,
+    "pools": 3
+  },
+  {
+    "method": "certify_once",
+    "m": 250,
+    "trials": 400,
+    "deploy_rate": 0.085,
+    "violation_rate_all": 0.0,
+    "violation_rate_deployed": 0.0,
+    "mean_coverage": 0.08459397136013862,
+    "mean_true_risk_deployed": 0.07767322012745598,
+    "pools": 3
+  },
+  {
+    "method": "strict_sequence",
+    "m": 250,
+    "trials": 400,
+    "deploy_rate": 0.0,
+    "violation_rate_all": 0.0,
+    "violation_rate_deployed": NaN,
+    "mean_coverage": 0.0,
+    "mean_true_risk_deployed": NaN,
+    "pools": 3
+  },
+  {
+    "method": "bonferroni",
+    "m": 250,
+    "trials": 400,
+    "deploy_rate": 1.0,
+    "violation_rate_all": 0.0,
+    "violation_rate_deployed": 0.0,
+    "mean_coverage": 0.9321654436120878,
+    "mean_true_risk_deployed": 0.04938431204495248,
+    "pools": 3
+  },
+  {
+    "method": "split_sequence",
+    "m": 250,
+    "trials": 400,
+    "deploy_rate": 0.7091666666666666,
+    "violation_rate_all": 0.0,
+    "violation_rate_deployed": 0.0,
+    "mean_coverage": 0.6940332772766652,
+    "mean_true_risk_deployed": 0.06928802106652043,
+    "pools": 3
+  },
+  {
+    "method": "naive",
+    "m": 500,
+    "trials": 400,
+    "deploy_rate": 1.0,
+    "violation_rate_all": 0.0,
+    "violation_rate_deployed": 0.0,
+    "mean_coverage": 0.999591805534322,
+    "mean_true_risk_deployed": 0.08047107430965948,
+    "pools": 3
+  },
+  {
+    "method": "certify_once",
+    "m": 500,
+    "trials": 400,
+    "deploy_rate": 0.17916666666666667,
+    "violation_rate_all": 0.0,
+    "violation_rate_deployed": 0.0,
+    "mean_coverage": 0.17899709524537535,
+    "mean_true_risk_deployed": 0.0801372118204704,
+    "pools": 3
+  },
+  {
+    "method": "strict_sequence",
+    "m": 500,
+    "trials": 400,
+    "deploy_rate": 0.0,
+    "violation_rate_all": 0.0,
+    "violation_rate_deployed": NaN,
+    "mean_coverage": 0.0,
+    "mean_true_risk_deployed": NaN,
+    "pools": 3
+  },
+  {
+    "method": "bonferroni",
+    "m": 500,
+    "trials": 400,
+    "deploy_rate": 1.0,
+    "violation_rate_all": 0.0,
+    "violation_rate_deployed": 0.0,
+    "mean_coverage": 0.9657858125668857,
+    "mean_true_risk_deployed": 0.06221138825896109,
+    "pools": 3
+  },
+  {
+    "method": "split_sequence",
+    "m": 500,
+    "trials": 400,
+    "deploy_rate": 0.8783333333333333,
+    "violation_rate_all": 0.0,
+    "violation_rate_deployed": 0.0,
+    "mean_coverage": 0.8679671813688019,
+    "mean_true_risk_deployed": 0.07395663002093883,
+    "pools": 3
+  },
+  {
+    "method": "naive",
+    "m": 1000,
+    "trials": 400,
+    "deploy_rate": 1.0,
+    "violation_rate_all": 0.0,
+    "violation_rate_deployed": 0.0,
+    "mean_coverage": 0.9999310757784233,
+    "mean_true_risk_deployed": 0.08067805387338221,
+    "pools": 3
+  },
+  {
+    "method": "certify_once",
+    "m": 1000,
+    "trials": 400,
+    "deploy_rate": 0.3658333333333333,
+    "violation_rate_all": 0.0,
+    "violation_rate_deployed": 0.0,
+    "mean_coverage": 0.3657951128777455,
+    "mean_true_risk_deployed": 0.0806486276447842,
+    "pools": 3
+  },
+  {
+    "method": "strict_sequence",
+    "m": 1000,
+    "trials": 400,
+    "deploy_rate": 0.16416666666666668,
+    "violation_rate_all": 0.0,
+    "violation_rate_deployed": 0.0,
+    "mean_coverage": 0.16398537430566174,
+    "mean_true_risk_deployed": 0.08004490417003329,
+    "pools": 3
+  },
+  {
+    "method": "bonferroni",
+    "m": 1000,
+    "trials": 400,
+    "deploy_rate": 1.0,
+    "violation_rate_all": 0.0,
+    "violation_rate_deployed": 0.0,
+    "mean_coverage": 0.9844266931661824,
+    "mean_true_risk_deployed": 0.07149880308854843,
+    "pools": 3
+  },
+  {
+    "method": "split_sequence",
+    "m": 1000,
+    "trials": 400,
+    "deploy_rate": 0.9808333333333333,
+    "violation_rate_all": 0.0,
+    "violation_rate_deployed": 0.0,
+    "mean_coverage": 0.9759723283901544,
+    "mean_true_risk_deployed": 0.07773093288341834,
+    "pools": 3
+  },
+  {
+    "method": "naive",
+    "m": 2000,
+    "trials": 400,
+    "deploy_rate": 1.0,
+    "violation_rate_all": 0.0,
+    "violation_rate_deployed": 0.0,
+    "mean_coverage": 1.0,
+    "mean_true_risk_deployed": 0.08072160220149825,
+    "pools": 3
+  },
+  {
+    "method": "certify_once",
+    "m": 2000,
+    "trials": 400,
+    "deploy_rate": 0.42916666666666664,
+    "violation_rate_all": 0.0,
+    "violation_rate_deployed": 0.0,
+    "mean_coverage": 0.42916666666666664,
+    "mean_true_risk_deployed": 0.08072160220149825,
+    "pools": 3
+  },
+  {
+    "method": "strict_sequence",
+    "m": 2000,
+    "trials": 400,
+    "deploy_rate": 1.0,
+    "violation_rate_all": 0.0,
+    "violation_rate_deployed": 0.0,
+    "mean_coverage": 0.9999150231870764,
+    "mean_true_risk_deployed": 0.08066682005108285,
+    "pools": 3
+  },
+  {
+    "method": "bonferroni",
+    "m": 2000,
+    "trials": 400,
+    "deploy_rate": 1.0,
+    "violation_rate_all": 0.0,
+    "violation_rate_deployed": 0.0,
+    "mean_coverage": 0.992937496814962,
+    "mean_true_risk_deployed": 0.0762855960061693,
+    "pools": 3
+  },
+  {
+    "method": "split_sequence",
+    "m": 2000,
+    "trials": 400,
+    "deploy_rate": 0.9975,
+    "violation_rate_all": 0.0,
+    "violation_rate_deployed": 0.0,
+    "mean_coverage": 0.9964833358813637,
+    "mean_true_risk_deployed": 0.08007580252088586,
+    "pools": 3
+  }
+]

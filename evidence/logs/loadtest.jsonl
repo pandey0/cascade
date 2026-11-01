@@ -1,0 +1,6 @@
+{"concurrency": 16, "seconds": 20.4, "requests": 1484, "rps": 72.9, "p50_ms": 181.2, "p95_ms": 480.8, "p99_ms": 556.9, "mix": {"cheap": 1364, "teacher": 120}, "label": "baseline_c16"}
+{"concurrency": 64, "seconds": 20.9, "requests": 1375, "rps": 65.9, "p50_ms": 970.2, "p95_ms": 1350.6, "p99_ms": 1534.9, "mix": {"cheap": 1192, "http_503": 72, "teacher": 111}, "label": "baseline_c64"}
+{"concurrency": 16, "seconds": 20.3, "requests": 972, "rps": 47.9, "p50_ms": 285.2, "p95_ms": 594.4, "p99_ms": 700.8, "mix": {"cheap": 894, "teacher": 78}, "label": "torch_threads1_c16"}
+{"concurrency": 64, "seconds": 21.2, "requests": 717, "rps": 33.8, "p50_ms": 2011.9, "p95_ms": 2761.3, "p99_ms": 2991.8, "mix": {"cheap": 627, "http_503": 39, "teacher": 51}, "label": "torch_threads1_c64"}
+{"concurrency": 16, "seconds": 20.4, "requests": 1294, "rps": 63.3, "p50_ms": 220.2, "p95_ms": 511.4, "p99_ms": 595.8, "mix": {"cheap": 1188, "teacher": 106}, "label": "microbatch16_c16"}
+{"concurrency": 64, "seconds": 20.8, "requests": 2581, "rps": 124.1, "p50_ms": 300.8, "p95_ms": 1241.2, "p99_ms": 1421.8, "mix": {"cheap": 822, "http_503": 1680, "teacher": 79}, "label": "microbatch16_c64"}

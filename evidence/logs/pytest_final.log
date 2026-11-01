@@ -1,0 +1,33 @@
+........................................................................ [ 80%]
+.................                                                        [100%]
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.10.12-final-0 _______________
+
+Name                             Stmts   Miss  Cover   Missing
+--------------------------------------------------------------
+src/cascade/adapters/claude.py      60      3    95%   48-50, 61
+src/cascade/adapters/gemini.py      83      5    94%   75-77, 96, 116-117
+src/cascade/artifact.py             63      7    89%   70, 72, 78-85
+src/cascade/backends.py             21      4    81%   33-35, 49-50
+src/cascade/batching.py             56      4    93%   59-60, 62-63
+src/cascade/bounds.py               21      1    95%   27
+src/cascade/cli.py                 147     46    69%   78, 80, 144-156, 168-223, 227-261, 265
+src/cascade/data.py                 43      2    95%   27-28
+src/cascade/datasets_io.py          22     22     0%   3-33
+src/cascade/drift.py               152      7    95%   88, 122, 125, 182, 223-226
+src/cascade/engine.py              133      1    99%   187
+src/cascade/gates.py               143      5    97%   127, 130, 157, 207, 304
+src/cascade/gateway/app.py         159      1    99%   273
+src/cascade/provenance.py           63      2    97%   75-76
+--------------------------------------------------------------
+TOTAL                             1565    110    93%
+
+11 files skipped due to complete coverage.
+Required test coverage of 85.0% reached. Total coverage: 92.97%
+============================= slowest 5 durations ==============================
+15.42s call     tests/test_cli.py::test_exp0_writes_outputs
+12.90s call     tests/test_provenance.py::test_cli_experiment_writes_manifest_and_ledger
+3.20s call     tests/test_sim.py::test_true_curves_are_monotone_and_sane
+2.35s call     tests/test_drift.py::test_rolling_policy_recovers_where_static_does_not
+1.51s call     tests/test_drift.py::test_monitor_covers_true_mean_at_all_times
+89 passed, 2 deselected in 45.60s

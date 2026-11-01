@@ -1,0 +1,22 @@
+\begin{tabular}{llrrrrr}
+\toprule
+Task / student & $\alpha$ & method & deploy & viol.\ (teacher) & viol.\ (gold) & cov.\\
+\midrule
+B77 distilled & 0.10 & naive & 1.00 & 0.462 & 1.000 & 0.72\\
+B77 distilled & 0.10 & wilson & 1.00 & 0.045 & 0.987 & 0.64\\
+B77 distilled & 0.10 & bonferroni & 1.00 & 0.000 & 0.697 & 0.52\\
+B77 distilled & 0.10 & holm & 1.00 & 0.001 & 0.728 & 0.53\\
+B77 gold-trained & 0.10 & naive & 1.00 & 0.475 & 0.000 & 0.52\\
+B77 gold-trained & 0.10 & wilson & 0.96 & 0.038 & 0.000 & 0.31\\
+B77 gold-trained & 0.10 & bonferroni & 0.10 & 0.000 & 0.000 & 0.03\\
+B77 gold-trained & 0.10 & holm & 0.10 & 0.000 & 0.000 & 0.03\\
+CL150 distilled & 0.10 & naive & 1.00 & 0.484 & 0.844 & 0.79\\
+CL150 distilled & 0.10 & wilson & 1.00 & 0.036 & 0.273 & 0.67\\
+CL150 distilled & 0.10 & bonferroni & 0.96 & 0.000 & 0.003 & 0.46\\
+CL150 distilled & 0.10 & holm & 0.96 & 0.001 & 0.008 & 0.48\\
+CL150 gold-trained & 0.10 & naive & 1.00 & 0.302 & 0.000 & 0.99\\
+CL150 gold-trained & 0.10 & wilson & 1.00 & 0.020 & 0.000 & 0.93\\
+CL150 gold-trained & 0.10 & bonferroni & 0.70 & 0.000 & 0.000 & 0.55\\
+CL150 gold-trained & 0.10 & holm & 0.70 & 0.000 & 0.000 & 0.56\\
+\bottomrule
+\end{tabular}
