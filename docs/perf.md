@@ -23,12 +23,25 @@ Observation: a single encode costs 11-27 ms (host-load dependent), yet the gatew
 | 2 | 18.1 | 31.0 | 1.71 | 1235 / 1987 | 728 / 1368 |
 | 3 | 40.1 | 50.1 | 1.25 | 558 / 1010 | 409 / 1024 |
 
-Batching won in 3 of 3 pairs (median 31.0 vs 18.1 req/s; p50 about 35-50% lower). **But** an
+Batching won in 3 of 3 pairs in this contended set (median 31.0 vs 18.1 req/s; p50 about 35-50% lower). **But** an
 earlier, uncontrolled run at 16 clients on a less loaded host went the other way (73 req/s default
 vs 63 batched), and at 64 clients the 32-slot concurrency limit shed most load (HTTP 503) in both
 configurations. So: batching helps most when CPU is contended or concurrency is high; it is not a
 universal win. It stays **opt-in** (off by default). A clean, dedicated-host re-measurement is
 still needed before quoting any throughput number.
+
+4. **Re-run on a quieter host** (the other job had finished; load average ~3), same protocol, new data in `evidence/logs/perf_ab.jsonl` (the contended set is kept as `perf_ab_contended.jsonl`):
+
+| rep | default req/s | batched req/s | ratio | default p50/p99 ms | batched p50/p99 ms |
+|---|---|---|---|---|---|
+| 1 | 39.8 | 48.9 | 1.23 | 560 / 1025 | 440 / 905 |
+| 2 | 30.2 | 46.3 | 1.53 | 784 / 1159 | 470 / 1048 |
+| 3 | 28.7 | 27.0 | 0.94 | 794 / 1309 | 827 / 1381 |
+
+Across both sets batching won 5 of 6 pairs (ratios 0.94-1.86, median ~1.5) but lost one, and one
+earlier unpaired run also favoured the default. Conclusion: a plausible gain of tens of percent
+under load, **not established**; host noise (the desktop was in use) is as large as the effect.
+Keep it opt-in; a dedicated host and more repetitions would be needed to settle it.
 
 ## Other measured facts
 - Process start-up is about 9 s (importing scipy.stats and loading the encoder dominates); the

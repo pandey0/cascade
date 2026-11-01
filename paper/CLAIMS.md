@@ -13,5 +13,5 @@
 | Under severe shift (unseen classes) no policy restores the target within 6,000 decisions at <= 10% audit | observed | same | horizon and window dependent |
 | Anytime-valid CS alarm had no pre-shift false alarms; a re-evaluated z-test had up to 22% | observed | same | CS detects late/rarely at low audit rates |
 | Break-even is on the order of 5,000-12,500 decisions for 3,000 labels at 30-60% coverage (teacher cost measured at $0.0002/call) | model output, not measured savings | `results/economics.md`, `src/cascade/economics.py` | excludes engineering time and error costs; coverage values illustrative |
-| Micro-batching raised throughput 1.25-1.86x in 3 paired local runs (simulated teacher) | observed, noisy host; an earlier unpaired run showed the opposite | `docs/perf.md`, `evidence/logs/perf_ab.jsonl` | contended host; not capacity numbers |
+| Micro-batching: 5 of 6 paired local runs faster (ratios 0.94-1.86), one slower; not established | observed, noisy host; an earlier unpaired run showed the opposite | `docs/perf.md`, `evidence/logs/perf_ab.jsonl` | contended host; not capacity numbers |
 | Certified threshold selection (Bonferroni over a grid) is NOT a new method: it is the Geifman & El-Yaniv selective-classification procedure and a Learn-then-Test instance | literature check | `docs/notes/literature-check.md` | full texts not yet read |
