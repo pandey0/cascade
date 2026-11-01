@@ -41,6 +41,9 @@ def main() -> None:
     ap.add_argument("--teacher-ms", type=float, default=300.0)
     ap.add_argument("--torch-threads", type=int, default=0, help="0 = library default")
     ap.add_argument("--batch", type=int, default=0, help="micro-batch size (0 = off)")
+    ap.add_argument("--teacher-fail-rate", type=float, default=0.0, help="chaos: random failures")
+    ap.add_argument("--teacher-timeout-s", type=float, default=10.0)
+    ap.add_argument("--fail-closed", action="store_true", help="503 instead of degraded answers")
     ap.add_argument("--alpha", type=float, default=0.05)
     ap.add_argument("--audit-rate", type=float, default=0.02)
     ap.add_argument("--db", default=str(ROOT / "data" / "cache" / "demo_audit.db"))
@@ -71,8 +74,13 @@ def main() -> None:
         def embed(text: str) -> np.ndarray:
             return embed_many([text])[0]
 
+    chaos = np.random.default_rng(0)
+
     def teacher(text: str) -> TeacherResponse:
         time.sleep(args.teacher_ms / 1000.0)
+        if args.teacher_fail_rate and chaos.random() < args.teacher_fail_rate:
+            msg = "injected teacher failure"
+            raise RuntimeError(msg)
         return TeacherResponse(gold.get(text, names[0]), "simulated", 0, 0, 0.0, args.teacher_ms)
 
     # Student labels are ints in this demo; map to names for the response.
@@ -82,7 +90,13 @@ def main() -> None:
             return np.array([names[int(i)] for i in p]), c
 
     store = AuditStore(args.db)
-    cfg = EngineConfig(decision="banking77", alpha=args.alpha, audit_rate=args.audit_rate)
+    cfg = EngineConfig(
+        decision="banking77",
+        alpha=args.alpha,
+        audit_rate=args.audit_rate,
+        fail_open=not args.fail_closed,
+        teacher_timeout_s=args.teacher_timeout_s,
+    )
     engine = Engine(cfg, embed, Named(), teacher, store, gate.threshold)
     configure_logging()
     app = create_app({"banking77": engine}, Settings.from_env(), store)

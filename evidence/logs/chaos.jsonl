@@ -1,0 +1,5 @@
+{"ts": 1793545228.7169523, "scenario": "flaky30_failopen", "healthz_after": 200, "status_after": 200, "mix": {"cheap": 277, "cheap_degraded": 7, "teacher": 16}, "n": 300}
+{"ts": 1793545228.7170053, "scenario": "flaky30_failclosed", "healthz_after": 200, "status_after": 200, "mix": {"cheap": 277, "http_503": 5, "teacher": 18}, "n": 300}
+{"ts": 1793545228.7170217, "scenario": "outage100_failopen", "healthz_after": 200, "status_after": 200, "mix": {"cheap": 277, "cheap_degraded": 23}, "n": 300}
+{"ts": 1793545228.7170343, "scenario": "slow_teacher_timeout", "healthz_after": 200, "status_after": 200, "mix": {"cheap": 277, "http_503": 23}, "n": 300}
+{"ts": 1793545228.7170463, "scenario": "sigterm_under_load", "requests_before_sigterm": 83, "exit_code": -15, "shutdown_s": 0.7, "mix": {"cheap": 83, "teacher": 9, "conn_ConnectError": 507, "conn_RemoteProtocolError": 1}, "n": 600}
