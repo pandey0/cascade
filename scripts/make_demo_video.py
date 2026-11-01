@@ -18,6 +18,7 @@ import matplotlib
 from PIL import Image, ImageDraw, ImageFont
 
 ROOT = Path(__file__).resolve().parents[1]
+FFMPEG = shutil.which("ffmpeg") or "ffmpeg"
 W, H, FPS = 1280, 720, 15
 FONT = ImageFont.truetype(
     str(Path(matplotlib.get_data_path()) / "fonts/ttf/DejaVuSansMono.ttf"), 17
@@ -38,7 +39,7 @@ BG, FG, CMD, DIM, CAP_BG = (
 CAPTIONS = {
     "$ no key": "No API key: the gateway fails closed (HTTP 401).",
     "$ with key": "Messages the cheap model is confident about are answered locally (path: cheap).",
-    "$ idempotency": "Same Idempotency-Key twice: the second answer is a replay, no second teacher call.",
+    "$ idempotency": "Same Idempotency-Key twice: the second answer is a replay (no second call).",
     "$ oversize": "Oversized input is rejected (HTTP 413).",
     "$ status": "Status after 60 requests: audits, teacher calls, spend, no drift alarm.",
     "$ metrics": "Prometheus metrics: what the Grafana dashboard reads.",
@@ -129,7 +130,7 @@ def main() -> None:
     )
     subprocess.run(  # noqa: S603
         [
-            "ffmpeg",
+            FFMPEG,
             "-y",
             "-loglevel",
             "error",
