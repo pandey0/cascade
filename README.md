@@ -89,6 +89,30 @@ TRACER (arXiv 2604.14531) already builds the core: students trained on LLM trace
 
 ---
 
+## Evidence gallery
+Generated from the result files (`scripts/make_figures.py`, `scripts/make_figures2.py`); numbers are not hand-typed.
+
+| | |
+|---|---|
+| ![violation rate vs calibration size](paper/figures/fig1_violation_vs_m.png) **Naive selection misses its target about half the time; certified selection does not** (Banking77/CLINC150, gold teacher) | ![coverage cost of validity](paper/figures/fig2_coverage_vs_m.png) **Cost of validity** in coverage |
+| ![teacher noise](docs/img/fig5_teacher_noise.png) **With a real LLM teacher**, agreement is not correctness (Claude Haiku 5.5, Banking77) | ![drift policies](docs/img/fig6_drift_policies.png) **Under drift**, rolling Holm recalibration helps unless the shift is severe |
+
+The gateway's API as served (FastAPI/Swagger, `GET /docs`): ![Swagger UI of the gateway](docs/img/swagger_ui.png)
+
+The Grafana dashboard (`ops/grafana/cascade-dashboard.json`) rendering live data from a running gateway (simulated teacher; captured in Chrome during a load run; the confidence-threshold panel shows a live rolling recalibration moving the threshold from 0.475 to 0.55 at the right edge): ![Grafana dashboard](docs/img/grafana_dashboard.jpg)
+
+Other evidence in the repo: terminal transcript of the end-to-end demo (`evidence/logs/demo_transcript.txt`, `docs/demo.md`), failure-injection results (`results/chaos.md`), Kubernetes smoke-test logs (`evidence/logs/k8s_smoke_*.txt`), Grafana panel-query check (`evidence/logs/grafana_check.txt`), CI runs (GitHub Actions, private repo), run manifests and ledger (`evidence/`). **Not yet in the repo:** a demo video.
+
+## References
+Closest prior work and the methods this project builds on (details and overlap assessment in `docs/notes/literature-check.md`; full bibliography in `paper/references.bib`):
+- A. Rida, *TRACER: Trace-Based Adaptive Cost-Efficient Routing for LLM Classification*, [arXiv:2604.14531](https://arxiv.org/abs/2604.14531); code [github.com/adrida/tracer](https://github.com/adrida/tracer) (MIT).
+- Y. Geifman, R. El-Yaniv, *Selective Classification for Deep Neural Networks*, NeurIPS 2017, [arXiv:1705.08500](https://arxiv.org/abs/1705.08500) (threshold selection with a binomial bound and Bonferroni correction: the origin of certified selection).
+- A. N. Angelopoulos, S. Bates, E. J. Candes, M. I. Jordan, L. Lei, *Learn then Test*, [arXiv:2110.01052](https://arxiv.org/abs/2110.01052).
+- I. Waudby-Smith, A. Ramdas, *Estimating means of bounded random variables by betting*, [arXiv:2010.09686](https://arxiv.org/abs/2010.09686) (the confidence sequence used by the drift alarm); A. Podkopaev, A. Ramdas, *Tracking the risk of a deployed model and detecting harmful distribution shifts*, [arXiv:2110.06177](https://arxiv.org/abs/2110.06177).
+- Y. Dou, S. Lian, S. Li, *Conformal Cascade*, [arXiv:2607.25018](https://arxiv.org/abs/2607.25018); Z. Jia et al., *BalanceRAG*, [arXiv:2605.20084](https://arxiv.org/abs/2605.20084); N. Gupta et al., *Language Model Cascades: Token-level uncertainty and beyond*, [arXiv:2404.10136](https://arxiv.org/abs/2404.10136); Y. Abbasi Yadkori et al., *Mitigating LLM Hallucinations via Conformal Abstention*, [arXiv:2405.01563](https://arxiv.org/abs/2405.01563).
+- Data: Banking77 (Casanueva et al. 2020, CC-BY-4.0) and CLINC150 (Larson et al. 2019, CC-BY-3.0), licences as stated on their Hugging Face cards.
+- Standards: OWASP ASVS 5.0.0 (`docs/security.md`), Google SRE Workbook, "Alerting on SLOs" (`docs/slo.md`).
+
 ## Quickstart
 ```bash
 python3 -m venv .venv && . .venv/bin/activate

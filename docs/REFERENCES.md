@@ -20,3 +20,6 @@ From TRACER's reference list (IDs as printed there): Madras et al. 2018 (learnin
 Also to read (recalled, verify): Angelopoulos et al. *Conformal Risk Control*; *Learn then Test*; Bates et al. *Distribution-free, risk-controlling prediction sets*; Geifman and El-Yaniv *Selective classification for deep neural networks*; Guo et al. *On calibration of modern neural networks*.
 
 Jev / System 1: https://typesafe.ai ; SDKs https://github.com/typesafe-ai/typesafe-sdk-python ; open reproduction of the interface pattern: https://github.com/TheoLeeCJ/SemIf-OpenJev . See `notes/jev-and-open-alternatives.md`.
+
+## Added 2026-11-01 (checked against arXiv abstract pages unless noted)
+Geifman & El-Yaniv, arXiv:1705.08500; Angelopoulos et al. (LTT), arXiv:2110.01052; Waudby-Smith & Ramdas, arXiv:2010.09686 (formulas read from the paper); Podkopaev & Ramdas, arXiv:2110.06177; Dou, Lian, Li (Conformal Cascade), arXiv:2607.25018; Jia et al. (BalanceRAG), arXiv:2605.20084; Gupta et al., arXiv:2404.10136 and Abbasi Yadkori et al., arXiv:2405.01563 (authors/dates verified). See `notes/literature-check.md`.

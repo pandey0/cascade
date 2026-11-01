@@ -1,0 +1,10 @@
+dashboard: 'Cascade gateway', 7 panels
+datasources: [('Prometheus', 'prometheus', True)]
+ok    Decisions/s by path: 1 queries, 10 points 
+ok    Latency p50/p95/p99 (s): 3 queries, 15 points 
+ok    Cheap-path share (coverage): 1 queries, 5 points 
+ok    Confidence threshold (-1 = withdrawn): 1 queries, 9 points 
+ok    Audited risk lower bound (alarm if > alpha): 1 queries, 9 points 
+ok    Errors/s by kind: 1 queries, 1 points 
+ok    Teacher spend (USD, cumulative): 1 queries, 9 points 
+RESULT: all panels return data
