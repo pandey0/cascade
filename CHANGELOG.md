@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project. Format: Keep a Changelog; versioning: SemVer.
 
-## [0.1.0] - 2026-11-01 (unreleased: not tagged or pushed)
+## [0.1.0] - 2026-11-01
 ### Added
 - Failure-injection script and results (`scripts/chaos.py`, `docs/reliability.md`), audit data-quality checks (`quality.py`), live Prometheus verification of the alert rules.
 - Decision engine with uniform audit sampling, rolling Holm recalibration, shadow mode, fail-open/closed teacher policy, anytime-valid (PrPl-EB) drift alarm.
@@ -12,6 +12,8 @@ All notable changes to this project. Format: Keep a Changelog; versioning: SemVe
 - Micro-batching of embeddings; break-even economics model.
 - Experiments: exp1b (noisy LLM teacher), exp2 (drift streams); findings notes; ADR 0005.
 - Ops: Prometheus recording/alert rules (multi-window burn rate), Grafana dashboard, SLO, security, runbook docs; Terraform and Helm (unapplied).
+### Verified
+- CI on GitHub (py3.10/3.12 tests, security, docker, ops, Trivy); Helm chart installed on a k3s cluster (rolling restart under load, 553/553 OK); live Prometheus + Grafana (all panels return data); `promtool`, `terraform validate`, Trivy; Locust A/B with CPU and memory (`docs/perf.md`); failure-injection scenarios (`docs/reliability.md`).
 ### Security
 - Failed-auth lockout per client address, per-key scopes (`decide[:name]`, `status`, `admin`; recalibration needs admin), security headers (HSTS, nosniff, no-store on /v1), auth-failure logging, optional HTTPS listener in Terraform. ASVS 5.0.0 L1 self-check in `docs/security.md`.
 ### Changed
