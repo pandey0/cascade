@@ -43,6 +43,10 @@ class ArtifactMeta:
     audit_rate: float = 0.02
     shadow: bool = True
     created_by: str = ""
+    teacher_timeout_s: float = 10.0  # request-path wait and the adapters' HTTP timeout
+    teacher_workers: int = 32  # concurrent request-path teacher calls
+    audit_workers: int = 2  # background audit threads
+    audit_queue_size: int = 256  # pending audits before new ones are dropped
 
 
 def save_artifact(path: str | Path, meta: ArtifactMeta, student: LogisticStudent) -> None:
@@ -65,6 +69,7 @@ def make_teacher(meta: ArtifactMeta) -> Callable[[str], TeacherResponse]:
         "instructions": meta.instructions,
         "price_in_per_m": meta.price_in_per_m,
         "price_out_per_m": meta.price_out_per_m,
+        "timeout_s": meta.teacher_timeout_s,
     }
     if meta.teacher_provider == "claude":
         return ClaudeTeacher(ClaudeConfig(**common))  # type: ignore[arg-type]
@@ -121,6 +126,10 @@ def create_app_from_env(
         delta=meta.delta,
         audit_rate=meta.audit_rate,
         shadow=meta.shadow,
+        teacher_timeout_s=meta.teacher_timeout_s,
+        teacher_workers=meta.teacher_workers,
+        audit_workers=meta.audit_workers,
+        audit_queue_size=meta.audit_queue_size,
     )
     engine = Engine(
         cfg,

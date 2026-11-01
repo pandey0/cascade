@@ -1,0 +1,13 @@
+{
+  "cascade_from": "/home/dell/COurse/projects/cascade/src/cascade",
+  "tail_latency_confident_requests_5pct_audited": {
+    "p50_ms": 0.005039008101448417,
+    "p95_ms": 0.007438857574015855,
+    "p99_ms": 0.010661649575922633,
+    "max_ms": 0.17534999642521143
+  },
+  "recovery_after_stalled_teacher": {
+    "stalled_requests_all_timed_out": 1.0,
+    "seconds_until_first_success_after_recovery": 0.0005594960239250213
+  }
+}

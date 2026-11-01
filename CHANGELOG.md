@@ -19,6 +19,9 @@ All notable changes to this project. Format: Keep a Changelog; versioning: SemVe
 - README rewritten problem-first (problem, where Cascade fits, a verified 2-minute quickstart, results, when not to use it); long narrative moved to `docs/story.md`, evidence to `docs/evidence.md`; `examples/quickstart.py` added and linted in CI.
 ### Verified
 - CI on GitHub (py3.10/3.12 tests, security, docker, ops, Trivy); Helm chart installed on a k3s cluster (rolling restart under load, 553/553 OK); live Prometheus + Grafana (all panels return data); `promtool`, `terraform validate`, Trivy; Locust A/B with CPU and memory (`docs/perf.md`); failure-injection scenarios (`docs/reliability.md`).
+### Fixed
+- Audits (teacher label, database write, re-tuning) now run on background workers behind a bounded queue: confident audited requests no longer wait for the teacher (p95 306 ms -> 0.007 ms in `scripts/measure_defects.py`), and a failed audit write no longer returns HTTP 500.
+- Teacher calls: pool sized to the concurrency limit, slots held until the call really ends, fail-fast when saturated, timeouts enforced in the Claude and Gemini HTTP clients (recovery after a stalled teacher 2.5 s -> 0.0006 s). New settings: `teacher_workers`, `audit_workers`, `audit_queue_size`, `teacher_timeout_s`; new metrics `cascade_audit_queue_depth`, `cascade_audits_dropped`, `cascade_teacher_in_flight`; new alert `CascadeAuditsDropping`.
 ### Security
 - Failed-auth lockout per client address, per-key scopes (`decide[:name]`, `status`, `admin`; recalibration needs admin), security headers (HSTS, nosniff, no-store on /v1), auth-failure logging, optional HTTPS listener in Terraform. ASVS 5.0.0 L1 self-check in `docs/security.md`.
 ### Changed

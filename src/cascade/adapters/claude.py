@@ -31,7 +31,8 @@ class ClaudeConfig:
     effort: str = "low"
     max_tokens: int = 64
     min_interval_s: float = 0.0
-    max_retries: int = 5
+    max_retries: int = 2  # worst-case time per call is about timeout_s * (max_retries + 1)
+    timeout_s: float = 10.0  # enforced by the HTTP client so a stalled call really ends
     api_key_env: str = "ANTHROPIC_API_KEY"
 
 
@@ -47,7 +48,7 @@ class ClaudeTeacher:
                 raise RuntimeError(msg)
             import anthropic  # noqa: PLC0415  (optional dependency)
 
-            client = anthropic.Anthropic(max_retries=cfg.max_retries)
+            client = anthropic.Anthropic(max_retries=cfg.max_retries, timeout=cfg.timeout_s)
         self._client: Any = client
 
     def _schema(self) -> dict[str, Any]:

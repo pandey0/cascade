@@ -21,3 +21,13 @@ Real Banking77 student + MiniLM, simulated teacher, 8 clients, 300 requests per 
 
 What this does NOT show: behaviour under sustained outage with a large escalation share, memory
 growth over hours, partial network failures, a real provider's rate limits, multi-replica effects.
+
+## Update 2026-11-02: two defects found and fixed
+A critique of the engine measured two reliability defects, both now fixed and covered by regression tests (`tests/test_engine.py`) and a reproducible before/after script (`scripts/measure_defects.py`; raw output `evidence/logs/defects_before.json`, `defects_after.json`):
+
+| Measurement | Before | After |
+|---|---|---|
+| p95 latency of confident requests with 5% audited and a 300 ms teacher | 306 ms | 0.007 ms |
+| Seconds until a request succeeds after a stalled teacher recovers (16 calls stalled 3 s, timeout 0.5 s) | 2.50 s | 0.0006 s |
+
+A failed audit write used to return HTTP 500 on audited requests; it is now contained. The chaos table above was produced before these fixes; its outcomes (cheap path stays up; fail-open and fail-closed behave as described) are unchanged by them. Remaining limit: if more teacher calls stall than there are slots (default 32), requests fail fast until the stalled calls reach their HTTP timeout.

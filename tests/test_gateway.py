@@ -191,3 +191,28 @@ def test_no_cors_headers_by_default(tmp_path: Path) -> None:
     c = _client(tmp_path)
     r = c.get("/healthz", headers={"Origin": "https://evil.example"})
     assert "access-control-allow-origin" not in {k.lower() for k in r.headers}
+
+
+def test_status_and_metrics_expose_audit_and_teacher_state(tmp_path: Path) -> None:
+    c = _client(tmp_path, audit_rate=1.0, recal_every=10_000)
+    c.post("/v1/decide", json={"decision": "d", "input": "x c=0.9"}, headers=KEY)
+    st = c.get("/v1/status/d", headers=KEY).json()
+    for field in ("audit_queue_depth", "audits_dropped", "audit_errors", "teacher_in_flight"):
+        assert field in st
+    text = c.get("/metrics").text
+    for name in (
+        "cascade_audit_queue_depth",
+        "cascade_audits_dropped",
+        "cascade_teacher_in_flight",
+    ):
+        assert name in text
+
+
+def test_shutdown_drains_audits_and_closes_engines(tmp_path: Path) -> None:
+    eng, store = make_engine(
+        tmp_path, teacher=make_teacher(delay=0.2), audit_rate=1.0, recal_every=10_000
+    )
+    app = create_app({"d": eng}, Settings(api_keys=("k-test",)), store)
+    with TestClient(app) as c:  # entering and leaving runs the lifespan hooks
+        c.post("/v1/decide", json={"decision": "d", "input": "x c=0.9"}, headers=KEY)
+    assert store.count("d") == 1  # the audit was still processed before shutdown finished

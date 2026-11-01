@@ -61,6 +61,13 @@ groups:
         annotations:
           summary: "No certifiable threshold: all traffic is escalating to the teacher (cost spike)"
           runbook: docs/runbook.md#gate-withdrawn
+      - alert: CascadeAuditsDropping
+        expr: increase(cascade_audits_dropped[15m]) > 0
+        for: 15m
+        labels: { severity: ticket }
+        annotations:
+          summary: "Audits are being dropped (queue full): the cutoff is re-tuned on less data than configured"
+          runbook: docs/runbook.md#audits-dropped
       - alert: CascadeTeacherSpendHigh
         expr: sum(increase(cascade_teacher_spend_usd[1h])) > 5
         labels: { severity: ticket }

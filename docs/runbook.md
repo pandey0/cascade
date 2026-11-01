@@ -21,6 +21,15 @@ Symptom: `CascadeRiskMonitorAlarm` (`cascade_drift_alarm == 1`, `cascade_risk_lo
 audited disagreements, retrain the student offline, redeploy, and re-run the benchmark gates.
 Expected lag: recovery takes about `window_labels / audit_rate` decisions (docs/notes/exp2-findings.md).
 
+## Audits dropped
+Symptom: alert `CascadeAuditsDropping` (`cascade_audits_dropped` increasing), `cascade_audit_queue_depth` near its limit,
+`/v1/status/<decision>` shows `audits_dropped` growing. Meaning: audits are labelled by the teacher on background
+workers; when the teacher is slow the queue fills and new audits are dropped (counted, never silently lost). Requests are
+unaffected; the cost is that re-tuning and the drift monitor see fewer labels. Actions: check the teacher's latency and
+errors first; if the teacher is healthy raise `audit_workers` or `audit_queue_size` in the artifact settings; if the audit
+rate is higher than the teacher can serve, lower `audit_rate`. Dropping does not bias the sample: the drop depends on load,
+not on the request's content.
+
 ## Gate withdrawn
 Symptom: `cascade_threshold == -1` for 30 min. Cause: too few audit labels, or no threshold has a
 certifiable risk. Raise `audit_rate`, widen `window_labels`, relax `alpha`, or retrain the student.

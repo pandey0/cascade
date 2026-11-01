@@ -9,7 +9,7 @@ Written 2026-11-02, updated the same day with experiment 3 and a measured prompt
 | Claim | Holds? |
 |---|---|
 | "Saves money on LLM calls" | **Only at high volume.** With a cheap LLM, savings cover just the hosting at roughly 75,000 requests/day (about 550,000/day once prompt caching makes the LLM 7.2x cheaper, which we measured), and repaying engineering time takes about 1 million/day (several million with caching). See the economics below. |
-| "Faster: milliseconds instead of an LLM round trip" | **Median yes, tail no.** Audits run inside the request, so the audited share of requests pays the full LLM latency (measured: 5% audit rate -> p95 = 306 ms with a 300 ms LLM). |
+| "Faster: milliseconds instead of an LLM round trip" | **Yes now; it was not.** Audits used to run inside the request, so the audited share paid the full LLM latency (measured: 5% audit rate -> p95 = 306 ms with a 300 ms LLM). **Fixed 2026-11-02:** audits run in the background; the same measurement now gives p95 = 0.007 ms. |
 | "A statistical guarantee on errors" | **Yes, but of a narrower kind than it sounds:** agreement with the LLM, under an i.i.d. assumption, per recalibration. Not correctness, and not under arbitrary drift. |
 | "Keeps working as traffic changes" | **Partly.** It notices and can withdraw; it does not learn. Severe shifts were not recovered in our experiments. |
 | "Production-ready" | **No.** v0.1.0 alpha with the architectural gaps below. |
@@ -49,8 +49,8 @@ What is good: clear separation (student / gate / teacher / audit store), fail-sa
 What would worry me, with evidence:
 
 1. **State is per replica.** The audit database is SQLite on an `emptyDir`; the threshold, drift monitor and rate limiter live in each pod's memory. Two replicas calibrate independently, can serve different cutoffs, and lose audit history on restart. Scaling out breaks the statistical story. Needs a shared store (Postgres or Redis) and a single owner for recalibration.
-2. **Audits sit in the request path (measured).** An audited request waits for the LLM even though the answer is already known. Test: 400 cheap-path requests, 5% audit rate, 300 ms LLM -> p50 0 ms but p95 306 ms. Fix: queue audits and run them in the background, dropping when the queue is full.
-3. **The LLM-call thread pool can be exhausted (measured).** 8 workers serve LLM calls; a timeout abandons the wait but not the call. With a stalled LLM (3 s calls, 0.5 s timeout) and then recovery, requests kept timing out for ~2.5 s afterwards because stuck calls still held the workers. With real provider timeouts of tens of seconds, recovery lag is tens of seconds. Fix: enforce the timeout inside the HTTP client and size or bound the pool deliberately.
+2. **~~Audits sit in the request path (measured)~~ FIXED.** An audited request used to wait for the LLM even though the answer was already known (400 cheap-path requests, 5% audit rate, 300 ms LLM: p95 306 ms). Audits, their database writes and the re-tuning of the cutoff now run on background workers behind a bounded queue; when the queue is full audits are dropped and counted. Same measurement after the fix: p95 0.007 ms. A failed audit write no longer fails the request either (it used to return HTTP 500).
+3. **~~The LLM-call thread pool can be exhausted (measured)~~ FIXED.** 8 workers served LLM calls and a timeout abandoned the wait but not the call: after a stalled LLM recovered, requests kept timing out for 2.5 s. Now the pool is as large as the concurrency limit (32), a slot is held until the call really ends, a saturated pool fails fast instead of queueing, and the Claude and Gemini adapters enforce the timeout in their HTTP clients (with 2 retries by default, so a call is bounded by about three timeouts). Same measurement after the fix: first success 0.0006 s after recovery. Limit: if more calls stall than there are slots, requests fail fast until the stalled calls hit their timeout.
 4. **"Cheap" is relative.** The student needs a PyTorch encoder: ~0.8 GB resident memory and 12-25 ms CPU per request, 9 s start-up. A hashing embedder avoids PyTorch but is weaker (83% vs 92% on Banking77 in our demo artifact).
 5. **Artifact and config distribution** use a ConfigMap (1 MB limit) and environment variables; there is no versioned rollout (canary a new student or cutoff), though shadow mode exists.
 6. **Complexity budget:** new moving parts (artifact, audit store, monitors, a service) for a saving that is small unless volume is large.
@@ -68,7 +68,7 @@ What would worry me, with evidence:
 
 ## As an application developer
 
-Good: typed, tested (98 tests, 93% coverage), CI, an OpenAPI spec, a runbook, a quickstart that works from a clean install.
+Good: typed, tested (109 tests, 94% coverage), CI, an OpenAPI spec, a runbook, a quickstart that works from a clean install.
 
 Friction: no SDK and no OpenAI-compatible endpoint (the API is bespoke); Python only; training and certification are research scripts you adapt, not a single command; PyTorch is a heavy dependency for the "cheap" path; configuration by environment variables; the model artifact format is unversioned; the demo and load tests never talk to a real LLM.
 
@@ -80,7 +80,7 @@ Certified threshold selection is not new (Geifman and El-Yaniv 2017; Learn-then-
 
 1. **Let the guarantee target the truth, not only the LLM (new top priority, from experiment 3):** a small human-labelled audit mode. Today a student that is *better* than the LLM is throttled by agreement with it (Banking77: 89.5% accurate, allowed to answer 5% of requests at a 10% target). The earlier comparison item is done: [notes/comparison-findings.md](notes/comparison-findings.md).
 2. **Ship a cost calculator** (volume, prices, hosting, engineering) that tells a team in one minute whether Cascade is worth it; the model exists in `economics.py`.
-3. **Fix the two measured defects:** background audits; bounded, client-enforced teacher timeouts.
+3. ~~Fix the two measured defects~~ **Done** (see above and `evidence/logs/defects_before.json` / `defects_after.json`).
 4. **Shared state** for multi-replica deployments.
 5. **A gold-audit mode:** certify true accuracy from a small human-labelled audit, not just agreement.
 6. **Out-of-distribution guard and per-class risk**, then an opt-in retraining loop.

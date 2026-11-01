@@ -36,8 +36,9 @@ class GeminiConfig:
     temperature: float = 0.0
     seed: int | None = 0
     min_interval_s: float = 0.0  # spacing between calls, to respect rate limits
-    max_retries: int = 5
+    max_retries: int = 2  # worst-case time per call is about timeout_s * (max_retries + 1)
     backoff_base_s: float = 1.0
+    timeout_s: float = 10.0  # enforced by the HTTP client so a stalled call really ends
     api_key_env: str = "GEMINI_API_KEY"
 
 
@@ -73,8 +74,12 @@ class GeminiTeacher:
                 msg = f"environment variable {cfg.api_key_env} is not set"
                 raise RuntimeError(msg)
             from google import genai  # noqa: PLC0415  (optional dependency)
+            from google.genai import types  # noqa: PLC0415
 
-            client = genai.Client(api_key=key)
+            client = genai.Client(
+                api_key=key,
+                http_options=types.HttpOptions(timeout=int(cfg.timeout_s * 1000)),  # milliseconds
+            )
         self._client = client
 
     def _config(self) -> Any:

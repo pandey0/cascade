@@ -1,0 +1,13 @@
+{
+  "cascade_from": "/tmp/claude-1000/-home-dell-COurse-resumebuilder/25dcdc0f-fd82-4502-b1a8-4d3724de00bc/scratchpad/old/src/cascade",
+  "tail_latency_confident_requests_5pct_audited": {
+    "p50_ms": 0.013455995940603316,
+    "p95_ms": 306.0219871942536,
+    "p99_ms": 307.0664189284434,
+    "max_ms": 315.382298984332
+  },
+  "recovery_after_stalled_teacher": {
+    "stalled_requests_all_timed_out": 1.0,
+    "seconds_until_first_success_after_recovery": 2.5011122740106657
+  }
+}

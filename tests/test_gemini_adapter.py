@@ -2,6 +2,7 @@ import json
 from types import SimpleNamespace
 
 import pytest
+from google import genai
 
 from cascade.adapters.gemini import (
     INVALID_LABEL,
@@ -88,3 +89,18 @@ def test_prompt_and_schema_helpers() -> None:
     cfg = _cfg()
     assert "card_arrival, refund_status, lost_card" in build_system_instruction(cfg)
     assert label_schema(LABELS)["properties"]["label"]["enum"] == list(LABELS)
+
+
+def test_timeout_is_passed_to_the_http_client_in_milliseconds(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    seen: dict[str, object] = {}
+
+    class FakeClient:
+        def __init__(self, **kwargs: object) -> None:
+            seen.update(kwargs)
+
+    monkeypatch.setenv("GEMINI_API_KEY", "k")
+    monkeypatch.setattr(genai, "Client", FakeClient)
+    GeminiTeacher(_cfg(timeout_s=2.5))
+    assert seen["http_options"].timeout == 2500  # type: ignore[attr-defined]

@@ -13,7 +13,8 @@ import os
 import threading
 import time
 import uuid
-from collections.abc import Mapping
+from collections.abc import AsyncIterator, Mapping
+from contextlib import asynccontextmanager
 from dataclasses import dataclass, field
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Request, Response
@@ -151,7 +152,14 @@ def create_app(  # noqa: PLR0915
 ) -> FastAPI:
     cfg = settings or Settings()
     registry_engines = dict(engines or {})
-    app = FastAPI(title="cascade gateway", version="0.1.0")
+
+    @asynccontextmanager
+    async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
+        yield
+        for eng in registry_engines.values():  # drain pending audits, stop background workers
+            eng.close()
+
+    app = FastAPI(title="cascade gateway", version="0.1.0", lifespan=lifespan)
     reg = CollectorRegistry()
     decisions_total = Counter(
         "cascade_decisions_total", "Decisions served", ["decision", "path"], registry=reg
@@ -166,6 +174,24 @@ def create_app(  # noqa: PLR0915
     errors_total = Counter("cascade_errors_total", "Errors by kind", ["kind"], registry=reg)
     teacher_usd = Gauge(
         "cascade_teacher_spend_usd", "Cumulative teacher spend", ["decision"], registry=reg
+    )
+    audit_depth_g = Gauge(
+        "cascade_audit_queue_depth",
+        "Audits waiting for a background worker",
+        ["decision"],
+        registry=reg,
+    )
+    audit_dropped_g = Gauge(
+        "cascade_audits_dropped",
+        "Audits dropped because the queue was full (cumulative)",
+        ["decision"],
+        registry=reg,
+    )
+    in_flight_g = Gauge(
+        "cascade_teacher_in_flight",
+        "Request-path teacher calls in progress",
+        ["decision"],
+        registry=reg,
     )
     threshold_g = Gauge(
         "cascade_threshold", "Current confidence threshold (-1 = none)", ["decision"], registry=reg
@@ -244,6 +270,9 @@ def create_app(  # noqa: PLR0915
             threshold_g.labels(name).set(-1.0 if eng.threshold is None else eng.threshold)
             risk_lower_g.labels(name).set(max(0.0, eng.stats.risk_lower))
             drift_g.labels(name).set(float(eng.stats.drift_alarm))
+            audit_depth_g.labels(name).set(eng.audit_queue_depth)
+            audit_dropped_g.labels(name).set(eng.stats.audits_dropped)
+            in_flight_g.labels(name).set(eng.teacher_in_flight)
         return Response(generate_latest(reg), media_type="text/plain; version=0.0.4")
 
     @app.post("/v1/decide", response_model=DecideResponse)
@@ -337,6 +366,10 @@ def create_app(  # noqa: PLR0915
             "recalibrations": s.recalibrations,
             "drift_alarm": s.drift_alarm,
             "risk_lower_bound": s.risk_lower,
+            "audit_queue_depth": eng.audit_queue_depth,
+            "audits_dropped": s.audits_dropped,
+            "audit_errors": s.audit_errors,
+            "teacher_in_flight": eng.teacher_in_flight,
             "shadow": eng.cfg.shadow,
             "alpha": eng.cfg.alpha,
         }

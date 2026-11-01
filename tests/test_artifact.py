@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 
 import numpy as np
@@ -87,3 +88,13 @@ def test_hashing_embedder_is_deterministic_unit_norm_and_text_sensitive() -> Non
     assert a.shape == (128,) and np.allclose(a, b)
     assert abs(float(np.linalg.norm(a)) - 1.0) < 1e-9 and not np.allclose(a, c)
     assert float(np.linalg.norm(e(""))) == 0.0  # empty text -> zero vector, no crash
+
+
+def test_old_artifact_without_timeout_field_still_loads(tmp_path: Path) -> None:
+    save_artifact(tmp_path / "art", _meta(), _student())
+    path = tmp_path / "art" / "artifact.json"
+    data = json.loads(path.read_text())
+    data.pop("teacher_timeout_s")
+    path.write_text(json.dumps(data))
+    meta, _ = load_artifact(tmp_path / "art")
+    assert meta.teacher_timeout_s == 10.0  # default

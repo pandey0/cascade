@@ -153,7 +153,7 @@ These test the web service and its packaging, using a **simulated LLM** so they 
 
 | Test | What it checks | Result |
 |---|---|---|
-| Automated tests | Statistics, decision logic, the API (auth, limits, idempotency), the audit database (migrations, backup and restore), the adapters (with fake clients) | **98 tests pass, 93% code coverage** |
+| Automated tests | Statistics, decision logic, the API (auth, limits, idempotency), the audit database (migrations, backup and restore), the adapters (with fake clients) | **109 tests pass, 94% code coverage** |
 | Continuous integration (GitHub) | Every push: lint, strict type checks, tests on Python 3.10 and 3.12, secret and dependency scans, container build and vulnerability scan, alert-rule and Terraform and Helm checks | **Green** (no high or critical vulnerabilities with a fix available) |
 | Failure injection | LLM failing 30% of calls, down completely, slower than the timeout, and the service being stopped mid-load | While the LLM failed, slowed or was down, the cheap path kept answering and the service stayed healthy; when stopped mid-load it shut down in under a second ([docs/reliability.md](docs/reliability.md)) |
 | Kubernetes | Install the Helm chart on a real local cluster, check auth and security settings, restart the pods under traffic | **553 of 553 requests succeeded** through a rolling restart ([infra/README.md](infra/README.md)) |
@@ -192,7 +192,7 @@ These test the web service and its packaging, using a **simulated LLM** so they 
 
 ## Honest limits
 
-- **Does it really help? Only in a narrow regime.** Read the adversarial review first: [docs/critique.md](docs/critique.md). It covers the cost reality, two measured defects (audits add the LLM's latency to the audited requests; the LLM-call thread pool can be exhausted), state that is per replica, and the comparison we have not run (against a fine-tuned small model, prompt caching or a semantic cache).
+- **Does it really help? Only in a narrow regime.** Read the adversarial review first: [docs/critique.md](docs/critique.md). It covers the cost reality, two measured defects that have since been fixed (audits added the LLM's latency to audited requests; the LLM-call thread pool could be exhausted), state that is per replica, and the comparison we have not run (against a fine-tuned small model, prompt caching or a semantic cache).
 - **Alpha software (v0.1.0).** Not deployed anywhere; the AWS setup has never been applied; the repo is private for now.
 - **The promise is about agreement with the LLM, not about being correct.** If the LLM is wrong 1 time in 4, a student that copies it inherits that. Our experiments show this clearly ([docs/notes/exp1b-findings.md](docs/notes/exp1b-findings.md)).
 - **It assumes the audited sample looks like today's requests.** When requests change, that breaks; the audits and the alarm exist to catch it, but recovery takes time (about `audited labels / audit rate` requests).

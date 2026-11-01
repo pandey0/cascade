@@ -1,6 +1,7 @@
 import json
 from types import SimpleNamespace
 
+import anthropic
 import pytest
 
 from cascade.adapters.claude import ClaudeConfig, ClaudeTeacher
@@ -56,3 +57,17 @@ def test_missing_key(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
     with pytest.raises(RuntimeError, match="ANTHROPIC_API_KEY is not set"):
         ClaudeTeacher(_cfg())
+
+
+def test_timeout_and_retries_are_passed_to_the_http_client(monkeypatch: pytest.MonkeyPatch) -> None:
+    seen: dict[str, object] = {}
+
+    class FakeAnthropic:
+        def __init__(self, **kwargs: object) -> None:
+            seen.update(kwargs)
+
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "k")
+    monkeypatch.setattr(anthropic, "Anthropic", FakeAnthropic)
+    cfg = ClaudeConfig("m", LABELS, "x", 0.1, 0.5, timeout_s=4.0, max_retries=1)
+    ClaudeTeacher(cfg)
+    assert seen == {"max_retries": 1, "timeout": 4.0}  # a stalled call ends after about 4 s

@@ -103,7 +103,7 @@ sequenceDiagram
 Two design rules matter:
 
 - **Only random audits (or every request in shadow mode) are stored for calibration.** Requests the LLM answered because the student was unsure are *not* stored for that purpose: they were selected for being hard, and mixing them in would make the student look worse than it is at the cutoffs that matter.
-- **The audit happens inside the request** today, so an audited request waits for the LLM before it returns (measured; see [critique.md](critique.md)). Moving audits to a background queue is the top engineering fix.
+- **The audit happens in the background.** A confident request that is picked for audit is answered at once; the teacher call and the database write run on background workers behind a bounded queue (default 256). If the queue is full the audit is dropped and counted (`cascade_audits_dropped`); the drop depends on load, not on the request's content, so the audited sample stays uniform. (Before 2026-11-02 the audit ran inside the request and added the LLM's latency to 5% of requests; see [critique.md](critique.md).)
 
 ## 5. Flow C: re-tuning the cutoff (and refusing to answer cheaply)
 
@@ -118,7 +118,7 @@ flowchart LR
   Z -- no --> X["WITHDRAW: no cutoff; every request goes to the LLM"]
 ```
 
-Withdrawing is the safe failure: accuracy is preserved and cost goes back to the pre-Cascade level. The dashboard shows the cutoff as `-1` when this happens, and an alert fires if it lasts. The re-tuning runs inside the request that happens to cross the "every N audits" mark.
+Withdrawing is the safe failure: accuracy is preserved and cost goes back to the pre-Cascade level. The dashboard shows the cutoff as `-1` when this happens, and an alert fires if it lasts. The re-tuning runs on a background audit worker, not inside a request.
 
 ## 6. Flow D: noticing that things got worse
 
@@ -145,7 +145,9 @@ The alarm **informs**; it does not change behaviour by itself. The automatic pro
 | Too many in flight | Sheds load | HTTP 503 with `Retry-After` |
 | Wrong or missing key; too many failed attempts | Rejects; locks that address out for a while | 401, then 429 |
 | Same idempotency key sent twice | Returns the stored answer, no second LLM call | `Idempotent-Replay: true` |
-| The audit database cannot be written | **Not handled gracefully today** (tested): the audited requests fail; requests that are not audited keep working | 500 on audited requests only (a known gap; the answer is known, so it should be returned anyway) |
+| The audit database cannot be written | The request is unaffected; the audit is lost, counted (`audit_errors`) and logged | Normal answer (fixed 2026-11-02; it used to return 500 on audited requests) |
+| The audit queue is full | The new audit is dropped and counted | Normal answer; alert `CascadeAuditsDropping` if it persists |
+| Every request-path LLM slot is stuck | Fails fast instead of queueing behind stalled calls | `cheap_degraded` (fail-open) or 503 (fail-closed) |
 
 ## 8. Flow F: from your data to a running service
 
@@ -182,4 +184,4 @@ Today the middle steps (train and certify) are the worked example `scripts/build
 
 ## 11. Known gaps in this architecture
 
-Per-replica state, in-request audits and re-tuning, an LLM-call thread pool that can be exhausted, an unhandled audit-store failure, a drift monitor that is never reset, and no retraining loop. They are described, with measurements where they exist, in [critique.md](critique.md).
+Per-replica state, a drift monitor that is never reset, and no retraining loop (the in-request audits, the exhaustible LLM-call pool and the unhandled audit-store failure were fixed on 2026-11-02). They are described, with measurements where they exist, in [critique.md](critique.md).
