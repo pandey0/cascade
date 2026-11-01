@@ -20,4 +20,4 @@ label, the student "disagreed", and the drift alarm fired (risk bound 0.56). The
 about the data it saw and wrong about the world; always check what the audit reference is before
 trusting an alarm (`docs/runbook.md`, drift section).
 
-Not included: a screen-recorded video (needs you) and a run against a real LLM teacher.
+Video: `docs/img/demo_replay.mp4` (41 s) is a typed **replay** of this captured transcript with captions, made by `scripts/make_demo_video.py`; the live Grafana capture is `docs/img/grafana_dashboard.jpg`. Not included: a narrated 2-3 minute screen recording (needs you) and a run against a real LLM teacher.

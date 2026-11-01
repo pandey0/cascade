@@ -99,9 +99,11 @@ Generated from the result files (`scripts/make_figures.py`, `scripts/make_figure
 
 The gateway's API as served (FastAPI/Swagger, `GET /docs`): ![Swagger UI of the gateway](docs/img/swagger_ui.png)
 
-The Grafana dashboard (`ops/grafana/cascade-dashboard.json`) rendering live data from a running gateway (simulated teacher; captured in Chrome during a load run; the confidence-threshold panel shows a live rolling recalibration moving the threshold from 0.475 to 0.55 at the right edge): ![Grafana dashboard](docs/img/grafana_dashboard.jpg)
+The Grafana dashboard (`ops/grafana/cascade-dashboard.json`) with live data from a running gateway (simulated teacher, a load run with a 30% audit rate, captured in Chrome). The confidence-threshold panel shows the cutoff rising and then settling again as the gate was re-certified on audited samples, and the cheap-path share dips and recovers alongside it: ![Grafana dashboard](docs/img/grafana_dashboard.jpg)
 
-Other evidence in the repo: terminal transcript of the end-to-end demo (`evidence/logs/demo_transcript.txt`, `docs/demo.md`), failure-injection results (`results/chaos.md`), Kubernetes smoke-test logs (`evidence/logs/k8s_smoke_*.txt`), Grafana panel-query check (`evidence/logs/grafana_check.txt`), CI runs (GitHub Actions, private repo), run manifests and ledger (`evidence/`). **Not yet in the repo:** a demo video.
+**Demo video:** [`docs/img/demo_replay.mp4`](docs/img/demo_replay.mp4), a 41-second typed replay of the real captured transcript of `scripts/demo.sh` with captions (not a live screen recording, not narrated; regenerate with `scripts/make_demo_video.py`).
+
+Other evidence in the repo: terminal transcript of the end-to-end demo (`evidence/logs/demo_transcript.txt`, `docs/demo.md`), failure-injection results (`results/chaos.md`), Kubernetes smoke-test logs (`evidence/logs/k8s_smoke_*.txt`), Grafana panel-query check (`evidence/logs/grafana_check.txt`), CI runs (GitHub Actions, private repo), run manifests and ledger (`evidence/`). **Not yet in the repo:** a narrated screen recording of 2-3 minutes.
 
 ## References
 Closest prior work and the methods this project builds on (details and overlap assessment in `docs/notes/literature-check.md`; full bibliography in `paper/references.bib`):
