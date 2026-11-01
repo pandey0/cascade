@@ -1,2 +1,6 @@
 {"concurrency": 24, "seconds": 15.6, "requests": 620, "rps": 39.8, "p50_ms": 560.2, "p95_ms": 877.5, "p99_ms": 1024.9, "mix": {"cheap": 565, "teacher": 55}, "label": "baseline_rep1"}
 {"concurrency": 24, "seconds": 15.5, "requests": 759, "rps": 48.9, "p50_ms": 439.5, "p95_ms": 743.1, "p99_ms": 905.1, "mix": {"cheap": 696, "teacher": 63}, "label": "batch16_rep1"}
+{"concurrency": 24, "seconds": 15.6, "requests": 472, "rps": 30.2, "p50_ms": 783.7, "p95_ms": 1052.4, "p99_ms": 1159.4, "mix": {"cheap": 431, "teacher": 41}, "label": "baseline_rep2"}
+{"concurrency": 24, "seconds": 15.3, "requests": 708, "rps": 46.3, "p50_ms": 470.3, "p95_ms": 897.1, "p99_ms": 1048.2, "mix": {"cheap": 652, "teacher": 56}, "label": "batch16_rep2"}
+{"concurrency": 24, "seconds": 15.7, "requests": 450, "rps": 28.7, "p50_ms": 793.6, "p95_ms": 1185.8, "p99_ms": 1309.0, "mix": {"cheap": 412, "teacher": 38}, "label": "baseline_rep3"}
+{"concurrency": 24, "seconds": 15.6, "requests": 422, "rps": 27.0, "p50_ms": 827.4, "p95_ms": 1276.2, "p99_ms": 1380.5, "mix": {"cheap": 389, "teacher": 33}, "label": "batch16_rep3"}

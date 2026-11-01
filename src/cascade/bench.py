@@ -118,8 +118,8 @@ def aggregate_pools(per_pool: list[list[dict[str, Any]]]) -> list[dict[str, Any]
         for k in keys:
             vals = np.array([p[i][k] for p in per_pool], dtype=np.float64)
             merged[k] = float(vals.mean())
-            merged[f"{k}_min"] = float(vals.min())
-            merged[f"{k}_max"] = float(vals.max())
+            merged[f"{k}_min"] = float(np.min(vals))
+            merged[f"{k}_max"] = float(np.max(vals))
         for k in ("violation_rate_deployed", "mean_true_risk_deployed"):
             vals = np.array([p[i][k] for p in per_pool], dtype=np.float64)
             merged[k] = float(np.nanmean(vals)) if not np.all(np.isnan(vals)) else float("nan")

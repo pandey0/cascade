@@ -107,7 +107,7 @@ def summarise(acc: dict[str, list[dict[str, float]]], m: int, trials: int) -> li
                 "deploy_rate": float(deployed.mean()),
                 "violation_rate_all": float(viol.mean()),
                 "violation_rate_deployed": (
-                    float(viol.sum() / deployed.sum()) if deployed.sum() else float("nan")
+                    float(viol.sum()) / float(deployed.sum()) if deployed.sum() else float("nan")
                 ),
                 "mean_coverage": float(cov.mean()),
                 "mean_true_risk_deployed": (

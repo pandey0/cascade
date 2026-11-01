@@ -41,7 +41,7 @@ class LogisticStudent:
             return -float(np.mean(log_softmax(z / t, axis=1)[np.arange(len(idx)), idx]))
 
         # scipy-stubs overload resolution rejects this valid bounded call
-        result = minimize_scalar(nll, bounds=(0.05, 20.0), method="bounded")  # type: ignore[call-overload]
+        result = minimize_scalar(nll, bounds=(0.05, 20.0), method="bounded")  # type: ignore[call-overload,unused-ignore]
         self.temperature = float(result.x)
         return self.temperature
 

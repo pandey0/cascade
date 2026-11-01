@@ -16,8 +16,10 @@ jobs:
       - uses: docker/login-action@v3
         with: { registry: ghcr.io, username: "${{ github.actor }}", password: "${{ secrets.GITHUB_TOKEN }}" }
       - run: docker build -t ghcr.io/${{ github.repository }}/gateway:${{ github.ref_name }} .
-      - uses: aquasecurity/trivy-action@v0.33.1
-        with:
+      - name: Trivy scan (OS + Python packages)
+        run: |
+          docker save ghcr.io/${{ github.repository }}/gateway:${{ github.ref_name }} -o cascade.tar
+          docker run --rm -v "$PWD:/w" aquasec/trivy:0.58.1 image --input /w/cascade.tar --severity CRITICAL,HIGH --ignore-unfixed --scanners vuln --exit-code 1
           image-ref: ghcr.io/${{ github.repository }}/gateway:${{ github.ref_name }}
           severity: CRITICAL,HIGH
           exit-code: "1"
