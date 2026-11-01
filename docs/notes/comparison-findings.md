@@ -13,11 +13,11 @@ from experiment 1b. Three data splits, pools of about 1,000 held-out messages, c
 | **E1.** A few hundred human labels suffice for a small model to match the LLM; if so, Cascade is dominated when human labels exist | **Confirmed, with the label counts.** | Banking77: 500 labels give 74.2% (about the LLM's 75.8%), 1,000 give 84.4%, 5,000 give 90.9%. CLINC150 (150 categories) needs more: 1,000 give 86.2%, **3,000 give 95.0% vs the LLM's 91.0%**. Fig. 7. |
 | **E2.** Cascade only makes sense when the LLM's answers are the only labels | **Mostly confirmed, with a surprise about the target.** | Trained on 1,000 LLM labels at a 10% error target, Cascade answers 53% (Banking77) and 46% (CLINC150) of requests cheaply with **no loss on Banking77 (75.8% vs 75.8%) and 0.7 points on CLINC150 (90.3% vs 91.0%)**. At a 5% target it almost never deploys at these sample sizes (coverage 3-9%). |
 | **E3.** A semantic cache gives modest hit rates and silent errors | **Wrong in part.** Hit rates were higher than I expected on Banking77. | Banking77, similarity 0.85: 45% of requests served from the cache for a 0.6-point accuracy loss (0.90: 26%, -0.4 points). CLINC150 is lower (0.85: 22%, -0.1 points). Accuracy on cache hits was 82-84% on Banking77, not worse than the LLM's own 75.8%: the "silent errors" are mostly the LLM's own errors copied. Fig. 8. |
-| **E4.** Prompt caching moves break-even volumes up several times | **Not tested.** The probe needs an API key; the key in `.env` was invalid (rotated). Stays an assumption. | `scripts/caching_probe.py` is ready. |
+| **E4.** Prompt caching moves break-even volumes up several times | **Confirmed, and it changes the conclusions.** A probe of 24 real calls (about $0.003) showed caching engages at our 1,935-token prompt: steady-state cost per call **$0.0000283 vs $0.000202, 7.2x cheaper** (token categories from the API; cache read/write prices applied from Anthropic's published multipliers), latency unchanged (about 1 s). Assumes steady traffic (more than one request per 5 minutes, else the cache expires). | `scripts/caching_probe.py`, `evidence/logs/caching_probe.json` |
 
 ## What the numbers say, in plain words
 
-1. **If you can get human labels, skip the cascade.** A small model on 500-3,000 human labels beat the LLM's accuracy on both datasets, needs no LLM at serving time, and in the cost model is the cheapest option from about 100,000 requests a day (Banking77, year 1: $8,032 vs $74,482 for the LLM alone at 1 million/day). Its weakness is that it comes with no guarantee, no fallback and no drift alarm.
+1. **If you can get human labels, skip the cascade.** A small model on 500-3,000 human labels beat the LLM's accuracy on both datasets and needs no LLM at serving time. It is the cheapest option from about 100,000 requests a day against an uncached LLM (Banking77, year 1: $8,032 vs $74,482 at 1 million/day), and from about **0.6-0.8 million a day against an LLM with prompt caching** ($8,032 vs $10,896). Its weakness is that it comes with no guarantee, no fallback and no drift alarm.
 2. **If the LLM's answers are all you have**, Cascade works as designed at a looser target: about half the LLM calls, almost no accuracy loss. But a semantic cache gets a similar reduction (Banking77) with far less machinery, no training and no guarantee. Cascade's extra is the *measured, auditable* error bound and the monitoring.
 3. **Certifying against the LLM backfires when the small model is better than the LLM.** With 3,000 human labels the Banking77 student scores 89.5% alone, yet the certified gate lets it answer only 5% of requests, because it must agree with an LLM that is wrong a quarter of the time. On CLINC150 the Cascade with an LLM fallback ends *below* the small model alone (94.3% vs 95.0%), because the fallback is the weaker answerer. **The guarantee should be able to target the dataset's truth (a small human-labelled audit), not only the LLM.** This is now the highest-priority product change.
 4. **The 5% target is hard with realistic audits.** With 400 audited examples the certified gate rarely deploys at a 5% target; the "about half" coverage in the quickstart needed 2,000.
@@ -32,12 +32,25 @@ Human label $0.10; two always-on nodes at $0.15/hour; small-model serving $8e-7/
 | Cascade, 1,000 LLM labels, target 10% | 75.8% | 0.49 | $12,999 | $16,332 | $49,670 | $383,043 |
 | Semantic cache, similarity 0.85 | 75.2% | 0.55 | $6,043 | $9,775 | $47,096 | $420,309 |
 
-Full tables for both datasets: `results/compare_summary.md`. Below about 100,000 requests a day with an inexpensive LLM, **the LLM alone is the cheapest option**.
+Full tables for both datasets: `results/compare_summary.md`. Below about 100,000 requests a day with an inexpensive LLM, **the LLM alone is the cheapest option**; with prompt caching that threshold rises to roughly 0.6-0.8 million.
+
+## Scenario B: prompt caching on every LLM call (measured 7.2x cheaper, +$500 engineering)
+Banking77, year-1 cost: LLM only $604 / $1,540 / $10,896 / $104,459 at 10k / 100k / 1M / 10M requests per day; small model on 1,000 human labels $7,731 / $7,758 / $8,032 / $10,770; Cascade (1,000 LLM labels) $13,182 / $13,671 / $18,560 / $67,446; semantic cache (0.85) $6,188 / $6,733 / $12,178 / $66,624. Full tables for both datasets: `results/compare_summary.md`.
+
+**Crossover volumes against the cached LLM alone** (cost model with the assumptions above; the volume above which each option is cheaper):
+
+| Option | Banking77 | CLINC150 |
+|---|---|---|
+| Small model on human labels (no LLM) | ~0.8 million/day | ~0.6 million/day |
+| Cascade on LLM labels (10% target) | ~2.8 million/day | ~2.5 million/day |
+| Semantic cache (similarity 0.85) | ~1.4 million/day | ~2.5 million/day |
+
+So with prompt caching, **Cascade only pays for itself at several million requests a day**, and a cached LLM call is the baseline to beat.
 
 ## Decision guide from this evidence
 | Your situation | Best measured option |
 |---|---|
-| Under ~100,000 requests/day, inexpensive LLM | LLM only |
+| Under ~100,000 requests/day, inexpensive LLM (about 0.6-0.8 million/day if you use prompt caching) | LLM only, with prompt caching |
 | You can get 500-3,000 human labels | Train the small model directly (more accurate and cheaper above ~100k/day); add monitoring |
 | Only LLM answers exist, high volume | A semantic cache or Cascade; both cut LLM calls by roughly 20-50% for under a point of accuracy in these runs; Cascade adds the audited bound |
 | You need an auditable, monitored error bound | Cascade (nothing else here gives one), ideally with a human-labelled audit |

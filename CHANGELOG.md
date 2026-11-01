@@ -13,6 +13,7 @@ All notable changes to this project. Format: Keep a Changelog; versioning: SemVe
 - Experiments: exp1b (noisy LLM teacher), exp2 (drift streams); findings notes; ADR 0005.
 - Ops: Prometheus recording/alert rules (multi-window burn rate), Grafana dashboard, SLO, security, runbook docs; Terraform and Helm (unapplied).
 ### Documentation
+- Prompt-caching probe (`scripts/caching_probe.py`, 24 real calls): 7.2x cheaper per call; economics and comparison updated with the measured factor.
 - Experiment 3 (head-to-head comparison with alternatives): `scripts/compare_approaches.py`, `scripts/summarize_compare.py`, `docs/notes/comparison-{plan,findings}.md`, figures 7 and 8; critique and README updated with the result.
 - `docs/critique.md`: adversarial review with outside research, hosting-aware economics, two measured defects and a prioritised fix list; corrected a doc claim about a retraining flywheel; `economics.py` gained daily break-even and payback functions.
 - README rewritten problem-first (problem, where Cascade fits, a verified 2-minute quickstart, results, when not to use it); long narrative moved to `docs/story.md`, evidence to `docs/evidence.md`; `examples/quickstart.py` added and linted in CI.

@@ -20,6 +20,15 @@ HUMAN_LABEL, NODE_HOUR, NODES, STUDENT_REQ = 0.10, 0.15, 2, 0.15 / 3600 / 50
 HOSTING_DAY = NODE_HOUR * 24 * NODES
 ENG = {"llm": 0, "gold": 5_000, "cascade": 10_000, "cache": 3_000}
 VOLUMES = (10_000, 100_000, 1_000_000, 10_000_000)
+_PROBE = ROOT / "evidence" / "logs" / "caching_probe.json"
+CACHE_RATIO = None
+if _PROBE.exists():
+    _sm = json.loads(_PROBE.read_text(encoding="utf-8"))["summary"]
+    CACHE_RATIO = (
+        _sm["cache"]["median_usd_per_call_steady_state"]
+        / _sm["no_cache"]["median_usd_per_call_steady_state"]
+    )
+ENG_PROMPT_CACHING = 500
 
 
 def mean(seeds: list[dict], path: list[str]) -> float:
@@ -37,10 +46,10 @@ def load(task: str) -> tuple[dict, list[dict]]:
     return d, list(d["seeds"].values())
 
 
-def configs(task: str) -> list[dict]:
+def configs(task: str, cached: bool = False) -> list[dict]:
     """Representative operating points: name, accuracy, LLM calls per request, one-time cost."""
     d, S = load(task)
-    c_t = d["c_t"]
+    c_t = d["c_t"] * (CACHE_RATIO if cached and CACHE_RATIO else 1.0)
     llm = mean(S, ["llm_only_accuracy"])
     out = [
         {
@@ -92,6 +101,8 @@ def configs(task: str) -> list[dict]:
         )
     for o in out:
         o["c_t"] = c_t
+        if cached and o["calls"] > 0:
+            o["eng"] += ENG_PROMPT_CACHING
     return out
 
 
@@ -187,10 +198,22 @@ def main() -> None:
         "+ 365 days of running cost.",
         "",
     ]
-    for task in ("banking77", "clinc150"):
+    scenarios = [("A. No prompt caching", False)]
+    if CACHE_RATIO:
+        scenarios.append(
+            (
+                f"B. Prompt caching on every LLM call (measured {1 / CACHE_RATIO:.1f}x cheaper, "
+                f"+${ENG_PROMPT_CACHING} engineering)",
+                True,
+            )
+        )
+    for task, (sc_name, cached) in [(t, sc) for sc in scenarios for t in ("banking77", "clinc150")]:
         d, _ = load(task)
+        if task == "banking77":
+            lines += [f"### Scenario {sc_name}", ""]
+        c_shown = configs(task, cached)[0]["c_t"]
         lines += [
-            f"## {task} (LLM price ${d['c_t']:.6f}/call, "
+            f"## {task} (LLM price ${c_shown:.6f}/call, "
             f"LLM median latency {d['llm_median_latency_ms']:.0f} ms)",
             "",
             "| approach | accuracy | LLM calls per request | "
@@ -198,7 +221,7 @@ def main() -> None:
             + " |",
             "|---|---|---|" + "---|" * len(VOLUMES),
         ]
-        for o in configs(task):
+        for o in configs(task, cached):
             costs = " | ".join(f"${year1(o, v):,.0f}" for v in VOLUMES)
             lines.append(f"| {o['name']} | {o['acc']:.1%} | {o['calls']:.2f} | {costs} |")
         lines.append("")

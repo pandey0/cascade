@@ -26,7 +26,8 @@ Coverage values are illustrative operating points.
 
 ## With hosting and engineering time (the numbers that decide whether it is worth it)
 Assumptions, NOT measurements unless stated: LLM cost per call = measured Banking77
-value (no prompt caching) or an illustrative 10x cheaper value with prompt caching;
+value (no prompt caching) or the same call with prompt caching (measured by a probe: see
+evidence/logs/caching_probe.json; steady state: more than one request per 5 minutes);
 the small model serves ~50 requests/s per node (measured 30-70 on 4 pinned cores) on
 a node assumed to cost $0.15/hour; 2 replicas always on ($7.2/day); 50% of requests
 answered cheaply; 5% audited; $10,000 of engineering time to adopt.
@@ -34,4 +35,4 @@ answered cheaply; 5% audited; $10,000 of engineering time to adopt.
 | LLM cost/call | break-even volume (covers hosting) | payback of $10k at 100k/day | at 1M/day | at 10M/day |
 |---|---|---|---|---|
 | $0.000204 (measured, no caching) | 74,602 requests/day | 4,080 days | 112 days | 10 days |
-| $0.000020 (illustrative, with caching) | 776,177 requests/day | never | 4,816 days | 117 days |
+| $0.000028 (measured, caching 7.2x cheaper) | 549,106 requests/day | never | 1,691 days | 81 days |

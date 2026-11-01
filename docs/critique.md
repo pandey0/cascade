@@ -1,6 +1,6 @@
 # Does Cascade really help? A critique
 
-Written 2026-11-02 after the v0.1.0 release, deliberately adversarial: from the point of view of an architect, an AI engineer and an application developer, plus what outside research says. Every number is either from this repo (with its source) or marked as an assumption. Where I found nothing, I say so.
+Written 2026-11-02, updated the same day with experiment 3 and a measured prompt-caching probe after the v0.1.0 release, deliberately adversarial: from the point of view of an architect, an AI engineer and an application developer, plus what outside research says. Every number is either from this repo (with its source) or marked as an assumption. Where I found nothing, I say so.
 
 ## Verdict
 
@@ -8,7 +8,7 @@ Written 2026-11-02 after the v0.1.0 release, deliberately adversarial: from the 
 
 | Claim | Holds? |
 |---|---|
-| "Saves money on LLM calls" | **Only at high volume.** With a cheap LLM, savings cover just the hosting at roughly 75,000 requests/day (about 780,000/day if prompt caching makes the LLM 10x cheaper), and repaying engineering time takes about 1 million/day. See the economics below. |
+| "Saves money on LLM calls" | **Only at high volume.** With a cheap LLM, savings cover just the hosting at roughly 75,000 requests/day (about 550,000/day once prompt caching makes the LLM 7.2x cheaper, which we measured), and repaying engineering time takes about 1 million/day (several million with caching). See the economics below. |
 | "Faster: milliseconds instead of an LLM round trip" | **Median yes, tail no.** Audits run inside the request, so the audited share of requests pays the full LLM latency (measured: 5% audit rate -> p95 = 306 ms with a 300 ms LLM). |
 | "A statistical guarantee on errors" | **Yes, but of a narrower kind than it sounds:** agreement with the LLM, under an i.i.d. assumption, per recalibration. Not correctness, and not under arbitrary drift. |
 | "Keeps working as traffic changes" | **Partly.** It notices and can withdraw; it does not learn. Severe shifts were not recovered in our experiments. |
@@ -33,14 +33,14 @@ Written 2026-11-02 after the v0.1.0 release, deliberately adversarial: from the 
 
 Reproduce with `python scripts/make_economics.py` (`results/economics.md`, `src/cascade/economics.py`).
 
-Assumptions (not measurements unless stated): LLM cost per call $0.000204 (**measured**, Claude Haiku 5.5, 77-label prompt, no caching) or $0.00002 (**illustration** assuming prompt caching at ~10% of the input price; unverified for this model); the student serves ~50 requests/s per node (**measured** 30-70 on 4 pinned cores); node cost $0.15/hour (**assumed**); two replicas always on ($7.2/day); 50% answered cheaply; 5% audited; $10,000 of engineering to adopt.
+Assumptions (not measurements unless stated): LLM cost per call $0.000204 (**measured**, Claude Haiku 5.5, 77-label prompt, no caching) or $0.0000283 (**measured** with prompt caching in a 24-call probe, steady traffic assumed; `evidence/logs/caching_probe.json`); the student serves ~50 requests/s per node (**measured** 30-70 on 4 pinned cores); node cost $0.15/hour (**assumed**); two replicas always on ($7.2/day); 50% answered cheaply; 5% audited; $10,000 of engineering to adopt.
 
 | LLM cost per call | Daily volume where savings just cover hosting | Payback of $10k at 100k/day | at 1M/day | at 10M/day |
 |---|---|---|---|---|
 | $0.000204 (no caching) | ~75,000 | ~4,080 days | ~112 days | ~10 days |
-| $0.00002 (with caching) | ~776,000 | never | ~4,800 days | ~117 days |
+| $0.0000283 (with caching, 7.2x cheaper) | ~549,000 | never | ~1,690 days | ~81 days |
 
-My earlier README line "break-even after 5,000-12,500 requests" counted only the labelling cost and was misleading as a headline. **Under ~100,000 requests/day with an inexpensive LLM, Cascade does not pay for itself.** The case gets better with a pricier teacher model, a longer prompt, or far more volume.
+My earlier README line "break-even after 5,000-12,500 requests" counted only the labelling cost and was misleading as a headline. **Under ~100,000 requests/day with an inexpensive LLM, Cascade does not pay for itself.** The case gets better with a pricier teacher model, a longer prompt, or far more volume. Experiment 3 adds the direct comparison: against a cached LLM, Cascade is cheaper only above roughly 2.5-2.8 million requests/day, a semantic cache above about 1.4-2.5 million, and a small model on human labels above about 0.6-0.8 million ([notes/comparison-findings.md](notes/comparison-findings.md)).
 
 ## As an architect
 
@@ -96,4 +96,5 @@ Certified threshold selection is not new (Geifman and El-Yaniv 2017; Learn-then-
 - **Confirmed:** a small model on 500-3,000 human labels beats the LLM's accuracy and, from about 100,000 requests/day, costs far less (year-1 on Banking77 at 1M/day: $8,032 vs $74,482).
 - **Where Cascade still earns its place:** when the LLM's answers are the only labels (about half the LLM calls at a 10% target for under a point of accuracy) and when you need an auditable, monitored bound. A semantic cache gets a similar call reduction with less machinery but no bound.
 - **New weakness found:** agreement-based certification throttles a student that is better than the LLM, and an LLM fallback can *lower* end-to-end accuracy (CLINC150: 94.3% with fallback vs 95.0% for the student alone).
-- **Still untested:** prompt caching (needs an API key), a stronger fine-tuned small model, latency under load with a real LLM.
+- **Prompt caching, measured:** 7.2x cheaper per call at our prompt size, which pushes every break-even up (see above).
+- **Still untested:** a stronger fine-tuned small model, latency under load with a real LLM, caching behaviour with bursty low-volume traffic (the cache expires after 5 minutes).

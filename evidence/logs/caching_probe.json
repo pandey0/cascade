@@ -1,0 +1,247 @@
+{
+  "model": "claude-haiku-5-5",
+  "raw": {
+    "no_cache": [
+      {
+        "input": 1950,
+        "output": 13,
+        "cache_write": 0,
+        "cache_read": 0,
+        "ms": 1381.6473570186645,
+        "usd": 0.0002015
+      },
+      {
+        "input": 1959,
+        "output": 13,
+        "cache_write": 0,
+        "cache_read": 0,
+        "ms": 990.5523239867762,
+        "usd": 0.00020240000000000001
+      },
+      {
+        "input": 1957,
+        "output": 13,
+        "cache_write": 0,
+        "cache_read": 0,
+        "ms": 957.8281360154506,
+        "usd": 0.0002022
+      },
+      {
+        "input": 1950,
+        "output": 13,
+        "cache_write": 0,
+        "cache_read": 0,
+        "ms": 986.4523640135303,
+        "usd": 0.0002015
+      },
+      {
+        "input": 1954,
+        "output": 13,
+        "cache_write": 0,
+        "cache_read": 0,
+        "ms": 1023.9791070052888,
+        "usd": 0.0002019
+      },
+      {
+        "input": 1954,
+        "output": 17,
+        "cache_write": 0,
+        "cache_read": 0,
+        "ms": 922.4502099968959,
+        "usd": 0.0002039
+      },
+      {
+        "input": 1955,
+        "output": 13,
+        "cache_write": 0,
+        "cache_read": 0,
+        "ms": 1022.4340880231466,
+        "usd": 0.000202
+      },
+      {
+        "input": 1949,
+        "output": 13,
+        "cache_write": 0,
+        "cache_read": 0,
+        "ms": 923.2778149889782,
+        "usd": 0.00020140000000000002
+      },
+      {
+        "input": 1960,
+        "output": 13,
+        "cache_write": 0,
+        "cache_read": 0,
+        "ms": 1535.4173769883346,
+        "usd": 0.0002025
+      },
+      {
+        "input": 1951,
+        "output": 17,
+        "cache_write": 0,
+        "cache_read": 0,
+        "ms": 1037.3660030018073,
+        "usd": 0.00020360000000000002
+      },
+      {
+        "input": 1964,
+        "output": 13,
+        "cache_write": 0,
+        "cache_read": 0,
+        "ms": 1010.8880359912291,
+        "usd": 0.0002029
+      },
+      {
+        "input": 1967,
+        "output": 13,
+        "cache_write": 0,
+        "cache_read": 0,
+        "ms": 1118.887647986412,
+        "usd": 0.0002032
+      }
+    ],
+    "cache": [
+      {
+        "input": 15,
+        "output": 13,
+        "cache_write": 1935,
+        "cache_read": 0,
+        "ms": 1061.1905319965445,
+        "usd": 0.000249875
+      },
+      {
+        "input": 24,
+        "output": 13,
+        "cache_write": 0,
+        "cache_read": 1935,
+        "ms": 1050.217303010868,
+        "usd": 2.825e-05
+      },
+      {
+        "input": 22,
+        "output": 13,
+        "cache_write": 0,
+        "cache_read": 1935,
+        "ms": 1023.6683870025445,
+        "usd": 2.805e-05
+      },
+      {
+        "input": 15,
+        "output": 13,
+        "cache_write": 0,
+        "cache_read": 1935,
+        "ms": 1030.241749016568,
+        "usd": 2.735e-05
+      },
+      {
+        "input": 19,
+        "output": 13,
+        "cache_write": 0,
+        "cache_read": 1935,
+        "ms": 961.8317779968493,
+        "usd": 2.775e-05
+      },
+      {
+        "input": 19,
+        "output": 17,
+        "cache_write": 0,
+        "cache_read": 1935,
+        "ms": 941.7651120165829,
+        "usd": 2.975e-05
+      },
+      {
+        "input": 20,
+        "output": 13,
+        "cache_write": 0,
+        "cache_read": 1935,
+        "ms": 1106.4421600021888,
+        "usd": 2.7850000000000003e-05
+      },
+      {
+        "input": 14,
+        "output": 13,
+        "cache_write": 0,
+        "cache_read": 1935,
+        "ms": 1035.9208829759154,
+        "usd": 2.725e-05
+      },
+      {
+        "input": 25,
+        "output": 13,
+        "cache_write": 0,
+        "cache_read": 1935,
+        "ms": 1775.6099440157413,
+        "usd": 2.835e-05
+      },
+      {
+        "input": 16,
+        "output": 17,
+        "cache_write": 0,
+        "cache_read": 1935,
+        "ms": 1079.6356959908735,
+        "usd": 2.9450000000000004e-05
+      },
+      {
+        "input": 29,
+        "output": 13,
+        "cache_write": 0,
+        "cache_read": 1935,
+        "ms": 987.5750149949454,
+        "usd": 2.875e-05
+      },
+      {
+        "input": 32,
+        "output": 13,
+        "cache_write": 0,
+        "cache_read": 1935,
+        "ms": 958.3258829952683,
+        "usd": 2.905e-05
+      }
+    ]
+  },
+  "summary": {
+    "no_cache": {
+      "calls": 12,
+      "median_usd_per_call_steady_state": 0.00020240000000000001,
+      "total_usd": 0.002429,
+      "first_call": {
+        "input": 1950,
+        "output": 13,
+        "cache_write": 0,
+        "cache_read": 0,
+        "ms": 1381.6473570186645,
+        "usd": 0.0002015
+      },
+      "last_call": {
+        "input": 1967,
+        "output": 13,
+        "cache_write": 0,
+        "cache_read": 0,
+        "ms": 1118.887647986412,
+        "usd": 0.0002032
+      },
+      "median_ms": 1022.4340880231466
+    },
+    "cache": {
+      "calls": 12,
+      "median_usd_per_call_steady_state": 2.825e-05,
+      "total_usd": 0.000561725,
+      "first_call": {
+        "input": 15,
+        "output": 13,
+        "cache_write": 1935,
+        "cache_read": 0,
+        "ms": 1061.1905319965445,
+        "usd": 0.000249875
+      },
+      "last_call": {
+        "input": 32,
+        "output": 13,
+        "cache_write": 0,
+        "cache_read": 1935,
+        "ms": 958.3258829952683,
+        "usd": 2.905e-05
+      },
+      "median_ms": 1035.9208829759154
+    }
+  }
+}

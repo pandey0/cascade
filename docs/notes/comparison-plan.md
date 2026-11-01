@@ -36,4 +36,4 @@ One LLM (Haiku 5.5), two datasets, one student type, 3 splits; hosting, label an
 no real traffic; no latency measurement beyond the encoder timings and the teacher timings already recorded.
 
 ## Outcome (added after the run)
-Results and the verdict on each expectation are in [comparison-findings.md](comparison-findings.md). E1 confirmed (with label counts), E2 mostly confirmed, E3 partly wrong, E4 not tested (invalid API key).
+Results and the verdict on each expectation are in [comparison-findings.md](comparison-findings.md). E1 confirmed (with label counts), E2 mostly confirmed, E3 partly wrong, E4 confirmed by a real probe (7.2x cheaper per call with prompt caching) after the API key was replaced; it changes the cost conclusions (Scenario B in the findings).

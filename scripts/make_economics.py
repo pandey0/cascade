@@ -46,7 +46,8 @@ def main() -> None:
         "",
         "## With hosting and engineering time (the numbers that decide whether it is worth it)",
         "Assumptions, NOT measurements unless stated: LLM cost per call = measured Banking77",
-        "value (no prompt caching) or an illustrative 10x cheaper value with prompt caching;",
+        "value (no prompt caching) or the same call with prompt caching (measured by a probe: see",
+        "evidence/logs/caching_probe.json; steady state: more than one request per 5 minutes);",
         "the small model serves ~50 requests/s per node (measured 30-70 on 4 pinned cores) on",
         "a node assumed to cost $0.15/hour; 2 replicas always on ($7.2/day); 50% of requests",
         "answered cheaply; 5% audited; $10,000 of engineering time to adopt.",
@@ -56,9 +57,19 @@ def main() -> None:
         "|---|---|---|---|---|",
     ]
     host, student = 2 * 0.15 * 24, 0.15 / 3600 / 50
+    probe = ROOT / "evidence" / "logs" / "caching_probe.json"
+    ratio = 0.1
+    cache_label = "assumed 10x cheaper"
+    if probe.exists():
+        sm = json.loads(probe.read_text(encoding="utf-8"))["summary"]
+        ratio = (
+            sm["cache"]["median_usd_per_call_steady_state"]
+            / sm["no_cache"]["median_usd_per_call_steady_state"]
+        )
+        cache_label = f"measured, caching {1 / ratio:.1f}x cheaper"
     for name, c_t in (
         ("measured, no caching", cost["banking77"]),
-        ("illustrative, with caching", cost["banking77"] / 10),
+        (cache_label, cost["banking77"] * ratio),
     ):
         be = break_even_daily_volume(0.5, c_t, student, 0.05, host)
         pays = [
