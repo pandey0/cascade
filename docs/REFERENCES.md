@@ -23,3 +23,13 @@ Jev / System 1: https://typesafe.ai ; SDKs https://github.com/typesafe-ai/typesa
 
 ## Added 2026-11-01 (checked against arXiv abstract pages unless noted)
 Geifman & El-Yaniv, arXiv:1705.08500; Angelopoulos et al. (LTT), arXiv:2110.01052; Waudby-Smith & Ramdas, arXiv:2010.09686 (formulas read from the paper); Podkopaev & Ramdas, arXiv:2110.06177; Dou, Lian, Li (Conformal Cascade), arXiv:2607.25018; Jia et al. (BalanceRAG), arXiv:2605.20084; Gupta et al., arXiv:2404.10136 and Abbasi Yadkori et al., arXiv:2405.01563 (authors/dates verified). See `notes/literature-check.md`.
+
+## Key references with links (moved from the README)
+Closest prior work and the methods this project builds on (details and overlap assessment in `docs/notes/literature-check.md`; full bibliography in `paper/references.bib`):
+- A. Rida, *TRACER: Trace-Based Adaptive Cost-Efficient Routing for LLM Classification*, [arXiv:2604.14531](https://arxiv.org/abs/2604.14531); code [github.com/adrida/tracer](https://github.com/adrida/tracer) (MIT).
+- Y. Geifman, R. El-Yaniv, *Selective Classification for Deep Neural Networks*, NeurIPS 2017, [arXiv:1705.08500](https://arxiv.org/abs/1705.08500) (threshold selection with a binomial bound and Bonferroni correction: the origin of certified selection).
+- A. N. Angelopoulos, S. Bates, E. J. Candes, M. I. Jordan, L. Lei, *Learn then Test*, [arXiv:2110.01052](https://arxiv.org/abs/2110.01052).
+- I. Waudby-Smith, A. Ramdas, *Estimating means of bounded random variables by betting*, [arXiv:2010.09686](https://arxiv.org/abs/2010.09686) (the confidence sequence used by the drift alarm); A. Podkopaev, A. Ramdas, *Tracking the risk of a deployed model and detecting harmful distribution shifts*, [arXiv:2110.06177](https://arxiv.org/abs/2110.06177).
+- Y. Dou, S. Lian, S. Li, *Conformal Cascade*, [arXiv:2607.25018](https://arxiv.org/abs/2607.25018); Z. Jia et al., *BalanceRAG*, [arXiv:2605.20084](https://arxiv.org/abs/2605.20084); N. Gupta et al., *Language Model Cascades: Token-level uncertainty and beyond*, [arXiv:2404.10136](https://arxiv.org/abs/2404.10136); Y. Abbasi Yadkori et al., *Mitigating LLM Hallucinations via Conformal Abstention*, [arXiv:2405.01563](https://arxiv.org/abs/2405.01563).
+- Data: Banking77 (Casanueva et al. 2020, CC-BY-4.0) and CLINC150 (Larson et al. 2019, CC-BY-3.0), licences as stated on their Hugging Face cards.
+- Standards: OWASP ASVS 5.0.0 (`docs/security.md`), Google SRE Workbook, "Alerting on SLOs" (`docs/slo.md`).

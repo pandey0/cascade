@@ -12,7 +12,7 @@ requires-python = ">=3.10"
 authors = [{ name = "Arpit Pandey" }]
 keywords = ["llm", "cascade", "selective-classification", "conformal", "calibration", "cost"]
 classifiers = [
-  "Development Status :: 2 - Pre-Alpha",
+  "Development Status :: 3 - Alpha",
   "Programming Language :: Python :: 3",
   "Typing :: Typed",
 ]

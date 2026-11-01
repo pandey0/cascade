@@ -1,134 +1,145 @@
-# cascade
+# Cascade
 
-Certified cost-quality decision cascades: answer a decision with a cheap model when it is confident, escalate to a teacher (usually an LLM) when it is not, and **bound how often the cheap path disagrees with the teacher**.
+**Stop paying a big LLM to answer questions a tiny model can answer. Cascade answers the easy ones cheaply, sends only the hard ones to the LLM, and tells you, with statistics, how often the cheap answer is wrong.**
 
-**Status: v0.1.0 (alpha).** Built and tested: exact binomial bounds; eight threshold-selection gates (naive, safety-factor, Wilson, certify-once, strict-sequence, Bonferroni, Holm, split-sequence); a decision engine with uniform audit sampling, rolling Holm recalibration and an anytime-valid drift alarm; a hardened FastAPI gateway (API-key auth, validation, rate limiting, idempotency keys, backpressure, Prometheus metrics, structured logs); a SQLite audit store (migrations, backup/restore, no raw text kept); Claude and Gemini teacher adapters with a spend-capped cache; micro-batching; a break-even economics model; real-data experiments on Banking77 and CLINC150 (gold teacher, a real LLM teacher, and drift streams). **Not done / not claimed:** no cloud deployment has been run (Terraform and Helm are written, not applied); CI has not run on GitHub yet; no comparison against TRACER's package; one student family (frozen embeddings + logistic regression); preliminary single-seed drift results. See `COMPLETION-PLAN.md`, `SCORECARD.md` and `paper/CLAIMS.md` for the claim-to-evidence map.
-
-## Results so far (all reproducible from `scripts/`; details in `docs/notes/`)
-| Question | Finding | Evidence |
-|---|---|---|
-| Does choosing the threshold on the same sample that "proves" it break the target? | Naive selection misses its target in about 43-58% of draws near the achievable risk; Bonferroni/Holm keep violations <= 0.5%, at about 4-12 coverage points at 1,000-2,000 audit labels | `exp1a-findings.md` |
-| What if the teacher is a real, noisy LLM? | Claude Haiku 5.5 agreed with gold on 76.5% (Banking77) and 90.9% (CLINC150). The bounded gates still hold against the *teacher-agreement* target, but agreement is neither sufficient nor necessary for correctness: a student trained on the teacher's labels violated the gold-error target in 70% of draws at alpha=0.10 on Banking77, while a gold-trained student beat the teacher (92% vs 76%) | `exp1b-findings.md` |
-| What happens under drift? | Rolling Holm recalibration on uniformly audited labels cut block-level violations from 39-65% (static) to 2-33% under mild shifts, at lower coverage; no policy recovered from severe shift (unseen classes) within 6,000 decisions at <= 10% audit. The anytime-valid alarm had no pre-shift false alarms but detects late | `exp2-findings.md` |
-| When does it pay back? | With measured teacher cost ($0.0002/call), break-even is about 5,000-12,500 decisions for 3,000 labels at 30-60% coverage, *excluding engineering time* | `results/economics.md` |
+![CI](https://github.com/pandey0/cascade/actions/workflows/ci.yml/badge.svg) ![License: MIT](https://img.shields.io/badge/license-MIT-blue) ![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue) ![Status: alpha](https://img.shields.io/badge/status-alpha-orange)
 
 ---
 
-## The story: what problem this solves, and how
+## The problem
 
-### 1. A good idea becomes an expensive habit
-*Acme Pay* (a made-up fintech) adds an AI feature: every incoming customer message is sent to an LLM with the prompt "which of these 77 intents is this?" (`card_declined`, `refund_status`, `change_address`, ...). No labelled dataset is needed, quality is decent, and it ships in a day. Six months later it handles 10,000 messages a day, and three things hurt:
+You add an AI feature to your product: every incoming customer message goes to an LLM with the prompt *"which of these 77 intents is this?"* (`card_declined`, `refund_status`, `change_address`, ...). It works, and it ships in a day. Months later it handles thousands of messages a day, and three things hurt:
 
-- **Cost grows linearly with traffic.** Every message pays for the long prompt (it contains all 77 label names) plus the answer. The TRACER paper's own back-of-envelope for this exact shape of task is about $2.60 per 1,000 calls with a frontier model, i.e. roughly $26/day or $9,500/year at 10,000 messages a day (their projection, with their stated token counts and prices; yours will differ).
-- **Latency and reliability depend on someone else's API.** Each decision waits on a network round trip, and rate limits or outages stall the product.
-- **Most of the spend is wasted.** "Where is my refund?" is not hard. After months, the same easy intents account for most traffic, and you are paying frontier-model prices to rediscover the same answers.
+- **Cost grows with every message.** Each one pays for a long prompt plus an answer.
+- **You depend on someone else's API** for speed and uptime: slow responses, rate limits, outages.
+- **Most of that spend is wasted.** "Where is my refund?" is not hard, yet you pay the same price to answer it for the thousandth time.
 
-### 2. When this problem actually appears
-Not on day one. It appears when **all** of these are true: the decision is a *closed-set choice* (classify, tag, route, pick a tool); volume is high and repetitive; the LLM's answers are good enough that you would accept them as the reference; and the bill, latency or rate limits have become real. If you make 200 decisions a day, nothing here is worth building (see section 6).
+The obvious fix is to train a small model on the LLM's answers and let it handle the easy cases. That part is easy. The part that bites is this one:
 
-### 3. What people try first, and why it falls short
-| Attempt | What goes wrong |
-|---|---|
-| Switch to a cheaper LLM | Quality drops on the hard tail; you still pay per call and still depend on an API |
-| Prompt caching / batching | Cuts the cost of the repeated prompt prefix, but every message still makes a call |
-| Hand-written rules | Brittle; the long tail of phrasings breaks them |
-| Train a classifier on human labels | Right idea, but you may not have labels; labelling 77 intents takes weeks and the label set keeps changing |
-| Train a small model on the LLM's answers, deploy when it "looks good" | Closest to the right idea, with a hidden trap: the confidence threshold is chosen on the same sample that "proves" it works, so it is optimistic. In my experiments (synthetic scores plus Banking77 and CLINC150 with a MiniLM student), such naive gates missed their stated target in roughly **45-54%** of runs whenever the target was near what the student could achieve, by small margins (average true risk within about 0.003 of the target), but the "guarantee" is not one |
-| A generic LLM router | Chooses between LLMs; each request still costs an LLM call |
+> **How confident does the small model have to be before you trust it?** Pick the cutoff by looking at a sample of its answers and "choosing the best-looking one", and the real error rate often ends up *worse than you intended*. In our experiments on real datasets this naive choice missed its own error target in roughly **40-60% of runs**.
 
-### 4. What Cascade does
-1. **Shadow mode (week 0).** You keep calling the LLM exactly as before. Cascade just records `(input, LLM label)` pairs, the teacher's own "traces". Nothing changes for users.
-2. **Learn (week 1).** Cascade trains a cheap student (frozen sentence embeddings plus a linear model, so CPU is enough) on those traces, and **calibrates** its confidence.
-3. **Certify the gate.** On a *held-out* audited slice, it tests a fixed grid of confidence thresholds and picks the most lenient one whose **upper confidence bound** on student-teacher disagreement stays under your target (for example, "agree with the LLM at least 95% of the time, with 90% confidence"). The bound is exact (Clopper-Pearson) and the grid is fixed in advance with a union-bound correction, so picking the best-looking threshold cannot inflate the guarantee. If no threshold can be certified, **it refuses to deploy**: you keep calling the LLM.
-4. **Serve.** Confident requests are answered by the student in about a millisecond, locally. Everything else goes to the LLM as before.
-5. **Keep it honest.** A small random fraction of *accepted* requests is also sent to the teacher (an **audit**), so agreement keeps being measured on the traffic the student actually handles. If agreement drops, Cascade falls back to the LLM automatically. Deferred requests become new training data (the flywheel).
-6. **Report.** A dashboard shows cost per 1,000 decisions, latency, share handled cheaply, measured agreement, calibration, and drift, so the savings are measured instead of promised.
+## Where Cascade fits
+
+You keep your LLM (we call it the **teacher**). Cascade puts a cheap **student** model in front of it and adds a safety net around the cutoff.
 
 ```mermaid
 flowchart LR
-  R[request] --> E[embed] --> S[student + confidence]
-  S --> G{confident AND certified?}
-  G -- yes --> C[cheap answer: ms, near-free]
-  G -- no --> T[teacher LLM answer]
-  T --> D[(logged as training data)]
-  C -. random 1-5% .-> A[audit: also ask teacher]
-  A --> M[monitor risk, drift alarm, recalibrate]
-  M -. new threshold or withdraw .-> G
+  R[request] --> S[student: answer + confidence]
+  S -- "confident enough" --> C[cheap answer: milliseconds]
+  S -- "not sure" --> T[teacher LLM answers]
+  C -. "small random sample" .-> A[audit: also ask the teacher]
+  A --> M[measure the real error rate, re-tune the cutoff, raise an alarm if it drifts]
+  M -. "new cutoff, or: stop answering cheaply" .-> S
 ```
 
-### 5. What it buys (illustrative arithmetic, not a benchmark)
-Using the paper's projection for the 77-intent task (about $26/day at 10,000 messages/day, student handling 83.2% of traffic at a 95% agreement target) and assuming a 3% audit rate on accepted traffic:
+1. **Learn:** the student is trained on the teacher's answers (CPU is enough; no GPU).
+2. **Certify the cutoff:** on a held-out, audited sample, Cascade picks the most generous cutoff whose error rate is provably below your target (for example "wrong at most 5% of the time, with 90% confidence"). If the evidence is not strong enough, it **refuses to answer cheaply** and everything keeps going to the LLM.
+3. **Serve and keep checking:** confident requests are answered by the student; a small random share of them is also sent to the teacher so the real error rate keeps being measured. If it creeps up, Cascade re-tunes the cutoff or falls back to the LLM.
 
-| | per day |
-|---|---|
-| LLM only | about $26.00 |
-| Cascade: deferred 16.8% of traffic | about $4.40 |
-| Cascade: audit calls (10,000 × 0.832 × 0.03 ≈ 250) | about $0.65 |
-| Cascade total | about **$5.05**, roughly 80% lower |
+## Try it in 2 minutes (no API key, no dataset downloads)
 
-Plus: the handled 83% no longer waits on an API, and keeps working during LLM outages. **These are assumptions, not results.** Reproducing numbers like this on real tasks, with certified selection and measured audit cost, is exactly what this project's experiments are for. Note the audit is a real cost, and validity costs coverage: on Banking77 and CLINC150 a valid (Holm/Bonferroni-certified) threshold gave up about 4-12 points of coverage relative to the naive one at 1,000-2,000 audited examples (and much more at 500 on CLINC150), and far more on a synthetic task whose risk hovers near the target. A simple uncorrected Wilson margin stayed near the nominal violation level on these benign i.i.d. tasks with less coverage loss, but has no guarantee (`docs/notes/exp1a-findings.md`). These runs used gold labels as the teacher, so they say nothing about teacher noise.
+```bash
+git clone https://github.com/pandey0/cascade && cd cascade
+python3 -m venv .venv && . .venv/bin/activate
+pip install -e .
+python examples/quickstart.py
+```
 
-### 6. What the guarantee does and does not mean
-- **It bounds disagreement with the teacher, not correctness.** If the LLM is right 81% of the time (the paper measured 81.0% on Banking77), a student that agrees with it inherits its mistakes. Cascade can add a small human-labelled audit to estimate real accuracy; that is a planned extension.
-- **It assumes the audited sample resembles current traffic.** New products, new languages or seasonal spikes break that; the audit and fallback exist to catch exactly this, but nothing is magic.
-- **It does not make hard tasks easy.** On NLI the TRACER paper's gate (correctly) refused to deploy a student because frozen embeddings could not separate the classes. Cascade should refuse too.
+You will see (numbers from a synthetic student where the true error rate is known):
 
-### 7. When a better approach exists (be honest about it)
-| Situation | Better choice |
-|---|---|
-| Low volume (hundreds of decisions a day), or the bill is small | Just call the LLM. This project is not worth the complexity |
-| You already have thousands of **human-labelled** examples | Train a classifier directly on them: usually more accurate than imitating a noisy teacher, with no teacher cost at all |
-| A smaller/cheaper LLM already meets your quality bar | Use it, optionally behind a cascade of two LLMs (FrugalGPT/RouteLLM-style) |
-| The task needs reasoning or free text (summaries, NLI-like judgments, open questions) | Keep the LLM, or fine-tune a model; frozen-embedding students will not work |
-| Labels or categories change every week | Cascade's retraining helps, but expect frequent refusals; consider a design with an embedding-retrieval step instead of closed labels |
-| High-stakes decisions (credit, hiring, safety) | Keep a human in the loop; a statistical bound on agreement is not sufficient justification |
-| You want something running this week | Try **TRACER** (open source, MIT, same core idea, PyPI `tracer-llm`) rather than waiting for this project |
+```text
+ONE AUDIT
+  naive    : cutoff 0.60, 50% answered cheaply, real error rate 5.0%
+  certified: cutoff 0.62, 47% answered cheaply, real error rate 4.7%
 
-### 8. How this project differs from TRACER (credit first)
-TRACER (arXiv 2604.14531) already builds the core: students trained on LLM traces behind an agreement gate, with an OOD guard and, in the current repo, one-shot certification on a reserved split. Cascade's contributions are extensions: certified **selection** over a fixed grid (instead of certify-once-or-decline), **audit sampling and drift monitoring** with automatic fallback, **teacher-noise-aware** reporting, a **cost and break-even model**, optional middle tiers with open typed-decision models (SemIf-style; Jev if you have access), and a production-grade gateway with observability and IaC. Details and evidence: `docs/notes/tracer-analysis.md`.
+300 REPEATED AUDITS (target: error rate <= 5%)
+  naive    : deployed 100% of the time, missed the target in 39% of those, 49% answered cheaply
+  certified: deployed 86% of the time, missed the target in 0% of those, 27% answered cheaply
+```
 
----
+One audit can look fine either way. Repeat it 300 times and the difference shows: the naive cutoff misses the target about **4 times in 10**; the certified one essentially never does, at the price of answering **fewer requests cheaply** (27% vs 49% here) and sometimes declining to deploy. That trade (safety for savings) is the whole idea, and Cascade makes it explicit instead of hiding it.
 
-## Evidence gallery
-Generated from the result files (`scripts/make_figures.py`, `scripts/make_figures2.py`); numbers are not hand-typed.
+## Run the service locally
+
+The gateway is a small HTTP service (`POST /v1/decide`) with API keys, rate limiting, metrics and an audit log. The demo below uses a real small model and a **simulated** teacher, so it costs nothing:
+
+```bash
+pip install -e ".[gateway,bench]"            # bench pulls PyTorch + sentence-transformers (large; use the CPU wheel)
+python scripts/exp1a_prepare.py banking77 0  # downloads the Banking77 dataset and embeds it (CPU, minutes)
+./scripts/demo.sh                            # starts the gateway, sends real messages, prints a transcript
+```
+
+Output and a 41-second replay video: [docs/demo.md](docs/demo.md). API reference: the running service serves `/docs` (Swagger UI); a static copy is [docs/openapi.json](docs/openapi.json).
+
+**Using it on your own decisions today** means five steps. Steps 2 and 3 are scripts you adapt, not yet a one-command CLI:
+
+1. Define your closed set of labels.
+2. Label a few thousand real inputs with your teacher (`scripts/label_with_teacher.py`: dry run by default, hard spend cap, cached; supports Claude and Gemini).
+3. Train the student and certify the cutoff on held-out audited data (`scripts/build_demo_artifact.py` is a complete worked example).
+4. Serve the saved artifact: `uvicorn --factory cascade.artifact:create_app_from_env` (settings via environment variables; see [docs/runbook.md](docs/runbook.md)).
+5. Watch `/metrics` and the dashboard; the runbook says what to do when the drift alarm fires or the cutoff is withdrawn.
+
+## What you get
 
 | | |
 |---|---|
-| ![violation rate vs calibration size](paper/figures/fig1_violation_vs_m.png) **Naive selection misses its target about half the time; certified selection does not** (Banking77/CLINC150, gold teacher) | ![coverage cost of validity](paper/figures/fig2_coverage_vs_m.png) **Cost of validity** in coverage |
-| ![teacher noise](docs/img/fig5_teacher_noise.png) **With a real LLM teacher**, agreement is not correctness (Claude Haiku 5.5, Banking77) | ![drift policies](docs/img/fig6_drift_policies.png) **Under drift**, rolling Holm recalibration helps unless the shift is severe |
+| **Certified cutoff selection** | Exact statistical bounds (Clopper-Pearson with Bonferroni or Holm correction) plus six other methods to compare against, including the naive one. |
+| **Gateway** | FastAPI service: API-key auth with scopes, rate limiting and brute-force lockout, idempotency keys, backpressure, structured logs, Prometheus metrics, OpenAPI. |
+| **Audit and drift handling** | Uniform random audits, rolling re-certification, an anytime-valid drift alarm, fail-open or fail-closed behaviour when the teacher is down. |
+| **Teachers** | Claude and Gemini adapters that return only labels from your closed set, with token and cost accounting. |
+| **Operations** | Docker image, Helm chart (tested on a real cluster), Terraform for AWS (validated, never applied), Grafana dashboard, alert rules, runbook, SLOs. |
+| **Reproducible research** | Every number in the docs comes from a script in `scripts/`, with run manifests and a ledger in `evidence/`. |
 
-The gateway's API as served (FastAPI/Swagger, `GET /docs`): ![Swagger UI of the gateway](docs/img/swagger_ui.png)
+## Results at a glance
 
-The Grafana dashboard (`ops/grafana/cascade-dashboard.json`) with live data from a running gateway (simulated teacher, a load run with a 30% audit rate, captured in Chrome). The confidence-threshold panel shows the cutoff rising and then settling again as the gate was re-certified on audited samples, and the cheap-path share dips and recovers alongside it: ![Grafana dashboard](docs/img/grafana_dashboard.jpg)
+All on Banking77 / CLINC150 with a simple student (frozen sentence embeddings + logistic regression). Details and caveats are in [docs/notes/](docs/notes/).
 
-**Demo video:** [`docs/img/demo_replay.mp4`](docs/img/demo_replay.mp4), a 41-second typed replay of the real captured transcript of `scripts/demo.sh` with captions (not a live screen recording, not narrated; regenerate with `scripts/make_demo_video.py`).
+| | |
+|---|---|
+| ![naive cutoff vs certified cutoff](paper/figures/fig1_violation_vs_m.png) **Naive cutoffs miss their target about half the time** near the achievable error rate; certified cutoffs keep misses far below the allowed 10%, giving up about 4-12 points of coverage. | ![teacher noise](docs/img/fig5_teacher_noise.png) **A real LLM teacher is wrong too** (Claude Haiku 5.5 agreed with the dataset labels 76.5% of the time on Banking77). Agreeing with it is not the same as being correct. |
+| ![drift](docs/img/fig6_drift_policies.png) **Under drift**, re-certifying on audited samples helps for mild shifts and is not enough for severe ones (classes the student never saw). | ![dashboard](docs/img/grafana_dashboard.jpg) **The Grafana dashboard** on a live gateway: the cutoff is re-tuned from audits while the cheap-path share dips and recovers. |
 
-Other evidence in the repo: terminal transcript of the end-to-end demo (`evidence/logs/demo_transcript.txt`, `docs/demo.md`), failure-injection results (`results/chaos.md`), Kubernetes smoke-test logs (`evidence/logs/k8s_smoke_*.txt`), Grafana panel-query check (`evidence/logs/grafana_check.txt`), CI runs (GitHub Actions, private repo), run manifests and ledger (`evidence/`). **Not yet in the repo:** a narrated screen recording of 2-3 minutes.
+Also measured: the cheap path stays up when the teacher fails or times out ([docs/reliability.md](docs/reliability.md)); a rolling restart on Kubernetes served 553/553 requests ([infra/README.md](infra/README.md)); micro-batching the encoder raised throughput in every paired local run ([docs/perf.md](docs/perf.md), noisy shared machine).
 
-## References
-Closest prior work and the methods this project builds on (details and overlap assessment in `docs/notes/literature-check.md`; full bibliography in `paper/references.bib`):
-- A. Rida, *TRACER: Trace-Based Adaptive Cost-Efficient Routing for LLM Classification*, [arXiv:2604.14531](https://arxiv.org/abs/2604.14531); code [github.com/adrida/tracer](https://github.com/adrida/tracer) (MIT).
-- Y. Geifman, R. El-Yaniv, *Selective Classification for Deep Neural Networks*, NeurIPS 2017, [arXiv:1705.08500](https://arxiv.org/abs/1705.08500) (threshold selection with a binomial bound and Bonferroni correction: the origin of certified selection).
-- A. N. Angelopoulos, S. Bates, E. J. Candes, M. I. Jordan, L. Lei, *Learn then Test*, [arXiv:2110.01052](https://arxiv.org/abs/2110.01052).
-- I. Waudby-Smith, A. Ramdas, *Estimating means of bounded random variables by betting*, [arXiv:2010.09686](https://arxiv.org/abs/2010.09686) (the confidence sequence used by the drift alarm); A. Podkopaev, A. Ramdas, *Tracking the risk of a deployed model and detecting harmful distribution shifts*, [arXiv:2110.06177](https://arxiv.org/abs/2110.06177).
-- Y. Dou, S. Lian, S. Li, *Conformal Cascade*, [arXiv:2607.25018](https://arxiv.org/abs/2607.25018); Z. Jia et al., *BalanceRAG*, [arXiv:2605.20084](https://arxiv.org/abs/2605.20084); N. Gupta et al., *Language Model Cascades: Token-level uncertainty and beyond*, [arXiv:2404.10136](https://arxiv.org/abs/2404.10136); Y. Abbasi Yadkori et al., *Mitigating LLM Hallucinations via Conformal Abstention*, [arXiv:2405.01563](https://arxiv.org/abs/2405.01563).
-- Data: Banking77 (Casanueva et al. 2020, CC-BY-4.0) and CLINC150 (Larson et al. 2019, CC-BY-3.0), licences as stated on their Hugging Face cards.
-- Standards: OWASP ASVS 5.0.0 (`docs/security.md`), Google SRE Workbook, "Alerting on SLOs" (`docs/slo.md`).
+## Is this for you?
 
-## Quickstart
-```bash
-python3 -m venv .venv && . .venv/bin/activate
-pip install -e ".[dev]"
-make check            # ruff + mypy --strict + pytest with coverage (coverage gate 85%)
-cascade exp0          # synthetic experiment; writes results/exp0.{md,json}
-./scripts/run_all.sh  # full reproducible pipeline (downloads data, runs everything, makes figures; ~25 min on CPU)
-# serve a real model locally with a SIMULATED teacher (needs the cached embeddings from run_all):
-CASCADE_ALLOW_ANONYMOUS=1 python scripts/serve_demo.py --port 8081 &
-curl -s -X POST localhost:8081/v1/decide -H 'content-type: application/json' \
-  -d '{"decision":"banking77","input":"I never received my new card"}'
-```
+**Good fit:** a closed set of choices (classify, tag, route, pick a tool); high volume of repetitive inputs; an LLM whose answers you would accept as the reference; a bill, latency or rate limit that now matters.
 
-## Layout
-`src/cascade/` library · `tests/` · `docs/adr/` decisions · `docs/notes/` research notes (TRACER analysis, Jev and open alternatives, compute plan, exp0 findings) · `docs/REFERENCES.md` · `results/` generated outputs · `evidence/` run manifests, ledger, logs · `paper/` draft, figures, claim-evidence map · `notebooks/` Colab quickstart · `SCORECARD.md` production scorecard · `ops/` Prometheus rules and Grafana dashboard · `infra/` Terraform and Helm (unapplied) · `docs/runbook.md`, `docs/slo.md`, `docs/security.md`, `docs/perf.md`.
+**Not a good fit:**
 
-License: MIT (see `LICENSE`).
+| Situation | Better choice |
+|---|---|
+| Hundreds of decisions a day, or a small bill | Just call the LLM. This is not worth the complexity. |
+| You already have thousands of human-labelled examples | Train a classifier on them directly: usually more accurate, no teacher cost. |
+| Free text, reasoning, summaries | Keep the LLM. A small embedding-based student will not work. |
+| Categories change every week | Expect frequent re-training and refusals; consider retrieval instead of closed labels. |
+| High-stakes decisions (credit, hiring, safety) | Keep a human in the loop. A statistical bound on agreement is not enough justification. |
+| You want something that works this week | Try [TRACER](https://github.com/adrida/tracer) (same core idea, on PyPI). |
+
+## Honest limits
+
+- **Alpha software (v0.1.0).** Not deployed anywhere; Terraform has never been applied; the repo is private for now.
+- **The guarantee is about agreement with the teacher, not correctness.** If the teacher is wrong 24% of the time, a student that copies it inherits that. Our experiments show this clearly ([docs/notes/exp1b-findings.md](docs/notes/exp1b-findings.md)).
+- **It assumes the audited sample looks like today's traffic.** Drift breaks that; the audits and the alarm exist to catch it, but recovery takes about `labels / audit_rate` decisions.
+- **Small-scale evidence:** two public datasets, one simple student, one teacher model, a few splits; the demo and load tests use a simulated teacher on a shared desktop.
+
+## Documentation
+
+| Read | For |
+|---|---|
+| [docs/story.md](docs/story.md) | The longer worked example behind this README |
+| [docs/architecture.md](docs/architecture.md) | How the pieces fit |
+| [docs/runbook.md](docs/runbook.md), [docs/slo.md](docs/slo.md), [docs/reliability.md](docs/reliability.md) | Operating it |
+| [docs/security.md](docs/security.md) | Threat model and an ASVS-based self-check |
+| [docs/notes/](docs/notes/) | Experiment findings, the TRACER analysis, literature check |
+| [docs/evidence.md](docs/evidence.md) | Figures, screenshots, demo video, logs |
+| [SCORECARD.md](SCORECARD.md) | Production-readiness checklist with evidence and gaps |
+| [paper/](paper/) | Unpublished draft and the claim-to-evidence map |
+
+## How this relates to prior work
+
+[TRACER](https://arxiv.org/abs/2604.14531) already combines a student trained on LLM answers with an agreement gate; certified threshold selection goes back to [Geifman and El-Yaniv (2017)](https://arxiv.org/abs/1705.08500) and [Learn-then-Test](https://arxiv.org/abs/2110.01052). Cascade does not claim to invent these. What it adds is an empirical comparison of selection methods in the LLM-distillation setting, a study of teacher noise and drift, and an engineered, tested gateway around them. See [docs/notes/literature-check.md](docs/notes/literature-check.md) and [docs/REFERENCES.md](docs/REFERENCES.md).
+
+## Contributing and license
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) (`make check` runs lint, strict types and tests). Changelog: [CHANGELOG.md](CHANGELOG.md). Licensed under the [MIT License](LICENSE).

@@ -1,7 +1,7 @@
 .PHONY: check lint type test exp0 audit openapi
 check: lint type test
 lint:
-	ruff check src tests scripts && ruff format --check src tests scripts
+	ruff check src tests scripts examples && ruff format --check src tests scripts examples
 type:
 	mypy
 test:
