@@ -193,7 +193,7 @@ These test the web service and its packaging, using a **simulated LLM** so they 
 ## Honest limits
 
 - **Does it really help? Only in a narrow regime.** Read the adversarial review first: [docs/critique.md](docs/critique.md). It covers the cost reality, two measured defects that have since been fixed (audits added the LLM's latency to audited requests; the LLM-call thread pool could be exhausted), state that is per replica, and the comparison we have not run (against a fine-tuned small model, prompt caching or a semantic cache).
-- **Alpha software (v0.1.0).** Not deployed anywhere; the AWS setup has never been applied; the repo is private for now.
+- **Alpha software (v0.1.0).** Not deployed anywhere; the AWS setup has never been applied; the repo went public on 2026-11-02 and the paper draft in `paper/` is unpublished.
 - **The promise is about agreement with the LLM, not about being correct.** If the LLM is wrong 1 time in 4, a student that copies it inherits that. Our experiments show this clearly ([docs/notes/exp1b-findings.md](docs/notes/exp1b-findings.md)).
 - **It assumes the audited sample looks like today's requests.** When requests change, that breaks; the audits and the alarm exist to catch it, but recovery takes time (about `audited labels / audit rate` requests).
 - **Small-scale evidence:** two public datasets, one simple student, one LLM, a few data splits; the demo and load tests use a simulated LLM on a shared desktop.
